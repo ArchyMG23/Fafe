@@ -1,0 +1,2 @@
+sed -i 's/import { MemberProfile } from '\''\.\/MemberProfile'\'';/import { MemberProfile } from '\''\.\/MemberProfile'\'';\nimport { MemberEntrepreneurProfile } from '\''\.\/MemberEntrepreneurProfile'\'';/g' src/pages/dashboard/MemberDashboard.tsx
+sed -i 's/import { DashboardOverview } from '\''\.\/DashboardOverview'\'';/import { DashboardOverview } from '\''\.\/DashboardOverview'\'';\nimport { Briefcase } from '\''lucide-react'\'';/g' src/pages/dashboard/MemberDashboard.tsx

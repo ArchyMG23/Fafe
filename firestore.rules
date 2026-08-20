@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user has ADMIN or SUPER_ADMIN role
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN' ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'SUPER_ADMIN');
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      // Anyone can read public user data? The prompt says: "Do not expose private member information through public Firestore queries."
+      // So public directory data should be a separate collection or users must only read their own data unless admin
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      
+      // Users can create their own document when they register (with MEMBER role and ACTIVE status)
+      allow create: if isAuthenticated() && request.auth.uid == userId
+                    && request.resource.data.role == 'MEMBER'
+                    && request.resource.data.status == 'ACTIVE';
+      
+      // Users can update their own data, BUT cannot change their role or status
+      allow update: if isAuthenticated() && 
+                    (
+                      (request.auth.uid == userId 
+                        && request.resource.data.role == resource.data.role 
+                        && request.resource.data.status == resource.data.status)
+                      || isAdmin()
+                    );
+                    
+      allow delete: if isAdmin();
+    }
+
+    // Donations Collection
+    match /donations/{donationId} {
+      // Users can only read their own donations, Admins can read all
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Users can create their own donations
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Only admins can update or delete donations
+      allow update, delete: if isAdmin();
+    }
+
+    // Public Collections (e.g., Entrepreneurs directory, projects, articles)
+    match /entrepreneurs/{entrepreneurId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /articles/{articleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

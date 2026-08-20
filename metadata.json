@@ -1,0 +1,6 @@
+{
+  "name": "FAFE Platform",
+  "description": "La plateforme numérique officielle du FAFE (Forum Africain des Femmes Entrepreneures) pour connecter, accompagner et valoriser les femmes entrepreneures à travers l'Afrique.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

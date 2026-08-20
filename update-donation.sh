@@ -1,0 +1,1 @@
+sed -i 's/navigate('\''\/dons\/succes'\''/        \/\/ Save to Firestore\n        import { collection, addDoc } from "firebase\/firestore";\n        import { db } from "..\/lib\/firebase";\n        import { useAuthStore } from "..\/store\/auth";\n        \/\/ Wait, I cannot use hooks inside the function like this. Let us just replace the whole file./g' src/pages/Donation.tsx
