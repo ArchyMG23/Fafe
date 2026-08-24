@@ -1,274 +1,564 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent } from '../components/ui/Card';
-import { ArrowRight, Globe2, Briefcase, TrendingUp, Calendar, Heart, MapPin } from 'lucide-react';
-import { collection, getDocs, query, limit, orderBy } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { Entrepreneur, Article, Project } from '../types';
-import { DEMO_ENTREPRENEURS, DEMO_ARTICLES, DEMO_PROJECTS } from '../lib/mockData';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "../components/ui/Button";
+import { Card, CardContent } from "../components/ui/Card";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  orderBy,
+} from "firebase/firestore";
+import { db } from "../lib/firebase";
+import { Entrepreneur, Article, Project } from "../types";
+import { useLanguageStore } from "../store/language";
+import { getCMSGlobal, defaultHeroSlides } from "../lib/cms";
+import { CMSHeroSlide } from "../types";
+import {
+  ArrowRight,
+  Globe2,
+  Briefcase,
+  TrendingUp,
+  Calendar,
+  Heart,
+  MapPin,
+  Play
+} from "lucide-react";
+import {
+  DEMO_ENTREPRENEURS,
+  DEMO_ARTICLES,
+  DEMO_PROJECTS,
+} from "../lib/mockData";
 
-export function Home() {
-  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
+function DynamicHeroSection() {
+  const [slides, setSlides] = useState<CMSHeroSlide[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const { language, tl } = useLanguageStore();
+
+  useEffect(() => {
+    const loadCMS = async () => {
+      const data = await getCMSGlobal();
+      if (data && data.heroSlides && data.heroSlides.length > 0) {
+        const activeSlides = data.heroSlides
+          .filter((s: any) => s.status === "ACTIVE")
+          .sort((a: any, b: any) => a.order - b.order);
+        if (activeSlides.length > 0) {
+          setSlides(activeSlides);
+          setCurrentIndex(Math.floor(Math.random() * activeSlides.length));
+        } else {
+          setSlides(defaultHeroSlides);
+        }
+      } else {
+        setSlides(defaultHeroSlides);
+      }
+    };
+    loadCMS();
+  }, []);
+
+  // Handle visibility pause
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsPaused(true);
+      } else {
+        setIsPaused(false);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused || slides.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 25000); // 25 seconds
+    return () => clearInterval(interval);
+  }, [slides.length, isPaused]);
+
+  // Preload next image
+  useEffect(() => {
+    if (slides.length > 1) {
+      const nextIndex = (currentIndex + 1) % slides.length;
+      const img = new Image();
+      img.src = slides[nextIndex].image;
+    }
+  }, [currentIndex, slides]);
+
+  if (slides.length === 0) return null;
+
+  const slide = slides[currentIndex];
+
+  return (
+    <section
+      className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden bg-[#FAF9F6]"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[60%] rounded-full bg-[#E67E22] opacity-5 blur-[100px] transition-all duration-1000"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[50%] rounded-full bg-[#D4AF37] opacity-10 blur-[80px] transition-all duration-1000"></div>
+      </div>
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          {/* Left Column: Text content */}
+          <div
+            className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left transition-opacity duration-1000"
+            key={`text-${currentIndex}`}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E67E22]/20 text-[#E67E22] text-sm font-bold tracking-wide uppercase mb-8 shadow-sm">
+              <Globe2 className="w-4 h-4" />
+              {language === "fr" ? "Réseau Panafricain" : "Pan-African Network"}
+            </div>
+
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6 animate-fade-in-up">
+              {tl(slide.title)}
+            </h1>
+
+            <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed animate-fade-in-up animation-delay-100">
+              {tl(slide.shortText)}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up animation-delay-200">
+              <Link to={slide.link || "/rejoindre"}>
+                <Button
+                  size="lg"
+                  className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-8 py-6 font-bold text-lg shadow-lg shadow-[#E67E22]/20 hover:scale-105 transition-all"
+                >
+                  {tl(slide.buttonText)}
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Column: Image */}
+          <div
+            className="relative mx-auto lg:mx-0 max-w-md lg:max-w-none w-full transition-opacity duration-1000"
+            key={`img-${currentIndex}`}
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#E67E22] to-[#D4AF37] rounded-full blur-2xl opacity-20 animate-pulse"></div>
+            <div className="relative rounded-[2rem] overflow-hidden border-8 border-white shadow-2xl aspect-[4/5] transform hover:-translate-y-2 transition-transform duration-500">
+              <img
+                src={slide.image}
+                alt={tl(slide.title) || "Entrepreneure FAFE"}
+                className="w-full h-full object-cover"
+              />
+
+              {/* Optional Overlay Content */}
+              <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#6B3E1E]/90 to-transparent">
+                <div className="flex items-center gap-3 text-white">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
+                    <Play className="w-5 h-5 text-white ml-1" />
+                  </div>
+                  <div>
+                    <p className="font-bold">Découvrez son histoire</p>
+                    <p className="text-sm text-white/80">Regarder la vidéo</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    index === currentIndex
+                      ? "bg-[#E67E22] w-8"
+                      : "bg-[#6B3E1E]/20 hover:bg-[#6B3E1E]/40"
+                  }`}
+                  aria-label={`Aller au slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DynamicNews() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fallbacks to mock data if Firestore is empty
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchArticles = async () => {
       try {
-        const entQuery = query(collection(db, 'users'), limit(4));
-        const entSnap = await getDocs(entQuery);
-        let fetchedEnt = entSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Entrepreneur));
-        if (fetchedEnt.length === 0) fetchedEnt = DEMO_ENTREPRENEURS.slice(0, 4);
-        setEntrepreneurs(fetchedEnt);
-
-        // Simulated fetch for articles and projects if they existed in DB
-        // Falling back to DEMO data as they are placeholders for this version
-        setArticles(DEMO_ARTICLES);
-        setProjects(DEMO_PROJECTS);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setEntrepreneurs(DEMO_ENTREPRENEURS.slice(0, 4));
-        setArticles(DEMO_ARTICLES);
-        setProjects(DEMO_PROJECTS);
+        const q = query(
+          collection(db, "articles"),
+          where("status", "==", "PUBLISHED"),
+          orderBy("publishedAt", "desc"),
+          limit(3),
+        );
+        const snap = await getDocs(q);
+        setArticles(
+          snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Article),
+        );
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchArticles();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="text-center py-20">
+        <div className="w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full animate-spin mx-auto"></div>
+      </div>
+    );
+
+  if (articles.length === 0)
+    return (
+      <div className="text-center text-stone-500 py-12">
+        <p>Aucune actualité publiée pour le moment.</p>
+      </div>
+    );
+
+  return (
+    <div className="grid md:grid-cols-3 gap-8">
+      {articles.map((article) => (
+        <Link
+          key={article.id}
+          to={`/actualites/${article.slug}`}
+          className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
+        >
+          <div className="h-48 overflow-hidden bg-stone-100 relative">
+            {article.featuredImage ? (
+              <img
+                src={article.featuredImage}
+                alt={article.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-stone-300">
+                Sans image
+              </div>
+            )}
+          </div>
+          <div className="p-6">
+            <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-3 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+              {article.title}
+            </h3>
+            <p className="text-stone-600 mb-4 line-clamp-2 text-sm">
+              {article.excerpt}
+            </p>
+            <span className="text-[#E67E22] font-bold text-sm flex items-center group-hover:gap-2 transition-all">
+              Lire l'article <ArrowRight className="w-4 h-4 ml-1" />
+            </span>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+
+function DynamicEvents() {
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const q = query(
+          collection(db, "events"),
+          where("status", "in", ["PUBLISHED", "REGISTRATION_OPEN", "ONGOING"]),
+          orderBy("startDate", "asc"),
+          limit(3)
+        );
+        const snap = await getDocs(q);
+        setEvents(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="text-center py-20">
+        <div className="w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full animate-spin mx-auto"></div>
+      </div>
+    );
+
+  if (events.length === 0)
+    return (
+      <div className="text-center text-stone-500 py-12">
+        <p>Aucun événement programmé pour le moment.</p>
+      </div>
+    );
+
+  return (
+    <div className="grid md:grid-cols-3 gap-8">
+      {events.map((event) => (
+        <Card key={event.id} className="overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer h-full flex flex-col">
+          <div className="relative h-48 overflow-hidden shrink-0">
+            <img 
+              src={event.coverImage || "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"} 
+              alt={event.title} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+            />
+            <div className="absolute top-4 left-4 bg-white/95 backdrop-blur px-3 py-2 rounded-lg text-center shadow-md">
+              <div className="text-[#E67E22] font-bold text-xl leading-none">
+                {new Date(event.startDate).getDate()}
+              </div>
+              <div className="text-[#6B3E1E] text-xs font-bold uppercase mt-1">
+                {new Date(event.startDate).toLocaleString('fr-FR', { month: 'short' })}
+              </div>
+            </div>
+            {event.online && (
+              <div className="absolute top-4 right-4 bg-[#E67E22] text-white px-2 py-1 rounded text-xs font-bold">
+                En ligne
+              </div>
+            )}
+          </div>
+          <CardContent className="p-6 flex flex-col flex-grow">
+            <h3 className="font-bold font-heading text-xl text-[#6B3E1E] mb-2 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+              {event.title}
+            </h3>
+            <div className="flex items-center gap-2 text-stone-500 text-sm mb-4">
+              <MapPin className="w-4 h-4" />
+              <span className="truncate">{event.online ? "Événement virtuel" : `${event.city}, ${event.country}`}</span>
+            </div>
+            <p className="text-stone-600 text-sm line-clamp-3 mb-6 flex-grow">
+              {event.shortDescription || event.description}
+            </p>
+            <Link to={`/evenements/${event.slug}`} className="mt-auto block">
+              <Button variant="outline" className="w-full border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E] hover:text-white transition-all rounded-full">
+                Voir l'événement
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export function Home() {
+  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        // Fetch 4 active entrepreneurs
+        const entRef = collection(db, 'users');
+        const entQ = query(entRef, where('role', '==', 'MEMBER'), where('status', '==', 'ACTIVE'), limit(4));
+        const entSnap = await getDocs(entQ);
+        const fetchedEnt = entSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Entrepreneur));
+        setEntrepreneurs(fetchedEnt);
+
+        // Fetch 2 active projects
+        const projRef = collection(db, 'projects');
+        const projQ = query(projRef, where('status', '==', 'PUBLISHED'), limit(2));
+        const projSnap = await getDocs(projQ);
+        const fetchedProj = projSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
+        setProjects(fetchedProj);
+      } catch (err) {
+        console.error("Error fetching home data", err);
+      }
+    };
+    fetchHomeData();
   }, []);
 
   const stats = [
-    { label: "Femmes entrepreneures", value: "2,500+" },
-    { label: "Pays représentés", value: "15" },
-    { label: "Entreprises accompagnées", value: "850" },
-    { label: "Projets soutenus", value: "120" },
+    {
+      value: "5K+",
+      label: "Femmes accompagnées",
+      icon: <Heart className="w-6 h-6 text-[#E67E22]" />,
+    },
+    {
+      value: "15+",
+      label: "Pays africains",
+      icon: <Globe2 className="w-6 h-6 text-[#E67E22]" />,
+    },
+    {
+      value: "200+",
+      label: "Projets financés",
+      icon: <Briefcase className="w-6 h-6 text-[#E67E22]" />,
+    },
+    {
+      value: "85%",
+      label: "Taux de réussite",
+      icon: <TrendingUp className="w-6 h-6 text-[#E67E22]" />,
+    },
   ];
 
-  const partners = [1, 2, 3, 4, 5, 6];
-  const countries = ['Sénégal', 'Côte d\'Ivoire', 'Nigeria', 'Mali', 'Cameroun', 'Kenya', 'Maroc', 'Rwanda'];
+  const partners = ["ONU Femmes", "BAD", "AFD", "Union Européenne", "OIF"];
+  const countries = [
+    "Sénégal",
+    "Côte d'Ivoire",
+    "Mali",
+    "Cameroun",
+    "RDC",
+    "Maroc",
+  ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAF9F6]">
-      
+    <div className="flex flex-col min-h-screen">
       {/* 1. HERO SECTION */}
-      <section className="relative bg-[#FAF9F6] pt-12 pb-24 lg:pt-20 lg:pb-32 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#E67E22]/5 rounded-bl-[120px] -z-10"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#D4AF37]/5 rounded-tr-[120px] -z-10"></div>
-        
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-            
-            {/* Left Content */}
-            <div className="w-full lg:w-1/2 space-y-8">
-              <div className="inline-block px-4 py-2 bg-[#E67E22]/10 border border-[#E67E22]/20 rounded-full">
-                <span className="text-[#E67E22] font-bold text-xs uppercase tracking-widest">Forum Africain des Femmes Entrepreneures</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight">
-                Ensemble, faisons grandir l'entrepreneuriat <span className="text-[#E67E22]">féminin africain.</span>
-              </h1>
-              
-              <p className="text-lg md:text-xl text-[#6B3E1E]/80 max-w-xl leading-relaxed">
-                Le FAFE connecte, accompagne et valorise les femmes entrepreneures pour construire une Afrique plus inclusive, innovante et prospère.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
-                <Link to="/inscription" className="w-full sm:w-auto">
-                  <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white px-8 py-6 rounded-full font-bold shadow-lg hover:shadow-xl transition-all">
-                    Rejoindre le FAFE
-                  </Button>
-                </Link>
-                <Link to="/entrepreneures" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 px-8 py-6 rounded-full font-bold transition-all">
-                    Découvrir notre réseau
-                  </Button>
-                </Link>
-              </div>
-              <div className="pt-2">
-                <Link to="/dons" className="inline-flex items-center text-[#D4AF37] font-bold text-sm hover:text-[#E67E22] transition-colors group">
-                  Soutenir le FAFE 
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Image Composition */}
-            <div className="w-full lg:w-1/2 relative">
-              <div className="relative z-10 rounded-2xl md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-white">
-                <img 
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1000&auto=format&fit=crop" 
-                  alt="Femmes entrepreneures africaines collaborant" 
-                  className="w-full h-[400px] lg:h-[600px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#6B3E1E]/60 to-transparent"></div>
-              </div>
-              
-              {/* Subtle graphic elements */}
-              <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-[#E67E22] rounded-full mix-blend-multiply opacity-20 blur-2xl"></div>
-              <div className="absolute -top-8 -right-8 w-40 h-40 bg-[#D4AF37] rounded-full mix-blend-multiply opacity-20 blur-2xl"></div>
-              
-              <div className="absolute bottom-8 -left-4 md:-left-12 z-20 bg-white p-4 rounded-xl shadow-xl border border-[#6B3E1E]/5 flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#E67E22]/10 rounded-full flex items-center justify-center text-[#E67E22]">
-                  <TrendingUp className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-[#6B3E1E]/60 uppercase tracking-wider mb-0.5">Impact 2024</p>
-                  <p className="text-lg font-bold text-[#6B3E1E]">+40% de croissance</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
+      <DynamicHeroSection />
 
       {/* 2. STATISTICS SECTION */}
       <section className="py-12 bg-white border-y border-[#6B3E1E]/5">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 divide-x-0 lg:divide-x divide-[#6B3E1E]/10">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="text-center px-4">
-                <h3 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-2">{stat.value}</h3>
-                <p className="text-sm font-bold text-[#D4AF37] uppercase tracking-widest">{stat.label}</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center group">
+                <div className="w-16 h-16 mx-auto bg-[#FAF9F6] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  {stat.icon}
+                </div>
+                <div className="text-4xl font-bold font-heading text-[#6B3E1E] mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-sm font-bold text-stone-500 uppercase tracking-wider">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 3. ABOUT SECTION */}
+      {/* 3. MISSIONS SECTION */}
       <section className="py-24 bg-[#FAF9F6]">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-col lg:flex-row gap-16 items-center">
-            <div className="w-full lg:w-1/2">
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" 
-                  alt="Équipe FAFE en réunion" 
-                  className="w-full h-[500px] object-cover"
-                />
-              </div>
-            </div>
-            
-            <div className="w-full lg:w-1/2 space-y-8">
-              <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase">Notre Mission</h2>
-              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] leading-tight">
-                Une force collective au service de l'entrepreneuriat féminin africain
-              </h3>
-              <p className="text-lg text-[#6B3E1E]/80 leading-relaxed">
-                Le Forum Africain des Femmes Entrepreneures est né d'une conviction profonde : l'avenir économique de l'Afrique repose sur le potentiel d'innovation et de résilience de ses femmes. Nous fédérons les talents, facilitons l'accès aux financements et offrons un accompagnement d'excellence.
-              </p>
-              
-              <div className="grid sm:grid-cols-3 gap-6 pt-6 border-t border-[#6B3E1E]/10">
-                <div>
-                  <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2 text-[#D4AF37]">Leadership</h4>
-                  <p className="text-sm text-[#6B3E1E]/70">Inspirer et former la prochaine génération de dirigeantes.</p>
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2 text-[#D4AF37]">Solidarité</h4>
-                  <p className="text-sm text-[#6B3E1E]/70">Bâtir un réseau d'entraide panafricain puissant.</p>
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2 text-[#D4AF37]">Excellence</h4>
-                  <p className="text-sm text-[#6B3E1E]/70">Viser les plus hauts standards de qualité et d'impact.</p>
-                </div>
-              </div>
-              
-              <div className="pt-4">
-                <Link to="/about" className="inline-flex items-center text-[#E67E22] font-bold hover:text-[#c96a1a] transition-colors group text-lg">
-                  Découvrir le FAFE
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </div>
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+              Notre Vocation
+            </h2>
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+              Trois piliers pour la réussite de vos projets
+            </h3>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Financement",
+                desc: "Accès facilité aux fonds d'investissement, subventions et prêts à taux préférentiels pour développer votre activité.",
+                icon: "💰",
+              },
+              {
+                title: "Formation & Mentorat",
+                desc: "Programmes de renforcement de capacités et accompagnement personnalisé par des experts et leaders du marché.",
+                icon: "🎓",
+              },
+              {
+                title: "Réseautage",
+                desc: "Intégration à un écosystème puissant pour trouver des partenaires, des clients et des opportunités d'affaires.",
+                icon: "🤝",
+              },
+            ].map((mission, idx) => (
+              <Card
+                key={idx}
+                className="bg-white border-0 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden group"
+              >
+                <CardContent className="p-8 text-center">
+                  <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform">
+                    {mission.icon}
+                  </div>
+                  <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-4">
+                    {mission.title}
+                  </h4>
+                  <p className="text-stone-600 leading-relaxed">
+                    {mission.desc}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 4. FEATURED ENTREPRENEURS */}
+      {/* 4. ENTREPRENEURS HIGHLIGHT */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div className="max-w-2xl">
-              <h2 className="text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3">Réseau d'Excellence</h2>
-              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-4">Elles entreprennent. Elles transforment. Elles inspirent.</h3>
-              <p className="text-lg text-[#6B3E1E]/70">Découvrez les femmes qui font avancer l'économie africaine.</p>
+              <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+                Annuaire
+              </h2>
+              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+                Découvrez les talents du réseau
+              </h3>
             </div>
             <Link to="/entrepreneures">
-              <Button variant="outline" className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6">
-                Explorer tout l'annuaire
+              <Button
+                variant="outline"
+                className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6"
+              >
+                Voir l'annuaire complet
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {loading ? (
-              <div className="col-span-4 text-center py-12 text-[#6B3E1E]/50 font-medium">Chargement des profils...</div>
-            ) : entrepreneurs.map((ent) => (
-              <div key={ent.id} className="group cursor-pointer">
-                <div className="w-full aspect-[4/5] bg-stone-100 rounded-2xl mb-6 overflow-hidden relative shadow-sm group-hover:shadow-xl transition-all duration-500">
-                  <img 
-                    src={ent.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
-                    alt={`${ent.firstName} ${ent.lastName}`} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
-                    <Link to={`/entrepreneures/${ent.id}`} className="w-full">
-                      <Button className="w-full bg-white text-[#6B3E1E] hover:bg-white/90">
-                        Voir le profil
-                      </Button>
-                    </Link>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {entrepreneurs.map((ent) => (
+              <Link key={ent.id} to={`/entrepreneures/${ent.id}`}>
+                <Card className="border border-[#6B3E1E]/10 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden group cursor-pointer bg-[#FAF9F6] h-full flex flex-col">
+                  <div className="relative h-48 overflow-hidden bg-[#6B3E1E]/5">
+                    {ent.professionalPhoto ? (
+                      <img
+                        src={ent.professionalPhoto}
+                        alt={`${ent.firstName} ${ent.lastName}`}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[#6B3E1E]/20 font-heading text-4xl">
+                        {ent.firstName[0]}
+                        {ent.lastName[0]}
+                      </div>
+                    )}
+                    <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-[#6B3E1E]/80 to-transparent">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/90 backdrop-blur rounded-full text-[10px] font-bold text-[#6B3E1E] uppercase tracking-wider">
+                        <MapPin className="w-3 h-3" /> {ent.country}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="px-2">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MapPin className="w-3 h-3 text-[#E67E22]" />
-                    <span className="text-[10px] font-bold text-[#E67E22] uppercase tracking-widest">{ent.country}</span>
-                  </div>
-                  <h4 className="font-bold text-xl text-[#6B3E1E] mb-1">
-                    {ent.firstName} {ent.lastName}
-                  </h4>
-                  <p className="text-sm text-[#6B3E1E]/70 mb-2 font-medium">
-                    {ent.position || 'Fondatrice'}, {ent.company}
-                  </p>
-                  <span className="inline-block px-3 py-1 bg-[#FAF9F6] border border-[#6B3E1E]/10 rounded-full text-[10px] font-bold text-[#6B3E1E] uppercase tracking-wider">
-                    {ent.sector}
-                  </span>
-                </div>
-              </div>
+                  <CardContent className="p-6 flex flex-col flex-grow">
+                    <h4 className="text-lg font-bold font-heading text-[#6B3E1E] mb-1 group-hover:text-[#E67E22] transition-colors">
+                      {ent.firstName} {ent.lastName}
+                    </h4>
+                    <p className="text-sm font-bold text-[#D4AF37] mb-3">
+                      {ent.company}
+                    </p>
+                    <p className="text-xs text-[#6B3E1E]/70 line-clamp-2 mt-auto">
+                      {ent.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5. AFRICA NETWORK SECTION */}
-      <section className="py-24 bg-[#6B3E1E] relative overflow-hidden">
-        {/* Subtle decorative Africa Map representation using CSS shapes/svg */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] opacity-[0.03] pointer-events-none">
-           <svg viewBox="0 0 400 400" fill="currentColor" className="w-full h-full text-white">
-             <path d="M120,80 C150,50 200,40 250,70 C280,90 320,120 340,180 C350,220 330,280 290,320 C250,360 200,380 160,350 C120,320 80,260 90,200 C100,150 90,110 120,80 Z" />
-           </svg>
-        </div>
-        
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Globe2 className="w-12 h-12 text-[#D4AF37] mx-auto mb-6 opacity-90" />
-            <h2 className="text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3">Présence Continentale</h2>
-            <h3 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">Un réseau qui traverse les frontières</h3>
-            <p className="text-lg text-white/80 leading-relaxed">
-              Sélectionnez un pays pour découvrir les talents et les entreprises qui transforment les économies locales et régionales.
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-4">
-            {countries.map(country => (
-              <Link key={country} to={`/entrepreneures?country=${encodeURIComponent(country)}`}>
-                <button className="px-6 py-3 bg-white/5 hover:bg-[#E67E22] border border-white/10 hover:border-[#E67E22] rounded-full text-sm font-medium text-white transition-all duration-300 flex items-center gap-2 group">
+      {/* 5. COUNTRIES MAP PLACEHOLDER */}
+      <section className="py-24 bg-[#6B3E1E] text-white relative overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold font-heading mb-12">
+            Un réseau présent dans toute l'Afrique
+          </h2>
+
+          <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+            {countries.map((country) => (
+              <Link key={country} to={`/pays/${country.toLowerCase()}`}>
+                <button className="px-6 py-3 rounded-full border border-white/20 bg-white/5 hover:bg-white hover:text-[#6B3E1E] font-bold transition-all flex items-center gap-2 group">
                   <span className="w-2 h-2 rounded-full bg-[#D4AF37] group-hover:bg-white transition-colors"></span>
                   {country}
                 </button>
@@ -287,19 +577,26 @@ export function Home() {
       <section className="py-24 bg-[#FAF9F6]">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">Impact & Développement</h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">Transformer l'entrepreneuriat en impact</h3>
+            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+              Impact & Développement
+            </h2>
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+              Transformer l'entrepreneuriat en impact
+            </h3>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {projects.map((project) => (
-              <Card key={project.id} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow bg-white rounded-2xl group flex flex-col">
+              <Card
+                key={project.id}
+                className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow bg-white rounded-2xl group flex flex-col"
+              >
                 <div className="flex flex-col sm:flex-row h-full">
                   <div className="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden shrink-0">
-                    <img 
-                      src={project.image} 
-                      alt={project.title} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute top-4 left-4">
                       <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-[#E67E22] uppercase tracking-widest shadow-sm">
@@ -312,12 +609,17 @@ export function Home() {
                       <div className="w-1.5 h-1.5 rounded-full bg-[#00843D]"></div>
                       En cours
                     </div>
-                    <h4 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4 leading-tight">{project.title}</h4>
+                    <h4 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4 leading-tight">
+                      {project.title}
+                    </h4>
                     <p className="text-sm text-[#6B3E1E]/70 mb-6 leading-relaxed line-clamp-3">
                       {project.description}
                     </p>
                     <Link to={`/projets/${project.id}`} className="mt-auto">
-                      <Button variant="outline" className="border-[#D4AF37]/50 text-[#6B3E1E] hover:bg-[#D4AF37] hover:text-white hover:border-[#D4AF37] transition-all rounded-full px-6 w-full sm:w-auto">
+                      <Button
+                        variant="outline"
+                        className="border-[#D4AF37]/50 text-[#6B3E1E] hover:bg-[#D4AF37] hover:text-white hover:border-[#D4AF37] transition-all rounded-full px-6 w-full sm:w-auto"
+                      >
                         Découvrir le projet
                       </Button>
                     </Link>
@@ -329,57 +631,50 @@ export function Home() {
         </div>
       </section>
 
+      
+      {/* EVENTS SECTION */}
+      <section className="py-24 bg-[#FAF9F6] border-t border-[#6B3E1E]/5">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">Agenda</h2>
+              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">Nos prochains événements</h3>
+            </div>
+            <Link to="/evenements">
+              <Button variant="outline" className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6">
+                Voir l'agenda
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </div>
+          <DynamicEvents />
+        </div>
+      </section>
+
       {/* 7. NEWS SECTION */}
       <section className="py-24 bg-white border-t border-[#6B3E1E]/5">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div className="max-w-2xl">
-              <h2 className="text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3">Éditorial</h2>
-              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">Actualités & inspirations</h3>
+              <h2 className="text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3">
+                Éditorial
+              </h2>
+              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+                Actualités & inspirations
+              </h3>
             </div>
             <Link to="/actualites">
-              <Button variant="outline" className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6">
+              <Button
+                variant="outline"
+                className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6"
+              >
                 Toutes les actualités
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {articles.map((article) => (
-              <article key={article.id} className="group cursor-pointer flex flex-col h-full">
-                <div className="w-full aspect-[16/10] overflow-hidden rounded-2xl mb-6 relative">
-                  <img 
-                    src={article.featuredImage} 
-                    alt={article.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute top-4 left-4">
-                    {article.categories.map(cat => (
-                      <span key={cat} className="bg-[#6B3E1E]/90 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mr-2">
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-xs font-medium text-[#6B3E1E]/50 mb-4 uppercase tracking-wider">
-                  <Calendar className="w-4 h-4" />
-                  {new Date(article.publicationDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </div>
-                <h4 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4 leading-snug group-hover:text-[#E67E22] transition-colors">
-                  {article.title}
-                </h4>
-                <p className="text-[#6B3E1E]/70 mb-6 flex-grow leading-relaxed">
-                  {article.excerpt}
-                </p>
-                <div className="mt-auto pt-6 border-t border-[#6B3E1E]/10">
-                  <Link to={`/actualites/${article.id}`} className="inline-flex items-center text-[#6B3E1E] font-bold text-sm group-hover:text-[#E67E22] transition-colors">
-                    Lire l'article <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+          <DynamicNews />
         </div>
       </section>
 
@@ -388,17 +683,23 @@ export function Home() {
         {/* Subtle background effects */}
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-10 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
-        
+
         <div className="container mx-auto px-4 md:px-6 relative z-10 text-center max-w-4xl">
           <Heart className="w-16 h-16 text-[#D4AF37] mx-auto mb-8" />
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-8 leading-tight">
-            Votre soutien peut ouvrir de <span className="text-[#D4AF37]">nouvelles opportunités.</span>
+            Votre soutien peut ouvrir de{" "}
+            <span className="text-[#D4AF37]">nouvelles opportunités.</span>
           </h2>
           <p className="text-white/80 text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-            Chaque contribution participe au développement de l'entrepreneuriat féminin africain en finançant des formations et des projets innovants.
+            Chaque contribution participe au développement de l'entrepreneuriat
+            féminin africain en finançant des formations et des projets
+            innovants.
           </p>
           <Link to="/dons">
-            <Button size="lg" className="bg-[#E67E22] hover:bg-[#c96a1a] text-white shadow-2xl px-12 py-6 rounded-full font-bold text-lg hover:scale-105 transition-transform duration-300">
+            <Button
+              size="lg"
+              className="bg-[#E67E22] hover:bg-[#c96a1a] text-white shadow-2xl px-12 py-6 rounded-full font-bold text-lg hover:scale-105 transition-transform duration-300"
+            >
               Faire un don
             </Button>
           </Link>
@@ -408,10 +709,15 @@ export function Home() {
       {/* 9. PARTNERS */}
       <section className="py-20 bg-white border-t border-[#6B3E1E]/10">
         <div className="container mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-xs font-bold text-[#6B3E1E]/40 uppercase tracking-widest mb-12">Nos partenaires institutionnels</h2>
+          <h2 className="text-xs font-bold text-[#6B3E1E]/40 uppercase tracking-widest mb-12">
+            Nos partenaires institutionnels
+          </h2>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-            {partners.map(p => (
-              <div key={p} className="h-12 flex items-center font-heading font-bold text-2xl text-[#6B3E1E]">
+            {partners.map((p) => (
+              <div
+                key={p}
+                className="h-12 flex items-center font-heading font-bold text-2xl text-[#6B3E1E]"
+              >
                 LOGO {p}
               </div>
             ))}

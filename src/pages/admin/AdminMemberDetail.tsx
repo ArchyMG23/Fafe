@@ -48,6 +48,11 @@ export function AdminMemberDetail() {
   }, [id, navigate]);
 
   const handleUpdate = async () => {
+    if (status !== member?.status || role !== member?.role) {
+      if (!window.confirm("Êtes-vous sûr de vouloir enregistrer ces modifications de statut ou de rôle ?")) {
+        return;
+      }
+    }
     if (!id || !member) return;
     setSaving(true);
     setMessage({ type: '', text: '' });
@@ -165,9 +170,12 @@ export function AdminMemberDetail() {
               >
                 <option value="MEMBER">MEMBER (Membre standard)</option>
                 <option value="ENTREPRENEUR">ENTREPRENEUR</option>
-                <option value="MODERATOR">MODERATOR</option>
                 <option value="TRAINER">TRAINER</option>
-                <option value="ADMIN">ADMIN (Administrateur)</option>
+                <option value="MODERATOR">MODERATOR</option>
+                <option value="CONTENT_MANAGER">CONTENT_MANAGER</option>
+                <option value="FINANCE_MANAGER">FINANCE_MANAGER</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="SUPER_ADMIN">SUPER_ADMIN</option>
               </select>
             </div>
 

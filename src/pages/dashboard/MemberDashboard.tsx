@@ -13,6 +13,9 @@ import { Briefcase } from 'lucide-react';
 import { MemberProfile } from './MemberProfile';
 import { MemberEntrepreneurProfile } from './MemberEntrepreneurProfile';
 import { DonationHistory } from './DonationHistory';
+import { MemberAdhesion } from './MemberAdhesion';
+import { ShieldCheck } from 'lucide-react';
+import { MemberEvents } from './events/MemberEvents';
 
 export function MemberDashboard() {
   const { currentUser, userProfile, loading, logout } = useAuthStore();
@@ -111,6 +114,11 @@ export function MemberDashboard() {
                     <Activity className="w-4 h-4 mr-3" /> Mon activité
                   </Button>
                 </Link>
+                <Link to="/espace-membre/adhesion">
+                  <Button variant="ghost" className={getLinkClass('/espace-membre/adhesion')}>
+                    <ShieldCheck className="w-4 h-4 mr-3" /> Mon adhésion
+                  </Button>
+                </Link>
                 <Link to="/espace-membre/dons">
                   <Button variant="ghost" className={getLinkClass('/espace-membre/dons')}>
                     <Heart className="w-4 h-4 mr-3" /> Mes dons
@@ -126,8 +134,12 @@ export function MemberDashboard() {
                     <Settings className="w-4 h-4 mr-3" /> Paramètres
                   </Button>
                 </Link>
+                <Link to="/espace-membre/evenements">
+                  <Button variant="ghost" className={getLinkClass('/espace-membre/evenements')}>
+                    <Calendar className="w-4 h-4 mr-3" /> Mes événements
+                  </Button>
+                </Link>
               </div>
-
               <div>
                 <h3 className="text-xs font-bold text-[#6B3E1E]/40 uppercase tracking-wider mb-3 px-4">Bientôt disponible</h3>
                 <Button variant="ghost" className="w-full justify-start mb-1 text-[#6B3E1E]/40 cursor-not-allowed" disabled>
@@ -135,9 +147,6 @@ export function MemberDashboard() {
                 </Button>
                 <Button variant="ghost" className="w-full justify-start mb-1 text-[#6B3E1E]/40 cursor-not-allowed" disabled>
                   <ShoppingBag className="w-4 h-4 mr-3" /> Mes commandes
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-[#6B3E1E]/40 cursor-not-allowed" disabled>
-                  <Calendar className="w-4 h-4 mr-3" /> Mes événements
                 </Button>
               </div>
             </nav>
@@ -149,7 +158,9 @@ export function MemberDashboard() {
               <Route path="/" element={<DashboardOverview />} />
               <Route path="/profil" element={<MemberProfile />} />
               <Route path="/entrepreneure" element={<MemberEntrepreneurProfile />} />
+              <Route path="/adhesion" element={<MemberAdhesion />} />
               <Route path="/dons" element={<DonationHistory />} />
+              <Route path="/evenements" element={<MemberEvents />} />
               <Route path="/activite" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Activité bientôt disponible</div>} />
               <Route path="/reseau" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Réseau bientôt disponible</div>} />
               <Route path="/parametres" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Paramètres bientôt disponibles</div>} />

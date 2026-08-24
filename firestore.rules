@@ -1,67 +1,146 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Check if user is authenticated
+    // Functions
     function isAuthenticated() {
       return request.auth != null;
     }
-
-    // Check if user has ADMIN or SUPER_ADMIN role
-    function isAdmin() {
-      return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN' ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'SUPER_ADMIN');
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
 
-    // Users Collection
+    function isAdmin() {
+      return isAuthenticated() && 
+        (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN');
+    }
+    
+    function isContentManager() {
+      return isAuthenticated() && 
+        (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN' || getUserData().role == 'CONTENT_MANAGER');
+    }
+
     match /users/{userId} {
-      // Anyone can read public user data? The prompt says: "Do not expose private member information through public Firestore queries."
-      // So public directory data should be a separate collection or users must only read their own data unless admin
       allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
-      
-      // Users can create their own document when they register (with MEMBER role and ACTIVE status)
       allow create: if isAuthenticated() && request.auth.uid == userId
                     && request.resource.data.role == 'MEMBER'
                     && request.resource.data.status == 'ACTIVE';
-      
-      // Users can update their own data, BUT cannot change their role or status
       allow update: if isAuthenticated() && 
-                    (
-                      (request.auth.uid == userId 
-                        && request.resource.data.role == resource.data.role 
-                        && request.resource.data.status == resource.data.status)
-                      || isAdmin()
-                    );
-                    
+                    ((request.auth.uid == userId 
+                       && request.resource.data.role == resource.data.role 
+                       && request.resource.data.status == resource.data.status)
+                    || isAdmin());
       allow delete: if isAdmin();
     }
 
-    // Donations Collection
-    match /donations/{donationId} {
-      // Users can only read their own donations, Admins can read all
-      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
-      
-      // Users can create their own donations
-      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      
-      // Only admins can update or delete donations
-      allow update, delete: if isAdmin();
-    }
-
-    // Public Collections (e.g., Entrepreneurs directory, projects, articles)
     match /entrepreneurs/{entrepreneurId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, update: if isAuthenticated() && (request.auth.uid == request.resource.data.ownerId || isAdmin());
+      allow delete: if isAdmin();
     }
+
     match /projects/{projectId} {
-      allow read: if true;
+      allow read: if resource == null || resource.data.status == 'ACTIVE' || isAdmin();
       allow write: if isAdmin();
     }
+
+    match /donations/{donationId} {
+      allow create: if true 
+                    && request.resource.data.paymentStatus == 'PENDING'
+                    && request.resource.data.donationStatus == 'PENDING';
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.donorUserId == request.auth.uid);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // New CMS Rules
     match /articles/{articleId} {
+      allow read: if resource == null || resource.data.status == 'PUBLISHED' || isContentManager();
+      allow write: if isContentManager();
+    }
+    
+    match /categories/{categoryId} {
       allow read: if true;
+      allow write: if isContentManager();
+    }
+    
+    match /tags/{tagId} {
+      allow read: if true;
+      allow write: if isContentManager();
+    }
+    
+    match /comments/{commentId} {
+      allow read: if resource == null || resource.data.status == 'APPROVED' || isContentManager();
+      allow create: if true; // anyone can comment
+      allow update, delete: if isContentManager();
+    }
+    
+    match /albums/{albumId} {
+      allow read: if resource == null || resource.data.status == 'PUBLISHED' || isContentManager();
+      allow write: if isContentManager();
+    }
+    
+    match /media/{mediaId} {
+      allow read: if true;
+      allow write: if isContentManager();
+    }
+    // Event Management Rules
+    match /events/{eventId} {
+      allow read: if resource == null || resource.data.status in ['PUBLISHED', 'REGISTRATION_OPEN', 'REGISTRATION_CLOSED', 'ONGOING', 'COMPLETED'] || isAdmin();
       allow write: if isAdmin();
+    }
+
+    match /eventRegistrations/{registrationId} {
+      // Admins can read all. Members can read their own.
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      
+      // Anyone can register (including guests)
+      allow create: if true
+                    // Cannot fake payment success
+                    && request.resource.data.paymentStatus in ['PENDING', 'NOT_REQUIRED']
+                    // Cannot fake attendance
+                    && (!('attended' in request.resource.data) || request.resource.data.attended == false)
+                    // Cannot set status to anything other than REGISTERED or WAITLISTED
+                    && request.resource.data.status in ['REGISTERED', 'WAITLISTED'];
+                    
+      // Members can only cancel their own registrations, admins can do anything
+      allow update: if isAdmin() || 
+                    (isAuthenticated() && resource.data.userId == request.auth.uid 
+                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+                     && request.resource.data.status == 'CANCELLED');
+                     
+      allow delete: if isAdmin();
+    }
+
+    match /certificates/{certificateId} {
+      allow read: if true; // Public verification
+      allow write: if isAdmin();
+    }
+
+    // Memberships Rules
+    match /memberships/{membershipId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated() 
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'PENDING';
+      allow update: if isAdmin() || (
+                      isAuthenticated() && resource.data.userId == request.auth.uid 
+                      && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'bankReference', 'proofUrl', 'updatedAt'])
+                      && (request.resource.data.status == 'PAYMENT_SUBMITTED' || request.resource.data.status == 'CANCELLED')
+                    );
+      allow delete: if isAdmin();
+    }
+
+    // Visual CMS Rules
+    match /cms/{documentId} {
+      allow read: if true;
+      allow write: if isContentManager();
     }
   }
 }

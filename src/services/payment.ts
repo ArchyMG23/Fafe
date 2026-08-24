@@ -8,7 +8,7 @@ export class PaymentService {
    */
   static async processPayment(
     amount: number,
-    currency: string,
+    currency: "XAF" | "EUR" | "USD" | "GBP",
     paymentMethod: string,
     frequency: DonationFrequency,
     donorData: { name: string; email: string; phone?: string }
@@ -23,10 +23,10 @@ export class PaymentService {
           currency,
           frequency,
           paymentMethod,
-          donorName: donorData.name,
+          donorFirstName: donorData.name.split(' ')[0] || '',
+          donorLastName: donorData.name.split(' ').slice(1).join(' ') || '',
           donorEmail: donorData.email,
-          phone: donorData.phone,
-          status: 'SUCCESS' as DonationStatus,
+          donorPhone: donorData.phone,paymentStatus: 'SUCCESS', donationStatus: 'SUCCESS',
           transactionReference: transactionRef,
           createdAt: Date.now()
         });
