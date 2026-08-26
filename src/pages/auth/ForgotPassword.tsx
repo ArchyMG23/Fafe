@@ -61,7 +61,7 @@ export function ForgotPassword() {
                 <p className="text-sm text-gray-500 mb-6">
                   Si un compte existe avec l'adresse <strong>{email}</strong>, un e-mail avec les instructions de réinitialisation vous a été envoyé.
                 </p>
-                <Link to="/connexion">
+                <Link to="/hub/connexion">
                   <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white">
                     Retour à la connexion
                   </Button>
@@ -93,7 +93,7 @@ export function ForgotPassword() {
                 </Button>
                 
                 <div className="mt-6 text-center text-sm text-[#6B3E1E]/70 border-t border-[#6B3E1E]/10 pt-6">
-                  <Link to="/connexion" className="font-bold text-[#E67E22] hover:underline">
+                  <Link to="/hub/connexion" className="font-bold text-[#E67E22] hover:underline">
                     Retour à la connexion
                   </Link>
                 </div>

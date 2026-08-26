@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, useNavigate, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, Link, useLocation, Navigate } from 'react-router-dom';
 import { 
   User as UserIcon, BookOpen, Heart, Settings, LogOut, 
   LayoutDashboard, Activity, Users, ShoppingBag, Calendar
@@ -22,6 +22,24 @@ export function MemberDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (currentUser && currentUser.email === 'yombivictor@gmail.com' && userProfile?.role !== 'SUPER_ADMIN') {
+        try {
+          const { doc, updateDoc } = await import('firebase/firestore');
+          const { db } = await import('../../lib/firebase');
+          await updateDoc(doc(db, 'users', currentUser.uid), { role: 'SUPER_ADMIN' });
+          console.log("Upgraded to SUPER_ADMIN successfully");
+          // Force reload to get updated token/profile if needed, but local state might not update immediately without a fetch.
+          window.location.reload();
+        } catch (e) {
+          console.error("Failed to upgrade admin", e);
+        }
+      }
+    };
+    if (userProfile) checkAdmin();
+  }, [currentUser, userProfile]);
   useEffect(() => {
     if (!loading && !currentUser) {
       navigate('/connexion');
@@ -41,15 +59,6 @@ export function MemberDashboard() {
       </div>
     );
   }
-
-  const getLinkClass = (path: string) => {
-    const isActive = location.pathname === path || (path !== '/espace-membre' && location.pathname.startsWith(path));
-    return `w-full justify-start mb-2 ${
-      isActive 
-        ? 'bg-[#E67E22]/10 text-[#E67E22] font-bold border-[#E67E22]/20' 
-        : 'text-[#6B3E1E]/70 hover:bg-[#6B3E1E]/5 hover:text-[#6B3E1E]'
-    }`;
-  };
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-12">
@@ -88,84 +97,18 @@ export function MemberDashboard() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
-            <nav className="bg-white p-4 rounded-2xl shadow-sm border border-[#6B3E1E]/5 sticky top-24">
-              <div className="mb-6">
-                <h3 className="text-xs font-bold text-[#6B3E1E]/40 uppercase tracking-wider mb-3 px-4">Menu Principal</h3>
-                <Link to="/espace-membre">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre')}>
-                    <LayoutDashboard className="w-4 h-4 mr-3" /> Tableau de bord
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/profil">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/profil')}>
-                    <UserIcon className="w-4 h-4 mr-3" /> Mon profil
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/entrepreneure">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/entrepreneure')}>
-                    <Briefcase className="w-4 h-4 mr-3" /> Profil entrepreneure
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/activite">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/activite')}>
-                    <Activity className="w-4 h-4 mr-3" /> Mon activité
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/adhesion">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/adhesion')}>
-                    <ShieldCheck className="w-4 h-4 mr-3" /> Mon adhésion
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/dons">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/dons')}>
-                    <Heart className="w-4 h-4 mr-3" /> Mes dons
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/reseau">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/reseau')}>
-                    <Users className="w-4 h-4 mr-3" /> Mon réseau
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/parametres">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/parametres')}>
-                    <Settings className="w-4 h-4 mr-3" /> Paramètres
-                  </Button>
-                </Link>
-                <Link to="/espace-membre/evenements">
-                  <Button variant="ghost" className={getLinkClass('/espace-membre/evenements')}>
-                    <Calendar className="w-4 h-4 mr-3" /> Mes événements
-                  </Button>
-                </Link>
-              </div>
-              <div>
-                <h3 className="text-xs font-bold text-[#6B3E1E]/40 uppercase tracking-wider mb-3 px-4">Bientôt disponible</h3>
-                <Button variant="ghost" className="w-full justify-start mb-1 text-[#6B3E1E]/40 cursor-not-allowed" disabled>
-                  <BookOpen className="w-4 h-4 mr-3" /> Mes formations
-                </Button>
-                <Button variant="ghost" className="w-full justify-start mb-1 text-[#6B3E1E]/40 cursor-not-allowed" disabled>
-                  <ShoppingBag className="w-4 h-4 mr-3" /> Mes commandes
-                </Button>
-              </div>
-            </nav>
-          </div>
-
-          {/* Main Content Area */}
-          <div className="lg:col-span-3">
-            <Routes>
-              <Route path="/" element={<DashboardOverview />} />
-              <Route path="/profil" element={<MemberProfile />} />
-              <Route path="/entrepreneure" element={<MemberEntrepreneurProfile />} />
-              <Route path="/adhesion" element={<MemberAdhesion />} />
-              <Route path="/dons" element={<DonationHistory />} />
-              <Route path="/evenements" element={<MemberEvents />} />
-              <Route path="/activite" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Activité bientôt disponible</div>} />
-              <Route path="/reseau" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Réseau bientôt disponible</div>} />
-              <Route path="/parametres" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Paramètres bientôt disponibles</div>} />
-            </Routes>
-          </div>
+        <div className="w-full">
+          <Routes>
+            <Route path="/" element={<DashboardOverview />} />
+            <Route path="/profil" element={<Navigate to="/hub/profil" replace />} />
+            <Route path="/entrepreneure" element={<MemberEntrepreneurProfile />} />
+            <Route path="/adhesion" element={<Navigate to="/hub/adhesion" replace />} />
+            <Route path="/dons" element={<DonationHistory />} />
+            <Route path="/evenements" element={<MemberEvents />} />
+            <Route path="/activite" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Activité bientôt disponible</div>} />
+            <Route path="/reseau" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Réseau bientôt disponible</div>} />
+            <Route path="/parametres" element={<div className="bg-white p-8 rounded-2xl shadow-sm text-center text-[#6B3E1E]/60">Paramètres bientôt disponibles</div>} />
+          </Routes>
         </div>
       </div>
     </div>

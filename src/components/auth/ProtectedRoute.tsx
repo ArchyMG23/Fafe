@@ -20,11 +20,11 @@ export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   }
 
   if (!currentUser) {
-    return <Navigate to="/connexion" state={{ from: location }} replace />;
+    return <Navigate to="/hub/connexion" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && userProfile && !allowedRoles.includes(userProfile.role)) {
-    return <Navigate to="/espace-membre" replace />;
+    return <Navigate to="/hub/dashboard" replace />;
   }
 
   return <Outlet />;

@@ -12,7 +12,7 @@ export function ScrollToTop() {
         return;
       }
     }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [pathname, hash]);
 
   return null;

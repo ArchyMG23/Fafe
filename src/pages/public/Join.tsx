@@ -107,7 +107,7 @@ export function Join() {
                     <CheckCircle className="w-5 h-5 shrink-0" />
                     <p>{language === 'fr' ? 'Vous êtes connecté. Vous pouvez procéder à la demande.' : 'You are logged in. You can proceed with the application.'}</p>
                   </div>
-                  <Link to="/dashboard/adhesion">
+                  <Link to="/hub/inscription">
                     <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 text-lg font-bold shadow-lg">
                       {language === 'fr' ? "Accéder à ma demande" : "Access my application"}
                     </Button>
@@ -115,13 +115,13 @@ export function Join() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <Link to="/inscription">
+                  <Link to="/hub/inscription">
                     <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 text-lg font-bold shadow-lg">
                       {language === 'fr' ? 'Créer un compte' : 'Create an account'}
                     </Button>
                   </Link>
                   <p className="text-center text-sm text-stone-500 mt-4">
-                    {language === 'fr' ? 'Déjà un compte ?' : 'Already have an account?'} <Link to="/connexion" className="text-[#6B3E1E] font-bold underline">{language === 'fr' ? 'Se connecter' : 'Log in'}</Link>
+                    {language === 'fr' ? 'Déjà un compte ?' : 'Already have an account?'} <Link to="/hub/connexion" className="text-[#6B3E1E] font-bold underline">{language === 'fr' ? 'Se connecter' : 'Log in'}</Link>
                   </p>
                 </div>
               )}

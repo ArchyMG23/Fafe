@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { Article, Category } from '../../types';
+import { fetchArticles } from '../../lib/dataFetching';
 import { Link, useParams } from 'react-router-dom';
 import { Loader2, Calendar, User, ArrowRight, Tag } from 'lucide-react';
+import { FafeImage } from '../../components/ui/FafeImage';
 
 export function News() {
   const { slug } = useParams(); // Can be category slug or tag slug if we differentiate routes, but for now let's just handle it basically
@@ -22,9 +24,7 @@ export function News() {
         const cats = catSnap.docs.map(d => ({ id: d.id, ...d.data() } as Category));
         setCategories(cats);
 
-        let q = query(collection(db, 'articles'), where('status', '==', 'PUBLISHED'), orderBy('publishedAt', 'desc'));
-        const artSnap = await getDocs(q);
-        let fetched = artSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Article));
+        let fetched = await fetchArticles();
 
         if (slug) {
           // If slug matches a category, filter by categoryId
@@ -52,7 +52,7 @@ export function News() {
   };
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
+    <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-4">
@@ -89,7 +89,7 @@ export function News() {
               <Link key={article.id} to={`/actualites/${article.slug}`} className="group bg-white rounded-2xl overflow-hidden border border-stone-200 hover:shadow-xl transition-all duration-300 flex flex-col h-full">
                 <div className="relative h-48 overflow-hidden bg-stone-100">
                   {article.featuredImage ? (
-                    <img src={article.featuredImage} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <FafeImage src={article.featuredImage} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-stone-300">Sans image</div>
                   )}

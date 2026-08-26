@@ -3,7 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { Article, Category } from '../../types';
+import { fetchArticles } from '../../lib/dataFetching';
 import { Loader2, Calendar, User, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { FafeImage } from '../../components/ui/FafeImage';
 import ReactMarkdown from 'react-markdown';
 
 export function ArticleDetail() {
@@ -17,16 +19,12 @@ export function ArticleDetail() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const q = query(collection(db, 'articles'), where('slug', '==', slug), limit(1));
-        const snap = await getDocs(q);
-        
-        if (snap.empty) {
+        const allArticles = await fetchArticles();
+        const data = allArticles.find(a => a.slug === slug || a.id === slug);
+        if (!data) {
           setLoading(false);
           return;
         }
-
-        const data = snap.docs[0].data() as Article;
-        data.id = snap.docs[0].id;
 
         // If not published and we are just a guest, we shouldn't see it
         // The firestore rules already block this unless we are admin
@@ -86,7 +84,7 @@ export function ArticleDetail() {
   );
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
+    <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
       <div className="container mx-auto px-4 max-w-4xl">
         
         <Link to="/actualites" className="inline-flex items-center text-sm font-bold text-stone-500 hover:text-[#E67E22] mb-8 transition-colors">
@@ -114,7 +112,7 @@ export function ArticleDetail() {
         {/* Featured Image */}
         {article.featuredImage && (
           <div className="w-full h-[40vh] md:h-[60vh] rounded-2xl overflow-hidden mb-12 shadow-lg">
-            <img src={article.featuredImage} alt={article.title} className="w-full h-full object-cover" />
+            <FafeImage src={article.featuredImage} alt={article.title} className="w-full h-full object-cover" />
           </div>
         )}
 
@@ -150,7 +148,7 @@ export function ArticleDetail() {
               {related.map(rel => (
                 <Link key={rel.id} to={`/actualites/${rel.slug}`} className="group bg-white rounded-xl overflow-hidden border border-stone-200 hover:shadow-lg transition-all">
                   <div className="h-32 bg-stone-100 overflow-hidden">
-                    {rel.featuredImage && <img src={rel.featuredImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />}
+                    {rel.featuredImage && <FafeImage src={rel.featuredImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />}
                   </div>
                   <div className="p-4">
                     <h4 className="font-bold text-[#6B3E1E] mb-2 line-clamp-2 group-hover:text-[#E67E22]">{rel.title}</h4>

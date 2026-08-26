@@ -14,6 +14,7 @@ import { db } from "../lib/firebase";
 import { Entrepreneur, Article, Project } from "../types";
 import { useLanguageStore } from "../store/language";
 import { getCMSGlobal, defaultHeroSlides } from "../lib/cms";
+import { fetchEntrepreneurs, fetchProjects, fetchArticles, fetchEvents } from "../lib/dataFetching";
 import { CMSHeroSlide } from "../types";
 import {
   ArrowRight,
@@ -25,6 +26,7 @@ import {
   MapPin,
   Play
 } from "lucide-react";
+import { FafeImage } from '../components/ui/FafeImage';
 import {
   DEMO_ENTREPRENEURS,
   DEMO_ARTICLES,
@@ -32,29 +34,38 @@ import {
 } from "../lib/mockData";
 
 function DynamicHeroSection() {
-  const [slides, setSlides] = useState<CMSHeroSlide[]>([]);
+  const [heroText, setHeroText] = useState<any>(null);
+  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const { language, tl } = useLanguageStore();
 
   useEffect(() => {
-    const loadCMS = async () => {
+    const loadData = async () => {
+      // 1. Load CMS for the institutional text (left column)
       const data = await getCMSGlobal();
       if (data && data.heroSlides && data.heroSlides.length > 0) {
-        const activeSlides = data.heroSlides
-          .filter((s: any) => s.status === "ACTIVE")
-          .sort((a: any, b: any) => a.order - b.order);
-        if (activeSlides.length > 0) {
-          setSlides(activeSlides);
-          setCurrentIndex(Math.floor(Math.random() * activeSlides.length));
-        } else {
-          setSlides(defaultHeroSlides);
-        }
+        setHeroText(data.heroSlides[0]); // Take the first slide text
       } else {
-        setSlides(defaultHeroSlides);
+        setHeroText(defaultHeroSlides[0]);
       }
+
+      // 2. Load entrepreneurs for the carousel (right column)
+      let ents = await fetchEntrepreneurs(10, true);
+      if (ents.length === 0) {
+        ents = await fetchEntrepreneurs(10); // fallback if no featured
+      }
+      if (ents.length === 0) {
+        ents = DEMO_ENTREPRENEURS.slice(0, 5);
+      }
+      
+      // Optionally randomize the starting index to avoid same person on every refresh
+      const startIndex = Math.floor(Math.random() * ents.length);
+      
+      setEntrepreneurs(ents);
+      setCurrentIndex(startIndex);
     };
-    loadCMS();
+    loadData();
   }, []);
 
   // Handle visibility pause
@@ -72,29 +83,29 @@ function DynamicHeroSection() {
   }, []);
 
   useEffect(() => {
-    if (isPaused || slides.length <= 1) return;
+    if (isPaused || entrepreneurs.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % slides.length);
+      setCurrentIndex((prev) => (prev + 1) % entrepreneurs.length);
     }, 25000); // 25 seconds
     return () => clearInterval(interval);
-  }, [slides.length, isPaused]);
+  }, [entrepreneurs.length, isPaused, currentIndex]);
 
   // Preload next image
   useEffect(() => {
-    if (slides.length > 1) {
-      const nextIndex = (currentIndex + 1) % slides.length;
+    if (entrepreneurs.length > 1) {
+      const nextIndex = (currentIndex + 1) % entrepreneurs.length;
       const img = new Image();
-      img.src = slides[nextIndex].image;
+      img.src = entrepreneurs[nextIndex].professionalPhoto;
     }
-  }, [currentIndex, slides]);
+  }, [currentIndex, entrepreneurs]);
 
-  if (slides.length === 0) return null;
+  if (entrepreneurs.length === 0 || !heroText) return null;
 
-  const slide = slides[currentIndex];
+  const currentEnt = entrepreneurs[currentIndex];
 
   return (
     <section
-      className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden bg-[#FAF9F6]"
+      className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 overflow-hidden bg-[#FAF9F6]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -105,65 +116,75 @@ function DynamicHeroSection() {
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left Column: Text content */}
-          <div
-            className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left transition-opacity duration-1000"
-            key={`text-${currentIndex}`}
-          >
+          <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E67E22]/20 text-[#E67E22] text-sm font-bold tracking-wide uppercase mb-8 shadow-sm">
               <Globe2 className="w-4 h-4" />
               {language === "fr" ? "Réseau Panafricain" : "Pan-African Network"}
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6 animate-fade-in-up">
-              {tl(slide.title)}
+            <h1 className="text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6 animate-fade-in-up">
+              {tl(heroText.title)}
             </h1>
 
-            <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed animate-fade-in-up animation-delay-100">
-              {tl(slide.shortText)}
+            <p className="text-base md:text-lg lg:text-xl text-stone-600 mb-10 leading-relaxed animate-fade-in-up animation-delay-100">
+              {tl(heroText.shortText)}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up animation-delay-200">
-              <Link to={slide.link || "/rejoindre"}>
+              <Link to={heroText.link || "/hub/inscription"}>
                 <Button
                   size="lg"
                   className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-8 py-6 font-bold text-lg shadow-lg shadow-[#E67E22]/20 hover:scale-105 transition-all"
                 >
-                  {tl(slide.buttonText)}
+                  {tl(heroText.buttonText)}
                 </Button>
               </Link>
             </div>
           </div>
 
-          {/* Right Column: Image */}
+          {/* Right Column: Image with Superimposed Card */}
           <div
-            className="relative mx-auto lg:mx-0 max-w-md lg:max-w-none w-full transition-opacity duration-1000"
+            className="relative mx-auto max-w-md lg:max-w-md xl:max-w-[450px] w-full transition-opacity duration-1000"
             key={`img-${currentIndex}`}
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-[#E67E22] to-[#D4AF37] rounded-full blur-2xl opacity-20 animate-pulse"></div>
-            <div className="relative rounded-[2rem] overflow-hidden border-8 border-white shadow-2xl aspect-[4/5] transform hover:-translate-y-2 transition-transform duration-500">
-              <img
-                src={slide.image}
-                alt={tl(slide.title) || "Entrepreneure FAFE"}
-                className="w-full h-full object-cover"
+            
+            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5]">
+              <FafeImage                 src={currentEnt.professionalPhoto}
+                alt={`${currentEnt.firstName} ${currentEnt.lastName}`}
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-1000"
               />
 
-              {/* Optional Overlay Content */}
-              <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#6B3E1E]/90 to-transparent">
-                <div className="flex items-center gap-3 text-white">
-                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
-                    <Play className="w-5 h-5 text-white ml-1" />
-                  </div>
-                  <div>
-                    <p className="font-bold">Découvrez son histoire</p>
-                    <p className="text-sm text-white/80">Regarder la vidéo</p>
-                  </div>
+              {/* Gradient Overlay for legibility */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+              {/* Superimposed Card directly ON the photo */}
+              <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-xl transform transition-all">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-[#E67E22] animate-pulse"></div>
+                  <span className="text-xs font-bold text-[#E67E22] tracking-wider uppercase">À LA UNE</span>
                 </div>
+                <h3 className="text-xl font-bold text-[#6B3E1E] mb-1">
+                  {currentEnt.firstName} {currentEnt.lastName}
+                </h3>
+                <p className="text-sm font-medium text-stone-600 mb-1">
+                  {currentEnt.company} • {currentEnt.sector}
+                </p>
+                <div className="flex items-center gap-1 text-sm text-stone-500 mb-4">
+                  <MapPin className="w-4 h-4" />
+                  {currentEnt.country}
+                </div>
+                
+                <Link to={`/hub/annuaire/${currentEnt.id}`} className="inline-flex items-center text-sm font-bold text-[#E67E22] hover:text-[#c96a1a] transition-colors group">
+                  Découvrir son profil 
+                  <ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
 
             {/* Pagination Dots */}
             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-              {slides.map((_, index) => (
+              {entrepreneurs.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
@@ -172,7 +193,7 @@ function DynamicHeroSection() {
                       ? "bg-[#E67E22] w-8"
                       : "bg-[#6B3E1E]/20 hover:bg-[#6B3E1E]/40"
                   }`}
-                  aria-label={`Aller au slide ${index + 1}`}
+                  aria-label={`Voir entrepreneure ${index + 1}`}
                 />
               ))}
             </div>
@@ -188,25 +209,13 @@ function DynamicNews() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const q = query(
-          collection(db, "articles"),
-          where("status", "==", "PUBLISHED"),
-          orderBy("publishedAt", "desc"),
-          limit(3),
-        );
-        const snap = await getDocs(q);
-        setArticles(
-          snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Article),
-        );
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
+    const fetchArticlesFn = async () => {
+      setLoading(true);
+      const data = await fetchArticles(3);
+      setArticles(data);
+      setLoading(false);
     };
-    fetchArticles();
+    fetchArticlesFn();
   }, []);
 
   if (loading)
@@ -233,8 +242,7 @@ function DynamicNews() {
         >
           <div className="h-48 overflow-hidden bg-stone-100 relative">
             {article.featuredImage ? (
-              <img
-                src={article.featuredImage}
+              <FafeImage                 src={article.featuredImage}
                 alt={article.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -267,23 +275,13 @@ function DynamicEvents() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const q = query(
-          collection(db, "events"),
-          where("status", "in", ["PUBLISHED", "REGISTRATION_OPEN", "ONGOING"]),
-          orderBy("startDate", "asc"),
-          limit(3)
-        );
-        const snap = await getDocs(q);
-        setEvents(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
+    const fetchEventsFn = async () => {
+      setLoading(true);
+      const data = await fetchEvents(3);
+      setEvents(data);
+      setLoading(false);
     };
-    fetchEvents();
+    fetchEventsFn();
   }, []);
 
   if (loading)
@@ -305,7 +303,7 @@ function DynamicEvents() {
       {events.map((event) => (
         <Card key={event.id} className="overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer h-full flex flex-col">
           <div className="relative h-48 overflow-hidden shrink-0">
-            <img 
+            <FafeImage 
               src={event.coverImage || "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"} 
               alt={event.title} 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
@@ -353,23 +351,10 @@ export function Home() {
   
   useEffect(() => {
     const fetchHomeData = async () => {
-      try {
-        // Fetch 4 active entrepreneurs
-        const entRef = collection(db, 'users');
-        const entQ = query(entRef, where('role', '==', 'MEMBER'), where('status', '==', 'ACTIVE'), limit(4));
-        const entSnap = await getDocs(entQ);
-        const fetchedEnt = entSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Entrepreneur));
-        setEntrepreneurs(fetchedEnt);
-
-        // Fetch 2 active projects
-        const projRef = collection(db, 'projects');
-        const projQ = query(projRef, where('status', '==', 'PUBLISHED'), limit(2));
-        const projSnap = await getDocs(projQ);
-        const fetchedProj = projSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
-        setProjects(fetchedProj);
-      } catch (err) {
-        console.error("Error fetching home data", err);
-      }
+      const ent = await fetchEntrepreneurs(4, true);
+      setEntrepreneurs(ent);
+      const proj = await fetchProjects(2);
+      setProjects(proj);
     };
     fetchHomeData();
   }, []);
@@ -509,12 +494,11 @@ export function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {entrepreneurs.map((ent) => (
-              <Link key={ent.id} to={`/entrepreneures/${ent.id}`}>
+              <Link key={ent.id} to={`/hub/annuaire/${ent.id}`}>
                 <Card className="border border-[#6B3E1E]/10 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden group cursor-pointer bg-[#FAF9F6] h-full flex flex-col">
                   <div className="relative h-48 overflow-hidden bg-[#6B3E1E]/5">
                     {ent.professionalPhoto ? (
-                      <img
-                        src={ent.professionalPhoto}
+                      <FafeImage                         src={ent.professionalPhoto}
                         alt={`${ent.firstName} ${ent.lastName}`}
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                       />
@@ -593,8 +577,7 @@ export function Home() {
               >
                 <div className="flex flex-col sm:flex-row h-full">
                   <div className="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden shrink-0">
-                    <img
-                      src={project.image}
+                    <FafeImage                       src={project.image}
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -615,7 +598,7 @@ export function Home() {
                     <p className="text-sm text-[#6B3E1E]/70 mb-6 leading-relaxed line-clamp-3">
                       {project.description}
                     </p>
-                    <Link to={`/projets/${project.id}`} className="mt-auto">
+                    <Link to={`/projets-sociaux/${project.id}`} className="mt-auto">
                       <Button
                         variant="outline"
                         className="border-[#D4AF37]/50 text-[#6B3E1E] hover:bg-[#D4AF37] hover:text-white hover:border-[#D4AF37] transition-all rounded-full px-6 w-full sm:w-auto"

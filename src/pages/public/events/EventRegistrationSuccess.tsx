@@ -36,7 +36,7 @@ export function EventRegistrationSuccess() {
           <Button variant="outline" className="w-full flex items-center justify-center gap-2 border-[#E67E22] text-[#E67E22] hover:bg-[#E67E22]/5">
             <Calendar className="w-4 h-4" /> Ajouter à mon agenda
           </Button>
-          <Link to="/espace-membre/evenements" className="block">
+          <Link to="/hub/dashboard/evenements" className="block">
             <Button className="w-full bg-[#6B3E1E] hover:bg-[#522d14] text-white">
               Voir mes billets
             </Button>

@@ -1,68 +1,28 @@
 const fs = require('fs');
 let content = fs.readFileSync('src/pages/Home.tsx', 'utf8');
 
-const target1 = `  useEffect(() => {
-    const loadCMS = async () => {
-      const data = await getCMSGlobal();
-      if (data && data.heroSlides && data.heroSlides.length > 0) {
-        const activeSlides = data.heroSlides.filter((s: any) => s.status === 'ACTIVE').sort((a: any, b: any) => a.order - b.order);
-        setSlides(activeSlides.length > 0 ? activeSlides : defaultHeroSlides);
-      } else {
-        setSlides(defaultHeroSlides);
-      }
-    };
-    loadCMS();
-  }, []);`;
+// Imports
+content = content.replace(
+  `import { getCMSGlobal, defaultHeroSlides } from "../lib/cms";`,
+  `import { getCMSGlobal, defaultHeroSlides } from "../lib/cms";\nimport { fetchEntrepreneurs, fetchProjects, fetchArticles, fetchEvents } from "../lib/dataFetching";`
+);
 
-const replacement1 = `  useEffect(() => {
-    const loadCMS = async () => {
-      const data = await getCMSGlobal();
-      if (data && data.heroSlides && data.heroSlides.length > 0) {
-        const activeSlides = data.heroSlides.filter((s: any) => s.status === 'ACTIVE').sort((a: any, b: any) => a.order - b.order);
-        if (activeSlides.length > 0) {
-          setSlides(activeSlides);
-          setCurrentIndex(Math.floor(Math.random() * activeSlides.length));
-        } else {
-          setSlides(defaultHeroSlides);
-        }
-      } else {
-        setSlides(defaultHeroSlides);
-      }
-    };
-    loadCMS();
-  }, []);`;
+// DynamicNews
+content = content.replace(
+  /const fetchArticles = async \(\) => \{[\s\S]*?fetchArticles\(\);\n  \}, \[\]\);/m,
+  `const fetchArticlesFn = async () => {\n      setLoading(true);\n      const data = await fetchArticles(3);\n      setArticles(data);\n      setLoading(false);\n    };\n    fetchArticlesFn();\n  }, []);`
+);
 
-const target2 = `  useEffect(() => {
-    if (isPaused || slides.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [slides.length, isPaused]);`;
+// DynamicEvents
+content = content.replace(
+  /const fetchEvents = async \(\) => \{[\s\S]*?fetchEvents\(\);\n  \}, \[\]\);/m,
+  `const fetchEventsFn = async () => {\n      setLoading(true);\n      const data = await fetchEvents(3);\n      setEvents(data);\n      setLoading(false);\n    };\n    fetchEventsFn();\n  }, []);`
+);
 
-const replacement2 = `  useEffect(() => {
-    if (isPaused || slides.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, 25000); // 25 seconds
-    return () => clearInterval(interval);
-  }, [slides.length, isPaused]);
-
-  // Preload next image
-  useEffect(() => {
-    if (slides.length > 1) {
-      const nextIndex = (currentIndex + 1) % slides.length;
-      const img = new Image();
-      img.src = slides[nextIndex].image;
-    }
-  }, [currentIndex, slides]);`;
-
-content = content.replace(target1, replacement1);
-content = content.replace(target2, replacement2);
-content = content.replace(/to="\/projets"/g, 'to="/projets-sociaux"');
-
-// Fix alt text in Hero image if it's empty
-content = content.replace(/alt=""/g, 'alt={tl(slide.title) || "Entrepreneure FAFE"}');
-content = content.replace(/alt={""}/g, 'alt={tl(slide.title) || "Entrepreneure FAFE"}');
+// Home fetchHomeData
+content = content.replace(
+  /const fetchHomeData = async \(\) => \{[\s\S]*?fetchHomeData\(\);\n  \}, \[\]\);/m,
+  `const fetchHomeData = async () => {\n      const ent = await fetchEntrepreneurs(4, true);\n      setEntrepreneurs(ent);\n      const proj = await fetchProjects(2);\n      setProjects(proj);\n    };\n    fetchHomeData();\n  }, []);`
+);
 
 fs.writeFileSync('src/pages/Home.tsx', content);

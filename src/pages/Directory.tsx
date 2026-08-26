@@ -3,11 +3,12 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { MapPin, Briefcase, Search, ArrowRight, ShieldCheck, SlidersHorizontal } from 'lucide-react';
+import { FafeImage } from '../components/ui/FafeImage';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Entrepreneur } from '../types';
 import { AFRICAN_COUNTRIES, SECTORS } from '../lib/constants';
-import { DEMO_ENTREPRENEURS } from '../lib/mockData';
+import { fetchEntrepreneurs } from '../lib/dataFetching';
 
 export function Directory() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,30 +23,13 @@ export function Directory() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const fetchEntrepreneurs = async () => {
-      try {
-        const entQuery = query(
-          collection(db, 'entrepreneurs'), 
-          where('status', '==', 'APPROVED')
-        );
-        const entSnap = await getDocs(entQuery);
-        let fetchedEnt = entSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Entrepreneur));
-        
-        // Use demo if db is empty
-        if (fetchedEnt.length === 0) {
-          fetchedEnt = DEMO_ENTREPRENEURS.map(e => ({...e, status: 'APPROVED', verificationStatus: 'VERIFIED'} as Entrepreneur));
-        }
-        
-        setEntrepreneurs(fetchedEnt);
-      } catch (error) {
-        console.error("Error fetching entrepreneurs:", error);
-        setEntrepreneurs(DEMO_ENTREPRENEURS.map(e => ({...e, status: 'APPROVED', verificationStatus: 'VERIFIED'} as Entrepreneur)));
-      } finally {
-        setLoading(false);
-      }
+    const loadData = async () => {
+      setLoading(true);
+      const data = await fetchEntrepreneurs();
+      setEntrepreneurs(data);
+      setLoading(false);
     };
-
-    fetchEntrepreneurs();
+    loadData();
   }, []);
 
   // Sync state back to URL parameters when filters change
@@ -212,7 +196,7 @@ export function Directory() {
             {filteredEntrepreneurs.map(entrepreneure => (
               <div key={entrepreneure.id} className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-[#6B3E1E]/5">
                 <div className="w-full aspect-[4/5] bg-stone-100 relative overflow-hidden">
-                  <img 
+                  <FafeImage 
                     src={entrepreneure.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
                     alt={`${entrepreneure.firstName} ${entrepreneure.lastName}`} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -250,7 +234,7 @@ export function Directory() {
                     <span className="text-[10px] bg-[#FAF9F6] px-3 py-1.5 rounded-full font-bold text-[#6B3E1E] uppercase tracking-wider truncate max-w-[60%]">
                       {getSectorName(entrepreneure.sector)}
                     </span>
-                    <Link to={`/entrepreneures/${entrepreneure.id}`} className="text-[#E67E22] text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    <Link to={`/hub/annuaire/${entrepreneure.id}`} className="text-[#E67E22] text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
                       Profil <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>

@@ -47,9 +47,9 @@ export function AdminDashboard() {
   useEffect(() => {
     if (!loading) {
       if (!userProfile) {
-        navigate('/connexion');
+        navigate('/hub/connexion');
       } else if (!['ADMIN', 'SUPER_ADMIN', 'MODERATOR', 'CONTENT_MANAGER', 'FINANCE_MANAGER'].includes(userProfile.role)) {
-        navigate('/espace-membre');
+        navigate('/hub/dashboard');
       }
     }
   }, [userProfile, loading, navigate]);
@@ -84,33 +84,43 @@ export function AdminDashboard() {
       ]
     },
     {
-      title: "Gestion",
+      title: "Site Institutionnel",
       items: [
-        { path: "/admin/membres", icon: <Users className="w-4 h-4 mr-3" />, label: "Membres" },
-        { path: "/admin/entrepreneures", icon: <Briefcase className="w-4 h-4 mr-3" />, label: "Entrepreneures" },
-        { path: "/admin/pays", icon: <MapPin className="w-4 h-4 mr-3" />, label: "Pays" },
-        { path: "/admin/dons", icon: <Heart className="w-4 h-4 mr-3" />, label: "Dons" },
-        { path: "/admin/adhesions", icon: <ShieldAlert className="w-4 h-4 mr-3" />, label: "Adhésions FAFE" },
-        { path: "/admin/projets", icon: <FolderOpen className="w-4 h-4 mr-3" />, label: "Projets" },
-        { path: "/admin/evenements", icon: <Calendar className="w-4 h-4 mr-3" />, label: "Événements" },
         { path: "/admin/contenus", icon: <FileText className="w-4 h-4 mr-3" />, label: "Contenus (CMS)" },
-        { path: "/admin/cms-visuel", icon: <LayoutDashboard className="w-4 h-4 mr-3" />, label: "Éditeur Visuel (CMS)" },
+        { path: "/admin/cms-visuel", icon: <LayoutDashboard className="w-4 h-4 mr-3" />, label: "Éditeur Visuel" },
+        { path: "/admin/evenements", icon: <Calendar className="w-4 h-4 mr-3" />, label: "Événements" },
+        { path: "/admin/projets", icon: <FolderOpen className="w-4 h-4 mr-3" />, label: "Projets" },
       ]
     },
     {
-      title: "Bientôt disponible",
+      title: "FAFE Hub",
       items: [
+        { path: "/admin/membres", icon: <Users className="w-4 h-4 mr-3" />, label: "Comptes Utilisateurs" },
+        { path: "/admin/adhesions", icon: <ShieldAlert className="w-4 h-4 mr-3" />, label: "Adhésions FAFE" },
+        { path: "/admin/entrepreneures", icon: <Briefcase className="w-4 h-4 mr-3" />, label: "Annuaire" },
         { path: "#", icon: <GraduationCap className="w-4 h-4 mr-3" />, label: "Formations", disabled: true },
-        { path: "#", icon: <ShoppingCart className="w-4 h-4 mr-3" />, label: "Marketplace", disabled: true },
-        { path: "#", icon: <Package className="w-4 h-4 mr-3" />, label: "Stocks", disabled: true },
-        { path: "/admin/commentaires", icon: <MessageSquare className="w-4 h-4 mr-3" />, label: "Commentaires" },
+        { path: "#", icon: <MessageSquare className="w-4 h-4 mr-3" />, label: "Réseau & Discussions", disabled: true },
+      ]
+    },
+    {
+      title: "FAFE Marketplace",
+      items: [
+        { path: "#", icon: <ShoppingCart className="w-4 h-4 mr-3" />, label: "Ventes & Commandes", disabled: true },
+        { path: "#", icon: <Package className="w-4 h-4 mr-3" />, label: "Produits", disabled: true },
+      ]
+    },
+    {
+      title: "FAFE Dons",
+      items: [
+        { path: "/admin/dons", icon: <Heart className="w-4 h-4 mr-3" />, label: "Historique des dons" },
       ]
     },
     {
       title: "Configuration",
       items: [
+        { path: "/admin/pays", icon: <MapPin className="w-4 h-4 mr-3" />, label: "Pays" },
         { path: "/admin/parametres", icon: <Settings className="w-4 h-4 mr-3" />, label: "Paramètres" },
-        { path: "/admin/audit", icon: <ShieldAlert className="w-4 h-4 mr-3" />, label: "Audit" },
+        { path: "/admin/audit", icon: <ShieldAlert className="w-4 h-4 mr-3" />, label: "Sécurité & Audit" },
       ]
     }
   ];

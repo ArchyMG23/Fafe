@@ -126,7 +126,7 @@ export function EventRegistration() {
           <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">Vous êtes déjà inscrit</h2>
           <p className="text-stone-600 mb-8">Vous avez déjà validé votre inscription pour l'événement <strong>{event.title}</strong>.</p>
           <div className="space-y-4">
-            <Link to="/espace-membre/evenements">
+            <Link to="/hub/dashboard/evenements">
               <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white">Voir mes inscriptions</Button>
             </Link>
             <Link to={`/evenements/${event.slug}`}>
@@ -179,7 +179,7 @@ export function EventRegistration() {
             {!currentUser && (
                <div className="bg-[#E67E22]/10 border border-[#E67E22]/20 text-[#E67E22] p-4 rounded-xl text-sm flex gap-3">
                  <AlertCircle className="w-5 h-5 shrink-0" />
-                 <p>Vous n'êtes pas connecté. <Link to="/connexion" className="font-bold underline">Connectez-vous</Link> pour pré-remplir ce formulaire et retrouver vos billets dans votre espace membre.</p>
+                 <p>Vous n'êtes pas connecté. <Link to="/hub/connexion" className="font-bold underline">Connectez-vous</Link> pour pré-remplir ce formulaire et retrouver vos billets dans votre espace membre.</p>
                </div>
             )}
 

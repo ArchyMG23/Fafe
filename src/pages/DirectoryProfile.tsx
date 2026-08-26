@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, collection, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { MapPin, Briefcase, Globe, ArrowLeft, CheckCircle2, Loader2, ShieldCheck, Mail, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react';
+import { FafeImage } from '../components/ui/FafeImage';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 import { DEMO_ENTREPRENEURS } from '../lib/mockData';
@@ -102,7 +103,7 @@ export function DirectoryProfile() {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
         <h2 className="text-2xl font-heading text-[#6B3E1E] mb-4">Profil introuvable ou en attente de validation</h2>
-        <Link to="/entrepreneures">
+        <Link to="/hub/annuaire">
           <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">Retour à l'annuaire</Button>
         </Link>
       </div>
@@ -112,7 +113,7 @@ export function DirectoryProfile() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-12">
       <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-        <Link to="/entrepreneures" className="inline-flex items-center text-sm font-medium text-[#6B3E1E]/60 hover:text-[#E67E22] mb-8 transition-colors">
+        <Link to="/hub/annuaire" className="inline-flex items-center text-sm font-medium text-[#6B3E1E]/60 hover:text-[#E67E22] mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour à l'annuaire
         </Link>
@@ -121,7 +122,7 @@ export function DirectoryProfile() {
           <div className="md:col-span-1 space-y-6">
             <Card className="overflow-hidden border border-[#6B3E1E]/5 shadow-lg rounded-2xl bg-white">
               <div className="aspect-[4/5] relative bg-stone-100">
-                <img 
+                <FafeImage 
                   src={profile.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
                   alt={`${profile.firstName} ${profile.lastName}`} 
                   className="w-full h-full object-cover"

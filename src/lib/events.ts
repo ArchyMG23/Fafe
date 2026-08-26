@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, getDocs, query, where, orderBy, limit, startAfter, setDoc, addDoc, updateDoc, Timestamp, runTransaction } from 'firebase/firestore';
 import { db } from './firebase';
 import { FAFEEvent, EventStatus, EventRegistration, RegistrationStatus } from '../types';
+import { DEMO_EVENTS } from './mockData';
 
 export const getPublishedEvents = async (pageLimit = 10, lastDoc?: any) => {
   try {
@@ -14,7 +15,8 @@ export const getPublishedEvents = async (pageLimit = 10, lastDoc?: any) => {
       q = query(q, startAfter(lastDoc));
     }
     const snapshot = await getDocs(q);
-    const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FAFEEvent));
+    let events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FAFEEvent));
+    if (events.length === 0) events = [...DEMO_EVENTS] as unknown as FAFEEvent[];
     return { events, lastDoc: snapshot.docs[snapshot.docs.length - 1] };
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -26,7 +28,11 @@ export const getEventBySlug = async (slug: string) => {
   try {
     const q = query(collection(db, 'events'), where('slug', '==', slug), limit(1));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return null;
+    if (snapshot.empty) {
+      const mock = DEMO_EVENTS.find(e => e.slug === slug);
+      if (mock) return mock as unknown as FAFEEvent;
+      return null;
+    }
     return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as FAFEEvent;
   } catch (error) {
     console.error('Error fetching event by slug:', error);

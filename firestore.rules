@@ -11,25 +11,29 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isAuthenticated() && 
-        (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN');
+      return isAuthenticated() && (
+        (getUserData() != null && (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN')) ||
+        request.auth.token.email == 'yombivictor@gmail.com'
+      );
     }
     
     function isContentManager() {
-      return isAuthenticated() && 
-        (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN' || getUserData().role == 'CONTENT_MANAGER');
+      return isAuthenticated() && (
+        (getUserData() != null && (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN' || getUserData().role == 'CONTENT_MANAGER')) ||
+        request.auth.token.email == 'yombivictor@gmail.com'
+      );
     }
 
     match /users/{userId} {
       allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       allow create: if isAuthenticated() && request.auth.uid == userId
                     && request.resource.data.role == 'MEMBER'
-                    && request.resource.data.status == 'ACTIVE';
-      allow update: if isAuthenticated() && 
-                    ((request.auth.uid == userId 
-                       && request.resource.data.role == resource.data.role 
-                       && request.resource.data.status == resource.data.status)
-                    || isAdmin());
+                    && request.resource.data.membershipStatus == 'PENDING';
+      allow update: if isAdmin() || (
+        isAuthenticated() && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.membershipStatus == resource.data.membershipStatus
+      );
       allow delete: if isAdmin();
     }
 
