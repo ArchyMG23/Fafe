@@ -623,7 +623,7 @@ export function Home() {
               <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">Agenda</h2>
               <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">Nos prochains événements</h3>
             </div>
-            <Link to="/evenements">
+            <Link to="/actualites">
               <Button variant="outline" className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6">
                 Voir l'agenda
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

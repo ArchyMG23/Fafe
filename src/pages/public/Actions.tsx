@@ -121,9 +121,9 @@ export function Actions() {
   }
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen">
+    <div className="bg-[#FAF9F6] min-h-screen actions-container">
       {/* 1. HERO - NOS ACTIONS */}
-      <section className="relative pt-24 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-[#FAF9F6]">
+      <section className="merged-section relative pt-24 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-[#FAF9F6] merged-section" id="actions-hero">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
@@ -172,7 +172,7 @@ export function Actions() {
       </section>
 
       {/* 2. INTRODUCTION / NOTRE ENGAGEMENT */}
-      <section className="py-20 bg-white">
+      <section className="merged-section py-20 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
             className="max-w-4xl mx-auto text-center"
@@ -199,7 +199,7 @@ export function Actions() {
       </section>
 
       {/* 3. DOMAINES D'ACTION */}
-      <section className="py-24 bg-[#FAF9F6]">
+      <section className="merged-section py-24 bg-[#FAF9F6]">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-16"
@@ -275,7 +275,7 @@ export function Actions() {
 
       {/* 4. ACTIONS À LA UNE */}
       {featuredActions.length > 0 && (
-        <section className="py-24 bg-white">
+        <section className="merged-section py-24 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <motion.div 
               className="text-center mb-16"
@@ -378,7 +378,7 @@ export function Actions() {
       )}
 
       {/* 5. IMPACT EN CHIFFRES */}
-      <section className="py-20 bg-[#6B3E1E] text-white relative overflow-hidden">
+      <section className="merged-section py-20 bg-[#6B3E1E] text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#E67E22] opacity-10 rounded-full blur-[80px]"></div>
         
@@ -408,7 +408,7 @@ export function Actions() {
       </section>
 
       {/* 6. TOUTES LES ACTIONS (FILTRABLES) */}
-      <section className="py-24 bg-[#FAF9F6]">
+      <section className="merged-section py-24 bg-[#FAF9F6]">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
             <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">
@@ -519,7 +519,7 @@ export function Actions() {
 
       {/* 7. PROJETS EN COURS */}
       {projects.length > 0 && (
-        <section className="py-24 bg-white">
+        <section className="merged-section py-24 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex justify-between items-end mb-12">
               <motion.div 
@@ -600,7 +600,7 @@ export function Actions() {
 
       {/* 8. HISTOIRES D'IMPACT (TÉMOIGNAGES) */}
       {testimonials.length > 0 && (
-        <section className="py-24 bg-[#FAF9F6]">
+        <section className="merged-section py-24 bg-[#FAF9F6]">
           <div className="container mx-auto px-4 md:px-6">
             <motion.div 
               className="text-center mb-16"
@@ -654,7 +654,7 @@ export function Actions() {
       
       {/* 8.5 ÉVÉNEMENTS ET ACTIVITÉS */}
       {events.length > 0 && (
-        <section className="py-24 bg-white">
+        <section className="merged-section py-24 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex justify-between items-end mb-12">
               <motion.div 
@@ -717,7 +717,7 @@ export function Actions() {
       )}
 
       {/* 9. COMMENT PARTICIPER (CTA) */}
-      <section className="py-20 bg-white">
+      <section className="merged-section py-20 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-12"
@@ -760,7 +760,7 @@ export function Actions() {
       </section>
 
       {/* 10. CTA FINAL */}
-      <section className="py-24 bg-[#6B3E1E] relative overflow-hidden">
+      <section className="merged-section py-24 bg-[#6B3E1E] relative overflow-hidden">
         {/* Abstract background elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#D4AF37] via-transparent to-transparent"></div>

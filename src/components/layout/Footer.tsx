@@ -64,40 +64,34 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">À propos</h4>
+            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">FAFE</h4>
             <ul className="space-y-3 text-white/80">
-              <li><Link to="/a-propos/historique" className="hover:text-white transition-colors">Historique</Link></li>
-              <li><Link to="/a-propos/vision" className="hover:text-white transition-colors">Vision & Mission</Link></li>
-              <li><Link to="/a-propos/gouvernance" className="hover:text-white transition-colors">Gouvernance</Link></li>
-              <li><Link to="/a-propos/rapports" className="hover:text-white transition-colors">Rapports d'activités</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Nos actions</h4>
-            <ul className="space-y-3 text-white/80">
-              <li><Link to="/actions/formation" className="hover:text-white transition-colors">Formation</Link></li>
-              <li><Link to="/projets-sociaux" className="hover:text-white transition-colors">Projets sociaux</Link></li>
-              <li><Link to="/evenements" className="hover:text-white transition-colors">Événements</Link></li>
-              <li><Link to="/actions/commerce" className="hover:text-white transition-colors">Commerce</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Ressources</h4>
-            <ul className="space-y-3 text-white/80">
-              <li><Link to="/entrepreneures" className="hover:text-white transition-colors">Annuaire</Link></li>
+              <li><Link to="/nous" className="hover:text-white transition-colors">Nous</Link></li>
               <li><Link to="/actualites" className="hover:text-white transition-colors">Actualités</Link></li>
-              <li><Link to="/dons" className="hover:text-white transition-colors flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#E67E22]"></span>Faire un don</Link></li>
-              <li><Link to="/rejoindre" className="hover:text-white transition-colors font-bold text-[#D4AF37]">Rejoindre le FAFE</Link></li>
+              <li><Link to="/galerie" className="hover:text-white transition-colors">Galerie</Link></li>
+              <li><Link to="/nous#contact" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Contact</h4>
+            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Communauté</h4>
             <ul className="space-y-3 text-white/80">
-              <li><Link to="/contact" className="hover:text-white transition-colors">Nous contacter</Link></li>
-              <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link to="/rejoindre" className="hover:text-white transition-colors font-bold text-[#D4AF37]">Rejoindre le FAFE</Link></li>
+              <li><Link to="/hub" className="hover:text-white transition-colors">FAFE Hub</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Services</h4>
+            <ul className="space-y-3 text-white/80">
+              <li><Link to="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
+              <li><Link to="/dons" className="hover:text-white transition-colors flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#E67E22]"></span>Dons</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Informations</h4>
+            <ul className="space-y-3 text-white/80">
               <li><Link to="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link></li>
               <li><Link to="/confidentialite" className="hover:text-white transition-colors">Confidentialité</Link></li>
             </ul>

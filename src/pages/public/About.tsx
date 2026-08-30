@@ -74,9 +74,9 @@ export function About() {
   };
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen">
+    <div className="bg-[#FAF9F6] min-h-screen about-container">
       {/* 1. HERO PCA */}
-      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden bg-[#FAF9F6]">
+      <section className="merged-section relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden bg-[#FAF9F6] merged-section" id="about-hero">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
@@ -96,7 +96,7 @@ export function About() {
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6">
-                {pcaHero?.heroTitleFR}
+                NOUS
               </h1>
               <p className="text-lg md:text-xl text-stone-600 leading-relaxed mb-12 max-w-2xl">
                 {pcaHero?.heroDescriptionFR}
@@ -139,7 +139,7 @@ export function About() {
       </section>
 
       {/* 2. PRÉSENTATION */}
-      <section className="py-24 bg-white" id="presentation">
+      <section className="merged-section py-24 bg-white" id="presentation">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
             className="text-center mb-16"
@@ -167,7 +167,7 @@ export function About() {
       </section>
 
       {/* 3. NOTRE HISTOIRE */}
-      <section className="py-24 bg-[#FAF9F6]" id="historique">
+      <section className="merged-section py-24 bg-[#FAF9F6]" id="historique">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-20"
@@ -218,7 +218,7 @@ export function About() {
       </section>
 
       {/* 4. VISION ET MISSION */}
-      <section className="py-24 bg-white" id="vision">
+      <section className="merged-section py-24 bg-white" id="vision">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <motion.div 
@@ -260,7 +260,7 @@ export function About() {
       </section>
 
       {/* 5. NOS VALEURS */}
-      <section className="py-24 bg-[#FAF9F6]" id="valeurs">
+      <section className="merged-section py-24 bg-[#FAF9F6]" id="valeurs">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-16"
@@ -299,7 +299,7 @@ export function About() {
       </section>
 
       {/* 6. GOUVERNANCE */}
-      <section className="py-24 bg-white border-b border-[#6B3E1E]/5" id="gouvernance">
+      <section className="merged-section py-24 bg-white border-b border-[#6B3E1E]/5" id="gouvernance">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
           <motion.div 
             initial="hidden"
@@ -330,7 +330,7 @@ export function About() {
       </section>
 
       {/* 7. BUREAU EXÉCUTIF */}
-      <section className="py-24 bg-[#FAF9F6]" id="bureau-executif">
+      <section className="merged-section py-24 bg-[#FAF9F6]" id="bureau-executif">
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <motion.div 
             className="text-center mb-16"
@@ -386,7 +386,7 @@ export function About() {
       </section>
 
       {/* 8. ÉQUIPE OPÉRATIONNELLE */}
-      <section className="py-24 bg-white" id="equipe">
+      <section className="merged-section py-24 bg-white" id="equipe">
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <motion.div 
             className="text-center mb-16"
@@ -434,7 +434,7 @@ export function About() {
       </section>
 
       {/* 9. PARTENAIRES */}
-      <section className="py-24 bg-[#FAF9F6]" id="partenaires">
+      <section className="merged-section py-24 bg-[#FAF9F6]" id="partenaires">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
             className="text-center mb-16"
@@ -478,7 +478,7 @@ export function About() {
       </section>
 
       {/* 10. RAPPORTS D'ACTIVITÉS */}
-      <section className="py-24 bg-white" id="rapports">
+      <section className="merged-section py-24 bg-white" id="rapports">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <motion.div 
             className="text-center mb-16"
@@ -521,7 +521,7 @@ export function About() {
       </section>
 
       {/* 11. CTA */}
-      <section className="py-24 bg-[#522d14] relative overflow-hidden">
+      <section className="merged-section py-24 bg-[#522d14] relative overflow-hidden merged-section" id="about-cta">
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-10 rounded-full blur-[100px]"></div>
         <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
           <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">

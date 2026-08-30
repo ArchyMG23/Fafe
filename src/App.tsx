@@ -25,6 +25,8 @@ import { News } from './pages/public/News';
 import { ArticleDetail } from './pages/public/ArticleDetail';
 import { About } from './pages/public/About';
 import { Actions } from './pages/public/Actions';
+import { AboutAndActions } from './pages/public/AboutAndActions';
+import { NewsAndEvents } from './pages/public/NewsAndEvents';
 import { Gallery } from './pages/public/Gallery';
 import { HubIntro } from './pages/public/HubIntro';
 
@@ -123,32 +125,40 @@ function App() {
           {/* Public Marketplace */}
           <Route path="/marketplace/*" element={<Placeholder title="FAFE Marketplace" />} />
           
-          {/* Public CMS Routes */}
-          <Route path="/actualites" element={<News />} />
+          {/* Merged CMS Routes */}
+          <Route path="/actualites" element={<NewsAndEvents />} />
           <Route path="/actualites/:slug" element={<ArticleDetail />} />
-          <Route path="/actualites/categorie/:slug" element={<News />} />
-          <Route path="/actualites/tag/:slug" element={<News />} />
-          <Route path="/a-propos/*" element={<About />} />
-          <Route path="/galerie/*" element={<Gallery />} />
-          <Route path="/recherche" element={<Placeholder title="Recherche Globale" />} />
-          
-          {/* Events Routes */}
-          <Route path="/evenements" element={<EventList />} />
           <Route path="/evenements/:slug" element={<EventDetails />} />
           <Route path="/evenements/:slug/inscription" element={<EventRegistration />} />
           <Route path="/evenements/inscription/succes" element={<EventRegistrationSuccess />} />
+
+          {/* Redirections for old actualités / événements routes */}
+          <Route path="/actualites-evenements" element={<Navigate to="/actualites" replace />} />
+          <Route path="/evenements" element={<Navigate to="/actualites" replace />} />
+          <Route path="/actualites/categorie/:slug" element={<Navigate to="/actualites" replace />} />
+          <Route path="/actualites/tag/:slug" element={<Navigate to="/actualites" replace />} />
+          
+          <Route path="/nous/*" element={<AboutAndActions />} />
+          
+          {/* Redirections for old nos actions / a propos routes */}
+          <Route path="/a-propos/*" element={<Navigate to="/nous" replace />} />
+          <Route path="/nos-actions" element={<Navigate to="/nous" replace />} />
+          <Route path="/nos-actions/:slug" element={<Navigate to="/nous" replace />} />
+          <Route path="/contact" element={<Navigate to="/nous#contact" replace />} />
+          
+          <Route path="/galerie/*" element={<Gallery />} />
+          <Route path="/recherche" element={<Placeholder title="Recherche Globale" />} />
+          
+          {/* Events Verification Routes */}
           <Route path="/certificat/:certificateId" element={<CertificateVerification />} />
           <Route path="/verification/:token" element={<Placeholder title="Vérification de billet" />} />
           
-          {/* Action Routes */}
-          <Route path="/nos-actions" element={<Actions />} />
-          <Route path="/nos-actions/:slug" element={<Actions />} />
+          {/* Projects */}
           <Route path="/projets-sociaux" element={<ProjectsList />} />
           <Route path="/projets-sociaux/:slug" element={<ProjectDetail />} />
           
           {/* Misc */}
           <Route path="/pays" element={<Placeholder title="Pays membres" />} />
-          <Route path="/contact" element={<Placeholder title="Contact" />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
