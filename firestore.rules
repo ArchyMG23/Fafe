@@ -132,7 +132,7 @@ service cloud.firestore {
       allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
       allow create: if isAuthenticated() 
                     && request.resource.data.userId == request.auth.uid
-                    && request.resource.data.status == 'PENDING';
+                    && request.resource.data.status in ['PENDING', 'AWAITING_PAYMENT'];
       allow update: if isAdmin() || (
                       isAuthenticated() && resource.data.userId == request.auth.uid 
                       && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'bankReference', 'proofUrl', 'updatedAt'])
@@ -141,10 +141,52 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Visual CMS Rules
+    // Visual & Structured CMS Rules
     match /cms/{documentId} {
       allow read: if true;
-      allow write: if isContentManager();
+      allow write: if isContentManager() || isAdmin();
+    }
+
+    match /cms_pages/{pageId} {
+      allow read: if true;
+      allow write: if isContentManager() || isAdmin();
+    }
+
+    match /cms_history/{historyId} {
+      allow read: if isContentManager() || isAdmin();
+      allow create: if isContentManager() || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /cms_audit_logs/{logId} {
+      allow read: if isContentManager() || isAdmin();
+      allow create: if isContentManager() || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    // ==========================================
+    // MARKETPLACE
+    // ==========================================
+    match /marketplace_categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /products/{productId} {
+      // Anyone can read products
+      allow read: if true;
+      // Only admins can write
+      allow write: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      // User can read their own orders. Admins can read all.
+      // Guest orders should probably be accessed with a special mechanism or just via email/ref, but for now we allow authenticated users to read their own.
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.customerId == request.auth.uid);
+      // Anyone can create an order
+      allow create: if true;
+      // Only admins can update or delete
+      allow update, delete: if isAdmin();
     }
   }
 }

@@ -27,6 +27,7 @@ export interface UserProfile {
   role: Role;
   status: UserStatus;
   membershipStatus?: MembershipStatus;
+  membershipNumber?: string;
   photoURL?: string;
   createdAt: number;
   updatedAt: number;
@@ -61,6 +62,7 @@ export interface Entrepreneur {
   productsServices: string[];
   status: EntrepreneurStatus;
   verificationStatus: VerificationStatus;
+  membershipNumber?: string;
   isFeatured?: boolean;
   createdAt: number;
   updatedAt: number;
@@ -327,7 +329,7 @@ export interface Certificate {
 // NEW MEMBERSHIP SYSTEM TYPES
 // ---------------------------------------------------------
 
-export type MembershipStatus = 'PENDING' | 'AWAITING_PAYMENT' | 'PAYMENT_SUBMITTED' | 'UNDER_REVIEW' | 'ACTIVE' | 'REJECTED' | 'EXPIRED' | 'CANCELLED';
+export type MembershipStatus = 'PENDING' | 'AWAITING_PAYMENT' | 'PAYMENT_SUBMITTED' | 'UNDER_REVIEW' | 'ACTIVE' | 'REJECTED' | 'EXPIRED' | 'CANCELLED' | 'SUSPENDED';
 
 export interface Membership {
   id: string;
@@ -340,6 +342,7 @@ export interface Membership {
   paymentMethod: string;
   bankReference?: string;
   proofUrl?: string;
+  rejectionReason?: string;
   submittedAt?: number;
   verifiedAt?: number;
   verifiedBy?: string;
@@ -442,3 +445,113 @@ export interface ActionStatistic {
   order: number;
   isVisible: boolean;
 }
+
+export type CMSPageId = 'accueil' | 'nous' | 'actualites' | 'galerie' | 'dons' | 'global';
+
+export interface CMSAuditLog {
+  id: string;
+  adminId: string;
+  adminEmail: string;
+  adminName: string;
+  timestamp: number;
+  page: CMSPageId | string;
+  section?: string;
+  language?: 'FR' | 'EN' | 'ALL';
+  action: 'SAVE_DRAFT' | 'PUBLISH' | 'ROLLBACK' | 'UPLOAD_MEDIA' | 'DELETE_MEDIA';
+  changesSummary: string;
+  previousVersion?: number;
+  newVersion?: number;
+  metadata?: any;
+}
+
+export interface CMSPageRecord<T = any> {
+  pageId: CMSPageId;
+  status: 'DRAFT' | 'PUBLISHED';
+  updatedAt: number;
+  updatedBy: string;
+  publishedAt?: number;
+  publishedBy?: string;
+  draftContent: T;
+  publishedContent: T;
+  version: number;
+}
+
+// ---------------------------------------------------------
+// NEW MARKETPLACE SYSTEM TYPES
+// ---------------------------------------------------------
+
+export type ProductStatus = 'DRAFT' | 'PUBLISHED' | 'SUSPENDED' | 'OUT_OF_STOCK' | 'ARCHIVED';
+
+export interface MarketplaceCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+  isActive: boolean;
+  order: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  shortDescription: string;
+  fullDescription: string;
+  price: number;
+  currency: string;
+  promotionalPrice?: number;
+  images: string[];
+  categoryId: string;
+  stock: number;
+  status: ProductStatus;
+  isFeatured: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface CartItem {
+  productId: string;
+  quantity: number;
+  // Product details at the time of adding to cart to display them easily
+  name: string;
+  price: number;
+  image: string;
+}
+
+export type OrderStatus = 'PENDING_PAYMENT' | 'PAID' | 'CONFIRMED' | 'PREPARING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
+export type OrderPaymentStatus = 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED' | 'CANCELLED' | 'REFUNDED';
+
+export interface OrderItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  customerId?: string; // Optional if guest
+  customerFirstName: string;
+  customerLastName: string;
+  customerEmail: string;
+  customerPhone: string;
+  customerCountry: string;
+  customerCity: string;
+  customerAddress: string;
+  items: OrderItem[];
+  totalAmount: number;
+  currency: string;
+  orderStatus: OrderStatus;
+  paymentStatus: OrderPaymentStatus;
+  paymentMethod?: string;
+  paymentReference?: string;
+  createdAt: number;
+  updatedAt: number;
+  paidAt?: number;
+}
+

@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { useAuthStore } from '../../store/auth';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
+import { FafeLogo } from '../ui/FafeLogo';
 
 export function HubLayout() {
   const { currentUser: user, userProfile: profile } = useAuthStore();
@@ -48,8 +49,8 @@ export function HubLayout() {
         <header className="bg-white shadow-sm border-b border-stone-200 p-4">
           <div className="container mx-auto flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2">
-              <span className="text-2xl font-black font-heading tracking-tighter text-[#E67E22]">FAFE</span>
-              <span className="text-xl font-bold font-heading text-[#6B3E1E]">HUB</span>
+              <FafeLogo size="sm" showSubtitle={false} />
+              <span className="text-xs bg-[#E67E22]/10 font-bold px-2 py-0.5 rounded text-[#E67E22] uppercase tracking-wider">Hub</span>
             </Link>
             <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors">
               &larr; Retour au site FAFE
@@ -77,8 +78,8 @@ export function HubLayout() {
       <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-stone-200 z-50 transform transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
         <div className="p-6 border-b border-stone-100 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-black font-heading tracking-tighter text-[#E67E22]">FAFE</span>
-            <span className="text-xl font-bold font-heading text-[#6B3E1E]">HUB</span>
+            <FafeLogo size="sm" showSubtitle={false} />
+            <span className="text-xs bg-[#E67E22]/10 font-bold px-2 py-0.5 rounded text-[#E67E22] uppercase tracking-wider">Hub</span>
           </Link>
           <button className="lg:hidden" onClick={() => setIsSidebarOpen(false)}>
             <X className="w-5 h-5 text-stone-500" />

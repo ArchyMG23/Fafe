@@ -1,159 +1,419 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User as UserIcon, Search, Globe, ChevronDown, ShoppingCart } from 'lucide-react';
+import {
+  Menu,
+  X,
+  User as UserIcon,
+  Search,
+  Globe,
+  ChevronDown,
+  ShoppingCart,
+  Heart,
+  Briefcase,
+  Users,
+  Compass,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '../ui/Button';
+import { FafeLogo } from '../ui/FafeLogo';
 import { useAuthStore } from '../../store/auth';
 import { useLanguageStore } from '../../store/language';
+import { useCartStore } from '../../store/cart';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const location = useLocation();
   const { currentUser: user } = useAuthStore();
   const { language, setLanguage } = useLanguageStore();
+  const cartItemsCount = useCartStore(state => state.getTotalItems());
+
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile drawer on route change
   useEffect(() => {
     setIsOpen(false);
-    }, [location.pathname]);
+    setOpenSubmenu(null);
+  }, [location.pathname, location.hash]);
+
+  // Prevent background scroll when mobile drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const toggleLanguage = () => {
     setLanguage(language === 'fr' ? 'en' : 'fr');
   };
 
-  const navLinks = [
-    { name: 'Accueil', path: '/' },
-    { name: 'Nous', path: '/nous' },
-    { name: 'Actualités', path: '/actualites' },
-    { name: 'Galerie', path: '/galerie' },
-  ];
-
   const isActive = (path: string) => {
     const basePath = path.split('#')[0];
-    if (basePath === '/') return location.pathname === '/';
-    if (basePath === '/nous') return location.pathname === '/nous' || location.pathname === '/a-propos' || location.pathname === '/nos-actions';
-    if (basePath === '/actualites') return location.pathname === '/actualites' || location.pathname === '/actualites-evenements' || location.pathname === '/evenements';
+    if (basePath === '/') return location.pathname === '/' && !location.hash;
+    if (basePath === '/nous') {
+      return location.pathname === '/nous' || location.pathname === '/a-propos' || location.pathname === '/nos-actions';
+    }
+    if (basePath === '/actualites') {
+      return (
+        location.pathname === '/actualites' ||
+        location.pathname === '/actualites-evenements' ||
+        location.pathname === '/evenements'
+      );
+    }
     return location.pathname.startsWith(basePath);
   };
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100' : 'bg-white border-b border-stone-100/50'}`}>
-      <div className={`mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 max-w-7xl ${isScrolled ? 'h-16' : 'h-20'}`}>
-        
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100'
+          : 'bg-white border-b border-stone-100/70'
+      }`}
+    >
+      <div
+        className={`mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 max-w-7xl ${
+          isScrolled ? 'h-16' : 'h-18 md:h-20'
+        }`}
+      >
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className={`bg-[#E67E22] rounded-full flex items-center justify-center text-white font-bold ring-1 ring-[#D4AF37]/50 transition-all duration-300 group-hover:scale-105 ${isScrolled ? 'w-10 h-10 text-lg' : 'w-11 h-11 text-xl'}`}>F</div>
-          <div className="flex flex-col">
-            <span className={`font-bold tracking-tight leading-none text-[#6B3E1E] transition-all duration-300 ${isScrolled ? 'text-lg' : 'text-xl'}`}>FAFE</span>
-            <span className={`uppercase tracking-widest text-[#6B3E1E]/60 transition-all duration-300 ${isScrolled ? 'text-[8px]' : 'text-[9px]'}`}>Panafricaine</span>
-          </div>
+        <Link to="/" className="flex items-center group py-1" aria-label="Accueil FAFE">
+          <FafeLogo size={isScrolled ? 'sm' : 'md'} className="group-hover:opacity-95 transition-opacity" />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-6 h-full">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`relative py-2 text-sm font-medium transition-colors group ${
-                isActive(link.path) ? 'text-[#E67E22]' : 'text-stone-500 hover:text-[#6B3E1E]'
-              }`}
-            >
-              {link.name}
-              <span className={`absolute left-0 bottom-0 h-[2px] bg-[#E67E22] transition-all duration-300 ${isActive(link.path) ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
-            </Link>
-          ))}
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 h-full">
+          <Link
+            to="/"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
+          >
+            Accueil
+            {isActive('/') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
+          </Link>
 
-          <Link to={user ? "/hub/dashboard" : "/hub/connexion"} className="relative py-2 text-sm font-medium transition-colors text-stone-500 hover:text-[#6B3E1E] flex items-center gap-1.5 group">
+          <Link
+            to="/nous"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/nous') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
+          >
+            Nous
+            {isActive('/nous') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
+          </Link>
+
+          <Link
+            to="/actualites"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/actualites') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
+          >
+            Actualités
+            {isActive('/actualites') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
+          </Link>
+
+          <Link
+            to="/entrepreneures"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/entrepreneures') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
+          >
+            Entrepreneures
+            {isActive('/entrepreneures') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
+          </Link>
+
+          <Link
+            to="/galerie"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/galerie') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
+          >
+            Médiathèque
+            {isActive('/galerie') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
+          </Link>
+
+          <Link
+            to={user ? '/hub/dashboard' : '/hub'}
+            className="relative py-2 text-sm font-semibold text-stone-600 hover:text-[#6B3E1E] flex items-center gap-1.5 transition-colors"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
             FAFE Hub
-            <span className="absolute left-0 bottom-0 h-[2px] bg-[#E67E22] transition-all duration-300 w-0 group-hover:w-full"></span>
           </Link>
 
-          <Link to="/dons" className="relative py-2 text-sm font-medium transition-colors text-[#E67E22] hover:text-[#c96a1a] group">
-            Don
-            <span className="absolute left-0 bottom-0 h-[2px] bg-[#E67E22] transition-all duration-300 w-0 group-hover:w-full"></span>
+          <Link
+            to="/dons"
+            className="relative py-1.5 px-3 rounded-full bg-[#E67E22]/10 text-[#E67E22] hover:bg-[#E67E22] hover:text-white font-bold text-xs transition-all"
+          >
+            Faire un don
           </Link>
-          
-          <div className="flex items-center gap-1 ml-4 border-l border-stone-200 pl-4">
-            <button onClick={toggleLanguage} aria-label="Changer de langue" className="text-xs font-bold uppercase text-stone-400 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50">
+
+          <div className="flex items-center gap-1.5 ml-2 border-l border-stone-200 pl-4">
+            <button
+              onClick={toggleLanguage}
+              aria-label="Changer de langue"
+              className="text-xs font-bold uppercase text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+            >
               {language}
             </button>
-            <button aria-label="Rechercher" className="text-stone-400 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50">
-              <Search className="w-4 h-4" />
-            </button>
-            <Link to="/marketplace" aria-label="Marketplace" title="Marketplace" className="text-[#6B3E1E] hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 group">
-              <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <Link
+              to="/marketplace/panier"
+              aria-label="Marketplace FAFE"
+              title="Marketplace"
+              className="text-[#6B3E1E] hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 relative"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartItemsCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                  {cartItemsCount}
+                </span>
+              )}
             </Link>
           </div>
         </nav>
 
-        {/* Mobile Menu Toggle & Icons */}
-        <div className="flex items-center gap-3 xl:hidden">
-          <Link to="/marketplace" aria-label="Marketplace" className="p-2 text-[#6B3E1E] hover:text-[#E67E22] transition-colors rounded-full hover:bg-stone-50">
-            <ShoppingCart className="w-5 h-5" />
-          </Link>
+        {/* Mobile Header Actions (Compact, Thumb-friendly) */}
+        <div className="flex items-center gap-1 sm:gap-2 lg:hidden">
           <button
-            className="p-2 text-[#6B3E1E] hover:text-[#E67E22] transition-colors rounded-full hover:bg-stone-50"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Menu"
+            onClick={toggleLanguage}
+            aria-label="Changer de langue"
+            className="text-xs font-bold uppercase text-stone-600 p-2.5 rounded-full hover:bg-stone-100 active:scale-95 transition-transform"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {language}
+          </button>
+          
+          <Link
+            to="/marketplace/panier"
+            aria-label="Marketplace"
+            className="p-2.5 text-[#6B3E1E] hover:text-[#E67E22] rounded-full hover:bg-stone-100 active:scale-95 transition-transform relative"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            {cartItemsCount > 0 && (
+              <span className="absolute top-1 right-1 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                {cartItemsCount}
+              </span>
+            )}
+          </Link>
+
+          <button
+            className="p-2.5 text-[#6B3E1E] hover:text-[#E67E22] rounded-full hover:bg-stone-100 active:scale-95 transition-transform ml-0.5"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <X className="w-6 h-6 text-[#E67E22]" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Nav */}
-      {isOpen && (
-        <div className="xl:hidden absolute top-full left-0 w-full bg-white shadow-xl h-[calc(100vh-4rem)] overflow-y-auto border-t border-stone-100">
-          <div className="flex flex-col p-6 gap-6">
-            <div className="flex items-center justify-between mb-2">
-               <button onClick={toggleLanguage} className="flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-lg text-stone-600 font-medium text-sm">
-                 <Globe className="w-4 h-4" />
-                 {language === 'fr' ? 'Français' : 'English'}
-               </button>
-               <button className="p-2 text-stone-400 bg-stone-50 rounded-lg">
-                 <Search className="w-5 h-5" />
-               </button>
+      {/* Mobile Drawer (Polished, Fast & Thumb-friendly) */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed inset-x-0 top-[64px] bottom-0 bg-white/98 backdrop-blur-md z-50 overflow-y-auto border-t border-stone-100 flex flex-col shadow-2xl"
+          >
+            <div className="container mx-auto px-5 py-6 flex-grow flex flex-col justify-between max-w-lg">
+              
+              <div className="space-y-6">
+                
+                {/* 1. ACCUEIL */}
+                <div>
+                  <Link
+                    to="/"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center justify-between p-3.5 rounded-xl font-bold text-base transition-colors ${
+                      isActive('/') ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-[#6B3E1E] hover:bg-stone-50'
+                    }`}
+                  >
+                    <span>ACCUEIL</span>
+                    <ArrowRight className="w-4 h-4 opacity-50" />
+                  </Link>
+                </div>
+
+                {/* 2. NOUS */}
+                <div className="border-t border-stone-100 pt-3">
+                  <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
+                    NOUS
+                  </span>
+                  <div className="space-y-1">
+                    <Link
+                      to="/nous"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <span>Présentation & Vision</span>
+                    </Link>
+                    <Link
+                      to="/nous#categories"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <span>Nos actions & programmes</span>
+                    </Link>
+                    <Link
+                      to="/nous#contact"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <span>Contact & Secrétariat</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* 3. ACTUALITÉS & MÉDIAS */}
+                <div className="border-t border-stone-100 pt-3">
+                  <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
+                    ACTUALITÉS & ÉDITORIAL
+                  </span>
+                  <div className="space-y-1">
+                    <Link
+                      to="/actualites"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <span>Actualités & Événements</span>
+                    </Link>
+                    <Link
+                      to="/galerie"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <span>Médiathèque (Photos & Vidéos)</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* 4. ENTREPRENEURES */}
+                <div className="border-t border-stone-100 pt-3">
+                  <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
+                    ENTREPRENEURES
+                  </span>
+                  <Link
+                    to="/entrepreneures"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                  >
+                    <span>Annuaire Panafricain</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#6B3E1E]">
+                      Talents
+                    </span>
+                  </Link>
+                </div>
+
+                {/* 5. SERVICES & HUB */}
+                <div className="border-t border-stone-100 pt-3">
+                  <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
+                    SERVICES & ENGAGEMENT
+                  </span>
+                  <div className="space-y-1">
+                    <Link
+                      to={user ? "/hub/dashboard" : "/hub"}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                        <span>FAFE Hub</span>
+                      </div>
+                      <span className="text-xs text-stone-400">Espace membre</span>
+                    </Link>
+
+                    <Link
+                      to="/marketplace"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <ShoppingCart className="w-4 h-4 text-[#6B3E1E]" />
+                        <span>Marketplace</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-xs text-stone-400">Boutique</span>
+                        {cartItemsCount > 0 && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600 mt-1">
+                            {cartItemsCount} article{cartItemsCount > 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/dons"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between p-3 rounded-xl bg-orange-50/80 text-[#E67E22] text-sm font-bold transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Heart className="w-4 h-4 text-[#E67E22]" />
+                        <span>Faire un don</span>
+                      </div>
+                      <span className="text-xs font-semibold uppercase tracking-wider">Soutenir</span>
+                    </Link>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Bottom Actions: Connexion / Inscription */}
+              <div className="pt-6 mt-6 border-t border-stone-200/80 space-y-3 pb-4">
+                {user ? (
+                  <Link to="/hub/dashboard" onClick={() => setIsOpen(false)} className="block">
+                    <Button className="w-full bg-[#6B3E1E] hover:bg-[#532f17] text-white py-3.5 rounded-full font-bold text-sm shadow-md flex items-center justify-center gap-2">
+                      <UserIcon className="w-4 h-4 text-[#D4AF37]" />
+                      Mon Espace Membre
+                    </Button>
+                  </Link>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link to="/hub/connexion" onClick={() => setIsOpen(false)}>
+                      <Button
+                        variant="outline"
+                        className="w-full border-stone-200 text-stone-700 hover:bg-stone-50 py-3 rounded-full font-bold text-xs sm:text-sm"
+                      >
+                        Connexion
+                      </Button>
+                    </Link>
+                    <Link to="/rejoindre" onClick={() => setIsOpen(false)}>
+                      <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-3 rounded-full font-bold text-xs sm:text-sm shadow-md">
+                        Rejoindre le FAFE
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
             </div>
-
-            <nav className="flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.path}
-                  to={link.path} 
-                  className={`text-lg font-medium p-3 rounded-xl transition-colors ${isActive(link.path) ? 'bg-orange-50 text-[#E67E22]' : 'text-[#6B3E1E] hover:bg-stone-50'}`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              
-              <div className="h-px bg-stone-100 my-4" />
-
-              <Link to={user ? "/hub/dashboard" : "/hub/connexion"} className="text-lg font-medium p-3 rounded-xl text-[#6B3E1E] hover:bg-stone-50 flex items-center gap-3 transition-colors" onClick={() => setIsOpen(false)}>
-                <UserIcon className="w-5 h-5 text-[#D4AF37]" />
-                FAFE Hub
-              </Link>
-              
-              <Link to="/dons" className="text-lg font-medium p-3 rounded-xl text-[#E67E22] hover:bg-orange-50 transition-colors" onClick={() => setIsOpen(false)}>
-                Don
-              </Link>
-              
-              <Link to="/marketplace" className="text-lg font-medium p-3 rounded-xl text-[#6B3E1E] hover:bg-stone-50 flex items-center gap-3 transition-colors" onClick={() => setIsOpen(false)}>
-                <ShoppingCart className="w-5 h-5" />
-                Marketplace
-              </Link>
-            </nav>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

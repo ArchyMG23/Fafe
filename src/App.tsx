@@ -39,6 +39,7 @@ import { CertificateVerification } from './pages/public/events/CertificateVerifi
 
 import { ProjectsList } from './pages/public/Projects';
 import { ProjectDetail } from './pages/public/ProjectDetail';
+import { MarketplaceLayout } from './pages/public/marketplace/MarketplaceLayout';
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -123,7 +124,7 @@ function App() {
           <Route path="/dons/succes" element={<DonationSuccess />} />
           
           {/* Public Marketplace */}
-          <Route path="/marketplace/*" element={<Placeholder title="FAFE Marketplace" />} />
+          <Route path="/marketplace/*" element={<MarketplaceLayout />} />
           
           {/* Merged CMS Routes */}
           <Route path="/actualites" element={<NewsAndEvents />} />

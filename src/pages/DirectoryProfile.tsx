@@ -137,7 +137,14 @@ export function DirectoryProfile() {
                 <h1 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-1">
                   {profile.firstName} {profile.lastName}
                 </h1>
-                <p className="text-[10px] uppercase tracking-widest text-[#E67E22] font-bold mb-6">{profile.position || 'Fondatrice'}</p>
+                <p className="text-[10px] uppercase tracking-widest text-[#E67E22] font-bold mb-3">{profile.position || 'Fondatrice'}</p>
+                
+                {profile.membershipNumber && (
+                  <div className="mb-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-50 border border-amber-200/80 text-[#6B3E1E] text-xs font-mono font-bold">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>N° {profile.membershipNumber}</span>
+                  </div>
+                )}
                 
                 <div className="space-y-4 text-sm font-medium">
                   <div className="flex items-center gap-3 text-[#6B3E1E]/80">

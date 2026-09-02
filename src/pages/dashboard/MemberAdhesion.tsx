@@ -435,7 +435,7 @@ export function MemberAdhesion() {
                       <div>
                         <p className="text-xs text-white/60 uppercase tracking-wider">Validité</p>
                         <p className="font-bold text-sm">
-                          {membership.expiresAt ? new Date(membership.expiresAt).toLocaleDateString() : 'Active'}
+                          {membership.expiresAt ? new Date(membership.expiresAt).toLocaleDateString() : 'Membre Officielle'}
                         </p>
                       </div>
                       <div>
@@ -443,6 +443,19 @@ export function MemberAdhesion() {
                         <p className="font-bold text-sm">{userProfile?.country || '-'}</p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3">
+                    <Link to="/hub/dashboard/entrepreneure" className="flex-1">
+                      <Button className="w-full bg-[#D4AF37] hover:bg-[#c49f2e] text-[#4A2A14] font-bold text-xs py-2.5">
+                        Ma fiche Entrepreneure
+                      </Button>
+                    </Link>
+                    <Link to="/hub/annuaire" className="flex-1">
+                      <Button variant="outline" className="w-full border-white/30 text-white hover:bg-white/10 font-bold text-xs py-2.5">
+                        Annuaire Panafricain
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>

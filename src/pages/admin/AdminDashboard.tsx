@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 import { Button } from '../../components/ui/Button';
+import { FafeLogo } from '../../components/ui/FafeLogo';
 
 // Admin Views
 import { AdminOverview } from './AdminOverview';
@@ -20,6 +21,7 @@ import { AdminDonationDetail } from './AdminDonationDetail';
 import { AdminProjects } from './AdminProjects';
 
 import { AdminAdhesions } from './AdminAdhesions';
+import { AdminCMSMain } from './cms/AdminCMSMain';
 import { AdminVisualCMS } from './cms/AdminVisualCMS';
 import { AdminContentDashboard } from './cms/AdminContentDashboard';
 import { AdminArticles } from './cms/AdminArticles';
@@ -32,6 +34,10 @@ import { AdminEvents } from './events/AdminEvents';
 import { AdminEventEditor } from './events/AdminEventEditor';
 import { AdminEventParticipants } from './events/AdminEventParticipants';
 import { AdminEventCheckIn } from './events/AdminEventCheckIn';
+
+import { AdminMarketplaceProducts } from './marketplace/AdminMarketplaceProducts';
+import { AdminMarketplaceOrders } from './marketplace/AdminMarketplaceOrders';
+import { AdminMarketplaceCategories } from './marketplace/AdminMarketplaceCategories';
 
 import { AdminAudit } from './AdminAudit';
 import { AdminProfile } from './AdminProfile';
@@ -86,8 +92,8 @@ export function AdminDashboard() {
     {
       title: "Site Institutionnel",
       items: [
-        { path: "/admin/contenus", icon: <FileText className="w-4 h-4 mr-3" />, label: "Contenus (CMS)" },
-        { path: "/admin/cms-visuel", icon: <LayoutDashboard className="w-4 h-4 mr-3" />, label: "Éditeur Visuel" },
+        { path: "/admin/cms", icon: <LayoutDashboard className="w-4 h-4 mr-3" />, label: "FAFE CMS (Pages & Médias)" },
+        { path: "/admin/contenus", icon: <FileText className="w-4 h-4 mr-3" />, label: "Articles & Actualités" },
         { path: "/admin/evenements", icon: <Calendar className="w-4 h-4 mr-3" />, label: "Événements" },
         { path: "/admin/projets", icon: <FolderOpen className="w-4 h-4 mr-3" />, label: "Projets" },
       ]
@@ -105,8 +111,9 @@ export function AdminDashboard() {
     {
       title: "FAFE Marketplace",
       items: [
-        { path: "#", icon: <ShoppingCart className="w-4 h-4 mr-3" />, label: "Ventes & Commandes", disabled: true },
-        { path: "#", icon: <Package className="w-4 h-4 mr-3" />, label: "Produits", disabled: true },
+        { path: "/admin/marketplace/commandes", icon: <ShoppingCart className="w-4 h-4 mr-3" />, label: "Ventes & Commandes" },
+        { path: "/admin/marketplace/produits", icon: <Package className="w-4 h-4 mr-3" />, label: "Produits" },
+        { path: "/admin/marketplace/categories", icon: <MapPin className="w-4 h-4 mr-3" />, label: "Catégories" },
       ]
     },
     {
@@ -130,8 +137,9 @@ export function AdminDashboard() {
       
       {/* Mobile Header & Sidebar Overlay */}
       <div className="md:hidden flex items-center justify-between bg-white border-b border-stone-200 p-4 sticky top-0 z-30">
-        <Link to="/" className="text-xl font-bold font-heading text-[#6B3E1E] flex items-center gap-2">
-          FAFE <span className="text-xs bg-[#E67E22]/10 px-2 py-1 rounded text-[#E67E22] uppercase tracking-widest">Admin</span>
+        <Link to="/" className="flex items-center gap-2">
+          <FafeLogo size="sm" showSubtitle={false} />
+          <span className="text-xs bg-[#E67E22]/10 px-2 py-0.5 rounded font-bold text-[#E67E22] uppercase tracking-wider">Admin</span>
         </Link>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-[#6B3E1E]">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -148,9 +156,10 @@ export function AdminDashboard() {
         transition-transform duration-300 ease-in-out transform md:transform-none
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        <div className="p-6 border-b border-stone-200 hidden md:block">
-          <Link to="/" className="text-2xl font-bold font-heading text-[#6B3E1E] tracking-tight flex items-center gap-2">
-            FAFE <span className="text-xs bg-[#E67E22]/10 px-2 py-1 rounded text-[#E67E22] uppercase tracking-widest font-sans">Admin</span>
+        <div className="p-5 border-b border-stone-200 hidden md:block">
+          <Link to="/" className="flex items-center justify-between group">
+            <FafeLogo size="sm" showSubtitle={true} />
+            <span className="text-[10px] bg-[#E67E22]/10 font-bold px-2 py-1 rounded text-[#E67E22] uppercase tracking-wider">Admin</span>
           </Link>
         </div>
         
@@ -231,7 +240,9 @@ export function AdminDashboard() {
             <Route path="/dons/:id" element={<AdminDonationDetail />} />
             <Route path="/projets" element={<AdminProjects />} />
             <Route path="/adhesions" element={<AdminAdhesions />} />
-            <Route path="/cms-visuel" element={<AdminVisualCMS />} />
+            <Route path="/cms" element={<AdminCMSMain />} />
+            <Route path="/cms/*" element={<AdminCMSMain />} />
+            <Route path="/cms-visuel" element={<AdminCMSMain />} />
             
             {/* Events routes */}
             <Route path="/evenements" element={<AdminEvents />} />
@@ -239,6 +250,11 @@ export function AdminDashboard() {
             <Route path="/evenements/:id" element={<AdminEventEditor />} />
             <Route path="/evenements/:id/participants" element={<AdminEventParticipants />} />
             <Route path="/evenements/:id/check-in" element={<AdminEventCheckIn />} />
+
+            {/* Marketplace Admin Routes */}
+            <Route path="/marketplace/produits" element={<AdminMarketplaceProducts />} />
+            <Route path="/marketplace/commandes" element={<AdminMarketplaceOrders />} />
+            <Route path="/marketplace/categories" element={<AdminMarketplaceCategories />} />
 
             {/* New empty routes to prevent 404s while building */}
             <Route path="/pays" element={<div className="p-8 text-center text-stone-500">Gestion des pays en construction</div>} />

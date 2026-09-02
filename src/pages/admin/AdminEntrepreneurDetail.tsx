@@ -171,7 +171,7 @@ export function AdminEntrepreneurDetail() {
 
               <div className="p-3 rounded-lg border border-stone-100 bg-stone-50">
                 <p className="text-xs text-stone-500 uppercase tracking-wider font-bold mb-2">Vérification Institutionnelle</p>
-                <div className="flex gap-2">
+                <div className="flex gap-2 mb-3">
                   <Button 
                     size="sm"
                     className={`flex-1 ${profile.verificationStatus === 'VERIFIED' ? 'bg-yellow-600 hover:bg-yellow-700 text-white' : 'bg-white border-stone-200 text-stone-600 hover:bg-stone-50'}`}
@@ -189,6 +189,31 @@ export function AdminEntrepreneurDetail() {
                     disabled={saving}
                   >
                     <ShieldAlert className="w-4 h-4 mr-1.5" /> Révoquer
+                  </Button>
+                </div>
+
+                <div className="pt-2 border-t border-stone-200/60 flex items-center justify-between">
+                  <span className="text-xs font-medium text-stone-700">Mettre en vedette (Accueil)</span>
+                  <Button
+                    size="sm"
+                    variant={profile.isFeatured ? 'default' : 'outline'}
+                    className={`text-xs px-2.5 py-1 h-7 ${profile.isFeatured ? 'bg-[#E67E22] text-white hover:bg-[#c96a1a]' : 'border-stone-300 text-stone-600'}`}
+                    onClick={async () => {
+                      if (!id || !profile) return;
+                      setSaving(true);
+                      try {
+                        const newFeatured = !profile.isFeatured;
+                        await updateDoc(doc(db, 'entrepreneurs', id), { isFeatured: newFeatured, updatedAt: Date.now() });
+                        setProfile({ ...profile, isFeatured: newFeatured });
+                      } catch (e) {
+                        console.error(e);
+                      } finally {
+                        setSaving(false);
+                      }
+                    }}
+                    disabled={saving}
+                  >
+                    {profile.isFeatured ? '★ En vedette' : '☆ Standard'}
                   </Button>
                 </div>
               </div>

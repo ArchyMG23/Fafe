@@ -1,9 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { getCMSGlobal, defaultAboutData } from '../../lib/cms';
+import { getPublishedCMSContent, defaultNousCMS } from '../../lib/cms';
 import { motion } from 'motion/react';
 import { Star, Lightbulb, Users, TrendingUp, Target, Download, ArrowRight, LayoutTemplate, Globe } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
+import { FafeOfficialEmblem } from '../../components/ui/FafeLogo';
+
+// Utility to get localized text cleanly
+const getTxt = (field: any, fallback = ''): string => {
+  if (!field) return fallback;
+  if (typeof field === 'string') return field;
+  if (typeof field === 'object') {
+    return field.fr || field.en || field.heroLabelFR || field.titleFR || field.descriptionFR || field.pcaTitleFR || field.roleFR || fallback;
+  }
+  return fallback;
+};
 
 // Utility to get the right icon
 const getIcon = (iconName: string) => {
@@ -18,50 +29,39 @@ const getIcon = (iconName: string) => {
 };
 
 export function About() {
-  const [cmsData, setCmsData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [cmsData, setCmsData] = useState<any>(defaultNousCMS);
   const { hash } = useLocation();
 
   useEffect(() => {
+    let isMounted = true;
     const fetchCMS = async () => {
       try {
-        const data = await getCMSGlobal();
-        if (data?.about) {
-          // Merge with defaults to ensure structure
-          setCmsData({ ...defaultAboutData, ...data.about });
-        } else {
-          setCmsData(defaultAboutData);
+        const data = await getPublishedCMSContent('nous', defaultNousCMS);
+        if (isMounted && data) {
+          setCmsData(data);
         }
       } catch (err) {
-        console.error("Error fetching about CMS data", err);
-        setCmsData(defaultAboutData);
-      } finally {
-        setLoading(false);
+        console.warn("Notice fetching about CMS data:", err);
       }
     };
     fetchCMS();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
-    if (!loading && hash) {
+    if (hash) {
       setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
       }, 100);
-    } else if (!loading && !hash) {
+    } else {
       window.scrollTo(0, 0);
     }
-  }, [loading, hash]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E67E22]"></div>
-      </div>
-    );
-  }
+  }, [hash]);
 
   const { pcaHero, presentation, historique, vision, mission, valeurs, gouvernance, bureauExecutif, equipe, partenaires, rapports } = cmsData;
 
@@ -92,14 +92,14 @@ export function About() {
             >
               <div className="inline-block px-4 py-1.5 bg-[#E67E22]/10 rounded-full mb-6">
                 <span className="text-sm font-bold tracking-widest text-[#E67E22] uppercase">
-                  {pcaHero?.heroLabelFR || "À PROPOS DU FAFE"}
+                  {getTxt(pcaHero?.heroLabel, "À PROPOS DU FAFE")}
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6">
-                NOUS
+                {getTxt(pcaHero?.heroTitle, "NOUS")}
               </h1>
               <p className="text-lg md:text-xl text-stone-600 leading-relaxed mb-12 max-w-2xl">
-                {pcaHero?.heroDescriptionFR}
+                {getTxt(pcaHero?.heroDescription)}
               </p>
 
               <div className="border-l-4 border-[#E67E22] pl-6 py-2">
@@ -110,7 +110,7 @@ export function About() {
                   {pcaHero?.pcaName}
                 </h3>
                 <p className="text-[#E67E22] font-medium">
-                  {pcaHero?.pcaTitleFR}
+                  {getTxt(pcaHero?.pcaTitle)}
                 </p>
               </div>
             </motion.div>
@@ -142,14 +142,17 @@ export function About() {
       <section className="merged-section py-24 bg-white" id="presentation">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-16 flex flex-col items-center"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
+            <div className="w-20 h-20 md:w-24 md:h-24 mb-6 transition-transform hover:scale-105 duration-300">
+              <FafeOfficialEmblem className="w-full h-full" />
+            </div>
             <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-4">
-              {presentation?.titleFR || "QUI SOMMES-NOUS ?"}
+              {getTxt(presentation?.title, "QUI SOMMES-NOUS ?")}
             </h2>
             <div className="w-16 h-1 bg-[#D4AF37] mx-auto"></div>
           </motion.div>
@@ -161,7 +164,7 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            {presentation?.descriptionFR}
+            {getTxt(presentation?.description)}
           </motion.div>
         </div>
       </section>
@@ -177,10 +180,10 @@ export function About() {
             variants={fadeInUp}
           >
             <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
-              {historique?.titleFR || "NOTRE HISTOIRE"}
+              {getTxt(historique?.title, "NOTRE HISTOIRE")}
             </h2>
             <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
-              Les jalons de notre évolution
+              {getTxt(historique?.subtitle, "Les jalons de notre évolution")}
             </h3>
           </motion.div>
 
@@ -207,8 +210,8 @@ export function About() {
                   </div>
                   <div className="ml-6 md:ml-0 md:text-center">
                     <div className="text-2xl font-bold font-heading text-[#D4AF37] mb-2">{evt.year}</div>
-                    <h4 className="text-lg font-bold text-[#6B3E1E] mb-2">{evt.titleFR}</h4>
-                    <p className="text-sm text-stone-600">{evt.descriptionFR}</p>
+                    <h4 className="text-lg font-bold text-[#6B3E1E] mb-2">{getTxt(evt.title || evt.titleFR)}</h4>
+                    <p className="text-sm text-stone-600">{getTxt(evt.description || evt.descriptionFR)}</p>
                   </div>
                 </motion.div>
               ))}
@@ -231,10 +234,10 @@ export function About() {
                 <Globe className="w-8 h-8 text-[#E67E22]" />
               </div>
               <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-6">
-                {vision?.titleFR || "NOTRE VISION"}
+                {getTxt(vision?.title, "NOTRE VISION")}
               </h3>
               <p className="text-lg text-stone-600 leading-relaxed">
-                {vision?.descriptionFR}
+                {getTxt(vision?.description)}
               </p>
             </motion.div>
 
@@ -249,10 +252,10 @@ export function About() {
                 <Target className="w-8 h-8 text-[#D4AF37]" />
               </div>
               <h3 className="text-2xl font-bold font-heading text-white mb-6 relative z-10">
-                {mission?.titleFR || "NOTRE MISSION"}
+                {getTxt(mission?.title, "NOTRE MISSION")}
               </h3>
               <p className="text-lg text-white/90 leading-relaxed relative z-10">
-                {mission?.descriptionFR}
+                {getTxt(mission?.description)}
               </p>
             </motion.div>
           </div>
@@ -290,7 +293,7 @@ export function About() {
                   {getIcon(valeur.icon)}
                 </div>
                 <h4 className="text-lg font-bold text-[#6B3E1E] tracking-wide uppercase">
-                  {valeur.titleFR}
+                  {getTxt(valeur.title || valeur.titleFR)}
                 </h4>
               </motion.div>
             ))}
@@ -311,20 +314,12 @@ export function About() {
               Organisation
             </h2>
             <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-8">
-              {gouvernance?.titleFR || "Gouvernance"}
+              {getTxt(gouvernance?.title, "Gouvernance")}
             </h3>
             
-            {gouvernance?.descriptionFR === "Contenu en cours de rédaction" ? (
-              <div className="flex flex-col items-center justify-center p-12 bg-stone-50 rounded-3xl border border-dashed border-stone-200">
-                <LayoutTemplate className="w-12 h-12 text-stone-300 mb-4" />
-                <h4 className="text-lg font-bold text-stone-500 mb-2">Contenu en cours de rédaction</h4>
-                <p className="text-stone-400 text-sm max-w-sm">Les informations officielles concernant la structure de gouvernance seront publiées prochainement.</p>
-              </div>
-            ) : (
-              <div className="prose prose-lg prose-stone mx-auto text-stone-600">
-                {gouvernance?.descriptionFR}
-              </div>
-            )}
+            <div className="prose prose-lg prose-stone mx-auto text-stone-600">
+              {getTxt(gouvernance?.description)}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -343,7 +338,7 @@ export function About() {
               Direction
             </h2>
             <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
-              {bureauExecutif?.titleFR || "Le Bureau Exécutif"}
+              {getTxt(bureauExecutif?.title, "Le Bureau Exécutif")}
             </h3>
           </motion.div>
 
@@ -377,7 +372,7 @@ export function About() {
                     </div>
                   </div>
                   <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2 pt-2">{member.name}</h4>
-                  <p className="text-[#E67E22] font-medium text-sm">{member.roleFR}</p>
+                  <p className="text-[#E67E22] font-medium text-sm">{getTxt(member.role || member.roleFR)}</p>
                 </div>
               </motion.div>
             ))}
@@ -399,7 +394,7 @@ export function About() {
               Au quotidien
             </h2>
             <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
-              {equipe?.titleFR || "L'Équipe Opérationnelle"}
+              {getTxt(equipe?.title, "L'Équipe Opérationnelle")}
             </h3>
           </motion.div>
 
@@ -426,7 +421,7 @@ export function About() {
                   )}
                 </div>
                 <h4 className="text-lg font-bold text-[#6B3E1E] mb-1">{member.name}</h4>
-                <p className="text-stone-500 text-sm">{member.roleFR}</p>
+                <p className="text-stone-500 text-sm">{getTxt(member.role || member.roleFR)}</p>
               </motion.div>
             ))}
           </div>

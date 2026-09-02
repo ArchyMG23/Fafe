@@ -6,10 +6,11 @@ import { db } from '../lib/firebase';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent } from '../components/ui/Card';
-import { Lock, ArrowRight, Loader2, Heart, CheckCircle2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Lock, ArrowRight, Loader2, Heart, CheckCircle2, ShieldCheck, ArrowLeft, Building2, Copy } from 'lucide-react';
 import { Project, Donation as DonationType } from '../types';
 import { PaymentService } from '../services/payment';
 import { useAuthStore } from '../store/auth';
+import { getPublishedCMSContent, defaultDonsCMS } from '../lib/cms';
 
 const PREDEFINED_AMOUNTS = [5000, 10000, 25000, 50000, 100000];
 const CURRENCIES = ['XAF', 'EUR', 'USD', 'GBP'];
@@ -24,6 +25,7 @@ export function Donation() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeProjects, setActiveProjects] = useState<Project[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [cmsData, setCmsData] = useState<any>(defaultDonsCMS);
 
   // Form State
   const [frequency, setFrequency] = useState<'ONE_TIME' | 'MONTHLY' | 'QUARTERLY' | 'ANNUAL'>('ONE_TIME');
@@ -39,6 +41,18 @@ export function Donation() {
   const [organisation, setOrganisation] = useState('');
   const [anonymous, setAnonymous] = useState(false);
   const [projectId, setProjectId] = useState<string>('GENERAL');
+
+  useEffect(() => {
+    const fetchCMS = async () => {
+      try {
+        const data = await getPublishedCMSContent('dons', defaultDonsCMS);
+        setCmsData(data);
+      } catch (err) {
+        console.error("Error fetching donation CMS data:", err);
+      }
+    };
+    fetchCMS();
+  }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -390,6 +404,51 @@ export function Donation() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Bank details card */}
+            {cmsData?.bankDetails && (
+              <Card className="bg-white border border-stone-200 shadow-sm rounded-2xl overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Building2 className="w-5 h-5 text-[#E67E22]" />
+                    <h3 className="font-bold font-heading text-sm text-[#6B3E1E]">Coordonnées Virement Bancaire</h3>
+                  </div>
+                  <div className="space-y-2.5 text-xs text-stone-600 bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    {cmsData.bankDetails.bankName && (
+                      <div>
+                        <span className="text-stone-400 block text-[10px] uppercase font-bold">Banque</span>
+                        <span className="font-semibold text-stone-800">{cmsData.bankDetails.bankName}</span>
+                      </div>
+                    )}
+                    {cmsData.bankDetails.accountHolder && (
+                      <div>
+                        <span className="text-stone-400 block text-[10px] uppercase font-bold">Titulaire</span>
+                        <span className="font-semibold text-stone-800">{cmsData.bankDetails.accountHolder}</span>
+                      </div>
+                    )}
+                    {cmsData.bankDetails.iban && (
+                      <div>
+                        <span className="text-stone-400 block text-[10px] uppercase font-bold">IBAN / Numéro de compte</span>
+                        <span className="font-mono font-bold text-stone-900 select-all">{cmsData.bankDetails.iban}</span>
+                      </div>
+                    )}
+                    {cmsData.bankDetails.swift && (
+                      <div>
+                        <span className="text-stone-400 block text-[10px] uppercase font-bold">Code SWIFT / BIC</span>
+                        <span className="font-mono font-bold text-stone-900 select-all">{cmsData.bankDetails.swift}</span>
+                      </div>
+                    )}
+                  </div>
+                  {cmsData.bankDetails.instructions && (
+                    <p className="text-[11px] text-stone-500 mt-3 italic">
+                      {typeof cmsData.bankDetails.instructions === 'object' 
+                        ? (cmsData.bankDetails.instructions.fr || cmsData.bankDetails.instructions.en)
+                        : cmsData.bankDetails.instructions}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

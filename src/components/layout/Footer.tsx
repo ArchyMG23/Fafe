@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { Button } from '../ui/Button';
+import { FafeLogo } from '../ui/FafeLogo';
 
 export function Footer() {
   const [email, setEmail] = useState('');
@@ -32,14 +33,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8 mb-16">
           
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-[#E67E22] rounded-full flex items-center justify-center text-white font-bold text-xl ring-2 ring-[#D4AF37]">
-                F
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold tracking-tight leading-none text-2xl">FAFE</span>
-                <span className="uppercase tracking-widest text-white/60 text-[10px]">Panafricaine</span>
-              </div>
+            <Link to="/" className="flex items-center mb-6 group">
+              <FafeLogo variant="light" size="lg" className="group-hover:opacity-90 transition-opacity" />
             </Link>
             <p className="text-white/80 mb-6 max-w-sm">
               Le premier réseau panafricain dédié à l'accompagnement, au financement et à la valorisation des femmes entrepreneures.

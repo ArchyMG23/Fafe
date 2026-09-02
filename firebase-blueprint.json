@@ -1,0 +1,80 @@
+{
+  "entities": {
+    "users": {
+      "title": "UserProfile",
+      "description": "Registered platform user accounts with system roles and membership status.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "country": { "type": "string" },
+        "city": { "type": "string" },
+        "role": { "type": "string", "enum": ["MEMBER", "ADMIN", "ENTREPRENEUR", "MODERATOR", "TRAINER", "SUPER_ADMIN", "CONTENT_MANAGER", "FINANCE_MANAGER"] },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE", "SUSPENDED", "PENDING"] },
+        "membershipStatus": { "type": "string", "enum": ["PENDING", "AWAITING_PAYMENT", "PAYMENT_SUBMITTED", "UNDER_REVIEW", "ACTIVE", "REJECTED", "EXPIRED", "CANCELLED", "SUSPENDED"] },
+        "membershipNumber": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["id", "firstName", "lastName", "email", "role", "status", "createdAt", "updatedAt"]
+    },
+    "memberships": {
+      "title": "Membership",
+      "description": "Formal annual membership records tracking payment, validation status, and official membership numbers.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "membershipNumber": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "AWAITING_PAYMENT", "PAYMENT_SUBMITTED", "UNDER_REVIEW", "ACTIVE", "REJECTED", "EXPIRED", "CANCELLED", "SUSPENDED"] },
+        "membershipType": { "type": "string" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "paymentMethod": { "type": "string" },
+        "bankReference": { "type": "string" },
+        "proofUrl": { "type": "string" },
+        "rejectionReason": { "type": "string" },
+        "submittedAt": { "type": "number" },
+        "verifiedAt": { "type": "number" },
+        "verifiedBy": { "type": "string" },
+        "expiresAt": { "type": "number" },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["id", "userId", "status", "createdAt", "updatedAt"]
+    },
+    "entrepreneurs": {
+      "title": "Entrepreneur",
+      "description": "Public directory profile for verified African women entrepreneurs active in FAFE.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "professionalPhoto": { "type": "string" },
+        "country": { "type": "string" },
+        "city": { "type": "string" },
+        "sector": { "type": "string" },
+        "company": { "type": "string" },
+        "position": { "type": "string" },
+        "website": { "type": "string" },
+        "expertise": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" },
+        "productsServices": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "SUSPENDED"] },
+        "verificationStatus": { "type": "string", "enum": ["VERIFIED", "UNVERIFIED"] },
+        "membershipNumber": { "type": "string" },
+        "isFeatured": { "type": "boolean" },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["firstName", "lastName", "country", "status", "verificationStatus", "createdAt", "updatedAt"]
+    }
+  },
+  "firestoreRulesTemplate": "standard"
+}

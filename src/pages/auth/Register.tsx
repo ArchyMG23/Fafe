@@ -57,23 +57,27 @@ export function Register() {
     const docRef = doc(db, 'users', user.uid);
     const docSnap = await getDoc(docRef);
 
+    const isSuperAdmin = user.email === 'yombivictor@gmail.com';
+
     if (!docSnap.exists()) {
       const now = Date.now();
       await setDoc(docRef, {
         id: user.uid,
-        firstName: additionalData.firstName || user.displayName?.split(' ')[0] || 'Utilisateur',
-        lastName: additionalData.lastName || user.displayName?.split(' ').slice(1).join(' ') || '',
+        firstName: additionalData.firstName || user.displayName?.split(' ')[0] || (isSuperAdmin ? 'Super' : 'Utilisateur'),
+        lastName: additionalData.lastName || user.displayName?.split(' ').slice(1).join(' ') || (isSuperAdmin ? 'Admin' : ''),
         email: user.email,
         phone: additionalData.phone || '',
-        country: additionalData.country || '',
-        city: additionalData.city || '',
-        role: 'MEMBER',
-        membershipStatus: 'PENDING',
+        country: additionalData.country || 'Sénégal',
+        city: additionalData.city || 'Dakar',
+        role: isSuperAdmin ? 'SUPER_ADMIN' : 'MEMBER',
+        membershipStatus: isSuperAdmin ? 'ACTIVE' : 'PENDING',
         status: 'ACTIVE',
         createdAt: now,
         updatedAt: now,
         lastLoginAt: now
       });
+    } else if (isSuperAdmin && docSnap.data().role !== 'SUPER_ADMIN') {
+      await setDoc(docRef, { role: 'SUPER_ADMIN', membershipStatus: 'ACTIVE', updatedAt: Date.now() }, { merge: true });
     }
   };
 

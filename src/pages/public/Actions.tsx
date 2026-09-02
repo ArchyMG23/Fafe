@@ -30,10 +30,17 @@ import {
   fetchActionCategories, 
   fetchFAFEActions, 
   fetchActionStats, 
-  fetchActionTestimonials,
-  fetchProjects,
-  fetchEvents
+  fetchActionTestimonials, 
+  fetchProjects, 
+  fetchEvents 
 } from '../../lib/dataFetching';
+import { 
+  DEMO_ACTION_CATEGORIES, 
+  DEMO_ACTIONS, 
+  DEMO_ACTION_STATS, 
+  DEMO_ACTION_TESTIMONIALS 
+} from '../../lib/actionsMock';
+import { DEMO_PROJECTS, DEMO_EVENTS } from '../../lib/mockData';
 
 const iconMap: Record<string, any> = {
   BookOpen,
@@ -47,18 +54,18 @@ const iconMap: Record<string, any> = {
 
 export function Actions() {
   const { language, tl } = useLanguageStore();
-  const [categories, setCategories] = useState<ActionCategory[]>([]);
-  const [featuredActions, setFeaturedActions] = useState<FAFEAction[]>([]);
-  const [allActions, setAllActions] = useState<FAFEAction[]>([]);
-  const [stats, setStats] = useState<ActionStatistic[]>([]);
-  const [testimonials, setTestimonials] = useState<ActionTestimonial[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [events, setEvents] = useState<FAFEEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<ActionCategory[]>(() => DEMO_ACTION_CATEGORIES.filter(c => c.isActive));
+  const [featuredActions, setFeaturedActions] = useState<FAFEAction[]>(() => DEMO_ACTIONS.filter(a => a.isFeatured));
+  const [allActions, setAllActions] = useState<FAFEAction[]>(() => DEMO_ACTIONS);
+  const [stats, setStats] = useState<ActionStatistic[]>(() => DEMO_ACTION_STATS.filter(s => s.isVisible));
+  const [testimonials, setTestimonials] = useState<ActionTestimonial[]>(() => DEMO_ACTION_TESTIMONIALS.filter(t => t.isVisible));
+  const [projects, setProjects] = useState<Project[]>(() => DEMO_PROJECTS.slice(0, 3));
+  const [events, setEvents] = useState<FAFEEvent[]>(() => (DEMO_EVENTS as any[]).slice(0, 3));
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    let isMounted = true;
     const loadData = async () => {
       try {
         const [cats, featured, all, st, tests, projs, evts] = await Promise.all([
@@ -70,20 +77,23 @@ export function Actions() {
           fetchProjects(3),
           fetchEvents(3)
         ]);
-        setCategories(cats);
-        setFeaturedActions(featured);
-        setAllActions(all);
-        setStats(st);
-        setTestimonials(tests);
-        setProjects(projs);
-        setEvents(evts);
+        if (isMounted) {
+          if (cats.length > 0) setCategories(cats);
+          if (featured.length > 0) setFeaturedActions(featured);
+          if (all.length > 0) setAllActions(all);
+          if (st.length > 0) setStats(st);
+          if (tests.length > 0) setTestimonials(tests);
+          if (projs.length > 0) setProjects(projs);
+          if (evts.length > 0) setEvents(evts);
+        }
       } catch (err) {
-        console.error("Error loading actions data", err);
-      } finally {
-        setLoading(false);
+        console.warn("Notice loading actions data in background:", err);
       }
     };
     loadData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const fadeInUp = {
@@ -111,14 +121,6 @@ export function Actions() {
       (a.country && a.country.toLowerCase().includes(searchLower));
     return matchesFilter && matchesSearch;
   });
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E67E22]"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen actions-container">
