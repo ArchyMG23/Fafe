@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -6,6 +6,7 @@ import { auth, db } from '../../lib/firebase';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
+import { useAuthStore } from '../../store/auth';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,13 @@ export function Login() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { currentUser } = useAuthStore();
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/hub/dashboard', { replace: true });
+    }
+  }, [currentUser, navigate]);
 
   const getErrorMessage = (err: any) => {
     const code = err.code || 'unknown';
@@ -57,33 +65,39 @@ export function Login() {
       const isSuperAdmin = user.email === 'yombivictor@gmail.com';
 
       if (!docSnap.exists()) {
-        const now = Date.now();
-        await setDoc(docRef, {
-          id: user.uid,
-          firstName: user.displayName?.split(' ')[0] || (isSuperAdmin ? 'Super' : 'Utilisateur'),
-          lastName: user.displayName?.split(' ').slice(1).join(' ') || (isSuperAdmin ? 'Admin' : ''),
-          email: user.email,
-          phone: '',
-          country: 'Sénégal',
-          city: 'Dakar',
-          role: isSuperAdmin ? 'SUPER_ADMIN' : 'MEMBER',
-          membershipStatus: isSuperAdmin ? 'ACTIVE' : 'PENDING',
-          status: 'ACTIVE',
-          createdAt: now,
-          updatedAt: now,
-          lastLoginAt: now
-        });
-      } else if (isSuperAdmin && docSnap.data().role !== 'SUPER_ADMIN') {
-        await setDoc(docRef, { role: 'SUPER_ADMIN', membershipStatus: 'ACTIVE', updatedAt: Date.now() }, { merge: true });
-      }
-
-      if (isSuperAdmin) {
-        navigate('/admin');
+        if (isSuperAdmin) {
+          const now = Date.now();
+          await setDoc(docRef, {
+            id: user.uid,
+            firstName: user.displayName?.split(' ')[0] || 'Super',
+            lastName: user.displayName?.split(' ').slice(1).join(' ') || 'Admin',
+            email: user.email,
+            phone: '',
+            country: 'Cameroun',
+            city: 'Yaoundé',
+            role: 'SUPER_ADMIN',
+            membershipStatus: 'ACTIVE',
+            status: 'ACTIVE',
+            createdAt: now,
+            updatedAt: now,
+            lastLoginAt: now
+          });
+          navigate('/admin');
+        } else {
+          // Normal user without account trying to login via Google
+          await user.delete(); // Remove the auth record
+          throw new Error('La connexion avec Google est réservée aux membres existants. Veuillez vous inscrire.');
+        }
       } else {
-        navigate('/hub/dashboard');
+        if (isSuperAdmin && docSnap.data().role !== 'SUPER_ADMIN') {
+          await setDoc(docRef, { role: 'SUPER_ADMIN', membershipStatus: 'ACTIVE', updatedAt: Date.now() }, { merge: true });
+          navigate('/admin');
+        } else {
+          navigate('/hub/dashboard');
+        }
       }
     } catch (err: any) {
-      setError(`Erreur Google: ${err.message}`);
+      setError(err.message || 'Erreur lors de la connexion Google');
     } finally {
       setIsLoading(false);
     }
