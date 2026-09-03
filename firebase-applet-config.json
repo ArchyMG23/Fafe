@@ -1,12 +1,12 @@
 {
-  "projectId": "noble-machine-7dzmz",
-  "appId": "1:399687523002:web:0327f82f3ae5202fb40083",
-  "apiKey": "AIzaSyCx__cvRc-zuyFpOiE16OIPDE6AuIpwPcE",
-  "authDomain": "noble-machine-7dzmz.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-fafeplatform-1f9f0706-cad1-4d67-94d8-0690809d943d",
-  "storageBucket": "noble-machine-7dzmz.firebasestorage.app",
-  "messagingSenderId": "399687523002",
-  "measurementId": "",
-  "oAuthClientId": "399687523002-q4btgdusb6t5kueb23jfeaecnjc9t4nc.apps.googleusercontent.com",
+  "projectId": "fafe-platform",
+  "appId": "1:721168724984:web:be1af05d9099cef8915c0d",
+  "apiKey": "AIzaSyBK3y4Ke4Wv08saeW60ptaMylGiVBPBy2o",
+  "authDomain": "fafe-platform.firebaseapp.com",
+  "firestoreDatabaseId": "fafe",
+  "storageBucket": "fafe-platform.firebasestorage.app",
+  "messagingSenderId": "721168724984",
+  "measurementId": "G-GQL65W9YM9",
+  "oAuthClientId": "",
   "recaptchaSiteKey": ""
 }

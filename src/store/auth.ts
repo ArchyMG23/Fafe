@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { UserProfile } from '../types';
 
@@ -49,7 +49,20 @@ export const initAuth = () => {
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
-          useAuthStore.getState().setProfile(docSnap.data() as UserProfile);
+          const profileData = docSnap.data() as UserProfile;
+          
+          // Auto-upgrade founder account to SUPER_ADMIN
+          if (user.email === 'yombivictor@gmail.com' && profileData.role !== 'SUPER_ADMIN') {
+            try {
+              await updateDoc(docRef, { role: 'SUPER_ADMIN' });
+              profileData.role = 'SUPER_ADMIN';
+              console.log('Founder account automatically upgraded to SUPER_ADMIN');
+            } catch (e) {
+              console.error('Failed to upgrade founder account', e);
+            }
+          }
+          
+          useAuthStore.getState().setProfile(profileData);
         } else {
           useAuthStore.getState().setProfile(null);
         }
