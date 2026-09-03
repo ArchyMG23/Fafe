@@ -51,13 +51,25 @@ export function MemberDashboard() {
     navigate('/');
   };
 
-  if (loading || !userProfile) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF9F6]">
         <div className="w-12 h-12 border-4 border-[#E67E22]/20 border-t-[#E67E22] rounded-full animate-spin mb-4"></div>
         <p className="text-[#6B3E1E]/60 font-medium">Chargement de votre espace...</p>
       </div>
     );
+  }
+
+  if (!userProfile) {
+     return (
+       <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF9F6] p-4 text-center">
+         <div className="bg-red-50 text-red-600 p-6 rounded-xl max-w-md">
+           <h2 className="text-xl font-bold mb-2">Profil Introuvable</h2>
+           <p className="mb-4">Votre compte d'authentification existe, mais votre profil membre n'a pas été trouvé. Veuillez vous déconnecter et vous réinscrire.</p>
+           <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">Se déconnecter</Button>
+         </div>
+       </div>
+     );
   }
 
   return (

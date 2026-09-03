@@ -45,6 +45,7 @@ export const initAuth = () => {
       
       // Fetch user profile from Firestore
       try {
+        const { setDoc } = await import('firebase/firestore');
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
         
@@ -64,7 +65,29 @@ export const initAuth = () => {
           
           useAuthStore.getState().setProfile(profileData);
         } else {
-          useAuthStore.getState().setProfile(null);
+          // If founder doesn't have a profile, create it
+          if (user.email === 'yombivictor@gmail.com') {
+             const now = Date.now();
+             const newAdminProfile = {
+                id: user.uid,
+                firstName: user.displayName?.split(' ')[0] || 'Super',
+                lastName: user.displayName?.split(' ').slice(1).join(' ') || 'Admin',
+                email: user.email,
+                phone: '',
+                country: 'Cameroun',
+                city: 'Yaoundé',
+                role: 'SUPER_ADMIN',
+                membershipStatus: 'ACTIVE',
+                status: 'ACTIVE',
+                createdAt: now,
+                updatedAt: now,
+                lastLoginAt: now
+             };
+             await setDoc(docRef, newAdminProfile);
+             useAuthStore.getState().setProfile(newAdminProfile as UserProfile);
+          } else {
+             useAuthStore.getState().setProfile(null);
+          }
         }
       } catch (error) {
         console.error('Error fetching user profile:', error);

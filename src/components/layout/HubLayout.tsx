@@ -11,7 +11,8 @@ import {
   UserCircle, ShieldAlert,
   LogOut,
   Menu,
-  X
+  X,
+  Settings
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuthStore } from '../../store/auth';
@@ -38,6 +39,10 @@ export function HubLayout() {
     { name: 'Marketplace', path: '/marketplace', icon: ShoppingBag },
     { name: 'Mes Dons', path: '/dons', icon: Heart },
   ];
+
+  if (profile?.role === 'SUPER_ADMIN' || profile?.role === 'ADMIN') {
+    navItems.push({ name: 'Administration', path: '/admin', icon: Settings });
+  }
 
   // If not logged in, we shouldn't show the full sidebar maybe? 
   // Wait, if not logged in, they are on /hub/connexion. 
