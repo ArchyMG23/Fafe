@@ -8,18 +8,27 @@ import { Donation } from '../types';
 
 export function DonationSuccess() {
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const urlDonationId = searchParams.get('donationId');
+  const urlReference = searchParams.get('ref');
+  const status = searchParams.get('status');
+  
   const state = location.state as { donationId?: string; reference?: string; email?: string } | null;
+  const donationId = state?.donationId || urlDonationId;
+  const reference = state?.reference || urlReference;
+  
   const [donation, setDonation] = useState<Donation | null>(null);
+  const [paymentStatusParam] = useState(searchParams.get('status'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDonation = async () => {
-      if (!state?.donationId) {
+      if (!donationId) {
         setLoading(false);
         return;
       }
       try {
-        const docRef = doc(db, 'donations', state.donationId);
+        const docRef = doc(db, 'donations', donationId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setDonation({ id: docSnap.id, ...docSnap.data() } as Donation);
@@ -34,7 +43,7 @@ export function DonationSuccess() {
     fetchDonation();
   }, [state]);
 
-  if (!state?.donationId && !loading) {
+  if (!donationId && !loading) {
     return <Navigate to="/dons" replace />;
   }
 
@@ -46,7 +55,7 @@ export function DonationSuccess() {
             <Loader2 className="w-12 h-12 animate-spin" />
             <p>Vérification de votre paiement...</p>
           </div>
-        ) : donation?.paymentStatus === 'SUCCESS' ? (
+        ) : (donation?.paymentStatus === 'SUCCESS' || paymentStatusParam === 'successful' || paymentStatusParam === 'success') ? (
           <>
             <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-10 h-10" />
@@ -59,7 +68,7 @@ export function DonationSuccess() {
             <div className="bg-white p-6 rounded-xl border border-stone-200 text-left mb-8 space-y-3">
               <div className="flex justify-between border-b border-stone-100 pb-2">
                 <span className="text-stone-500 text-sm">Référence transaction</span>
-                <span className="font-mono font-medium text-sm text-stone-900">{state?.reference || 'N/A'}</span>
+                <span className="font-mono font-medium text-sm text-stone-900">{reference || 'N/A'}</span>
               </div>
               <div className="flex justify-between border-b border-stone-100 pb-2">
                 <span className="text-stone-500 text-sm">Date</span>
@@ -101,7 +110,7 @@ export function DonationSuccess() {
             <div className="bg-white p-6 rounded-xl border border-stone-200 text-left mb-8 space-y-3">
               <div className="flex justify-between border-b border-stone-100 pb-2">
                 <span className="text-stone-500 text-sm">Référence temporaire</span>
-                <span className="font-mono font-medium text-sm text-stone-900">{state?.reference || donation?.id}</span>
+                <span className="font-mono font-medium text-sm text-stone-900">{reference || donation?.id}</span>
               </div>
               <div className="flex justify-between pb-2">
                 <span className="text-stone-500 text-sm">Statut</span>

@@ -1,6 +1,6 @@
 import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { CreditCard, CheckCircle, Clock, AlertTriangle, FileText, Upload, Shield, Loader2, ArrowRight } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useAuthStore } from '../../store/auth';
@@ -11,10 +11,12 @@ import { Membership, CMSBankDetails } from '../../types';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage, db } from '../../lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import { PaymentService } from '../../services/payment';
 
 export function MemberAdhesion() {
   const { currentUser: user, userProfile, setProfile } = useAuthStore();
   const { language } = useLanguageStore();
+  const [searchParams] = useSearchParams();
   
   const [membership, setMembership] = useState<Membership | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,32 @@ export function MemberAdhesion() {
 
   useEffect(() => {
     loadData();
+    const status = searchParams.get('status');
+    const txRef = searchParams.get('tx_ref');
+    if ((status === 'successful' || status === 'success') && txRef) {
+      handleOnlinePaymentSuccess();
+    }
   }, [user]);
+
+  const handleOnlinePaymentSuccess = async () => {
+    if (!user) return;
+    try {
+      const memberships = await getUserMemberships(user.uid);
+      if (memberships.length > 0) {
+        const mem = memberships[0];
+        if (mem.status === 'AWAITING_PAYMENT') {
+          await submitMembershipPayment(mem.id, 'Paiement en ligne Flutterwave', '');
+          const userRef = doc(db, 'users', user.uid);
+          await updateDoc(userRef, { membershipStatus: 'PAYMENT_SUBMITTED' });
+          setProfile({ ...userProfile, membershipStatus: 'PAYMENT_SUBMITTED' } as any);
+          setMessage({ type: 'success', text: 'Paiement en ligne confirmé avec succès !' });
+          loadData();
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const loadData = async () => {
     if (!user) return;
@@ -105,6 +132,33 @@ export function MemberAdhesion() {
     
     setProofFile(file);
     setMessage({ type: '', text: '' });
+  };
+
+  const handleOnlinePayment = async () => {
+    if (!membership || !userProfile) return;
+    setIsUploading(true);
+    try {
+      const paymentInit = await PaymentService.processPayment(
+        50000,
+        'XAF',
+        'FLUTTERWAVE',
+        'ONE_TIME',
+        { 
+          name: `${userProfile.firstName} ${userProfile.lastName}`, 
+          email: userProfile.email,
+          phone: userProfile.phone || ''
+        },
+        membership.id,
+        `${window.location.origin}/dashboard/adhesion`
+      );
+      if (paymentInit.providerRedirectUrl) {
+        window.location.href = paymentInit.providerRedirectUrl;
+      }
+    } catch (e) {
+      console.error(e);
+      setMessage({ type: 'error', text: 'Erreur lors de l\'initialisation du paiement.' });
+      setIsUploading(false);
+    }
   };
 
   const handleSubmitPayment = async (e: React.FormEvent) => {
@@ -346,8 +400,26 @@ export function MemberAdhesion() {
                   </div>
                 </div>
 
+                
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                  <h3 className="font-bold text-[#6B3E1E] mb-4">Transmettre la preuve de paiement</h3>
+                  <h3 className="font-bold text-[#6B3E1E] mb-4">Paiement en ligne sécurisé</h3>
+                  <p className="text-sm text-stone-600 mb-4">
+                    Réglez votre cotisation annuelle (50 000 FCFA) par carte bancaire ou Mobile Money via Flutterwave.
+                  </p>
+                  <Button onClick={handleOnlinePayment} disabled={isUploading} className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+                    {isUploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
+                    Payer l'adhésion en ligne
+                  </Button>
+                </div>
+
+                <div className="relative flex py-4 items-center">
+                  <div className="flex-grow border-t border-stone-300"></div>
+                  <span className="flex-shrink-0 mx-4 text-stone-400 text-sm font-medium">OU paiement manuel</span>
+                  <div className="flex-grow border-t border-stone-300"></div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                  <h3 className="font-bold text-[#6B3E1E] mb-4">Transmettre la preuve de paiement bancaire</h3>
                   <form onSubmit={handleSubmitPayment} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-1">Référence du virement (facultatif)</label>

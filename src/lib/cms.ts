@@ -412,16 +412,24 @@ export async function getPublishedCMSContent<T>(pageId: CMSPageId, fallback: T):
  */
 export const getCMSGlobal = async () => {
   try {
+    const globalDocRef = doc(db, 'cms', 'global');
+    const globalDocSnap = await getDoc(globalDocRef);
+    let globalData: any = {};
+    if (globalDocSnap.exists()) {
+      globalData = globalDocSnap.data();
+    }
+
     const [nousRecord, donsRecord] = await Promise.all([
       getCMSPageRecord('nous'),
       getCMSPageRecord('dons')
     ]);
     return {
       about: nousRecord.publishedContent,
-      bankDetails: donsRecord.publishedContent.bankDetails,
-      heroSlides: defaultHeroSlides
+      bankDetails: globalData.bankDetails || donsRecord.publishedContent?.bankDetails || defaultDonsCMS.bankDetails,
+      heroSlides: globalData.heroSlides || defaultHeroSlides
     };
-  } catch {
+  } catch (error) {
+    console.error("Error in getCMSGlobal:", error);
     return {
       about: defaultNousCMS,
       bankDetails: defaultDonsCMS.bankDetails,
@@ -434,6 +442,20 @@ export const updateCMSGlobal = async (data: any) => {
   try {
     const docRef = doc(db, 'cms', 'global');
     await setDoc(docRef, data, { merge: true });
+    
+    // Also sync bankDetails to cms_pages/dons so Donation.tsx (which reads publishedContent) sees it
+    if (data.bankDetails) {
+      const donsRef = doc(db, 'cms_pages', 'dons');
+      await setDoc(donsRef, {
+        publishedContent: {
+          bankDetails: data.bankDetails
+        },
+        draftContent: {
+          bankDetails: data.bankDetails
+        }
+      }, { merge: true });
+    }
+
     return true;
   } catch (error) {
     console.error("Error updating CMS global:", error);

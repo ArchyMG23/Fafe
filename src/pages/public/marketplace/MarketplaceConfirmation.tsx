@@ -16,7 +16,7 @@ export function MarketplaceConfirmation() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id && status === 'success') {
+    if (id && status === 'success' || status === 'successful') {
       confirmPaymentAndDeductStock(id);
     } else {
       setLoading(false);

@@ -87,7 +87,7 @@ export function Navbar() {
       }`}
     >
       <div
-        className={`w-full mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 max-w-7xl ${
+        className={`w-full mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 lg:px-12 max-w-[1600px] ${
           isScrolled ? 'h-16' : 'h-18 md:h-20'
         }`}
       >
@@ -104,7 +104,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center justify-center flex-1 gap-6 xl:gap-8 h-full mx-4">
+        <nav className="hidden lg:flex items-center justify-center flex-1 gap-8 xl:gap-14 h-full mx-8 xl:mx-20">
           <Link
             to="/"
             className={`relative py-2 text-sm font-semibold transition-colors ${
@@ -179,7 +179,7 @@ export function Navbar() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden lg:flex items-center gap-1.5 shrink-0 border-l border-stone-200 pl-4">
+        <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0 border-l border-stone-200 pl-6 xl:pl-8 ml-auto">
           <Link
             to="/recherche"
             aria-label="Recherche"

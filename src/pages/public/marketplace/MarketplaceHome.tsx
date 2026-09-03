@@ -2,49 +2,86 @@ import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Search, Filter, ArrowRight, Tag, Loader2, Star, ShoppingBag } from 'lucide-react';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, startAfter, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
+import { useMarketplaceStore } from '../../../store/marketplace';
 import { db } from '../../../lib/firebase';
 import { Product, MarketplaceCategory } from '../../../types';
 import { Button } from '../../../components/ui/Button';
 import { useCartStore } from '../../../store/cart';
 
 export function MarketplaceHome() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<MarketplaceCategory[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { products, categories, lastDoc, hasMore, isLoaded, setCache, appendProducts } = useMarketplaceStore();
+  const [loading, setLoading] = useState(!isLoaded);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const addItem = useCartStore(state => state.addItem);
 
+  const PRODUCTS_PER_PAGE = 12;
+
   useEffect(() => {
-    fetchMarketplaceData();
-  }, []);
+    if (!isLoaded) {
+      fetchMarketplaceData();
+    }
+  }, [isLoaded]);
 
   const fetchMarketplaceData = async () => {
     try {
       setLoading(true);
+
       // Fetch Categories
       const categoriesRef = collection(db, 'marketplace_categories');
       const categoriesQuery = query(categoriesRef, where('isActive', '==', true), orderBy('order', 'asc'));
       const categoriesSnap = await getDocs(categoriesQuery);
       
-      const cats: MarketplaceCategory[] = [];
-      categoriesSnap.forEach(doc => cats.push({ id: doc.id, ...doc.data() } as MarketplaceCategory));
-      setCategories(cats);
+      const cats = [];
+      categoriesSnap.forEach(doc => cats.push({ id: doc.id, ...doc.data() }));
 
-      // Fetch Products
+      // Fetch Initial Products
       const productsRef = collection(db, 'products');
-      const productsQuery = query(productsRef, where('status', 'in', ['PUBLISHED', 'OUT_OF_STOCK']), orderBy('createdAt', 'desc'));
+      const productsQuery = query(
+        productsRef, 
+        where('status', 'in', ['PUBLISHED', 'OUT_OF_STOCK']), 
+        orderBy('createdAt', 'desc'),
+        limit(PRODUCTS_PER_PAGE)
+      );
       const productsSnap = await getDocs(productsQuery);
       
-      const prods: Product[] = [];
-      productsSnap.forEach(doc => prods.push({ id: doc.id, ...doc.data() } as Product));
-      setProducts(prods);
-
+      const prods = [];
+      productsSnap.forEach(doc => prods.push({ id: doc.id, ...doc.data() }));
+      
+      const lastVisible = productsSnap.docs[productsSnap.docs.length - 1] || null;
+      setCache(prods, cats, lastVisible, prods.length === PRODUCTS_PER_PAGE);
     } catch (error) {
       console.error('Error fetching marketplace data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMoreProducts = async () => {
+    if (!lastDoc || loadingMore) return;
+    try {
+      setLoadingMore(true);
+      const productsRef = collection(db, 'products');
+      const productsQuery = query(
+        productsRef, 
+        where('status', 'in', ['PUBLISHED', 'OUT_OF_STOCK']), 
+        orderBy('createdAt', 'desc'),
+        startAfter(lastDoc),
+        limit(PRODUCTS_PER_PAGE)
+      );
+      
+      const productsSnap = await getDocs(productsQuery);
+      const prods = [];
+      productsSnap.forEach(doc => prods.push({ id: doc.id, ...doc.data() }));
+      
+      const lastVisible = productsSnap.docs[productsSnap.docs.length - 1] || null;
+      appendProducts(prods, lastVisible, prods.length === PRODUCTS_PER_PAGE);
+    } catch (error) {
+      console.error('Error loading more products:', error);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -86,8 +123,30 @@ export function MarketplaceHome() {
 
       <div className="w-full max-w-7xl mx-auto px-4 mt-8 md:mt-12">
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Loader2 className="w-8 h-8 text-[#E67E22] animate-spin" />
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="space-y-6 hidden lg:block">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100 h-96 animate-pulse">
+                <div className="h-6 w-32 bg-stone-200 rounded mb-6"></div>
+                <div className="space-y-4">
+                  {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-10 w-full bg-stone-100 rounded-xl"></div>)}
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div key={i} className="bg-white rounded-2xl border border-stone-100 overflow-hidden h-[400px] animate-pulse flex flex-col">
+                    <div className="w-full aspect-square bg-stone-200"></div>
+                    <div className="p-5 flex-1 flex flex-col">
+                      <div className="h-4 w-1/3 bg-stone-200 rounded mb-2"></div>
+                      <div className="h-5 w-3/4 bg-stone-200 rounded mb-2"></div>
+                      <div className="h-4 w-full bg-stone-100 rounded mb-auto"></div>
+                      <div className="h-6 w-1/2 bg-stone-200 rounded mt-4"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -168,6 +227,23 @@ export function MarketplaceHome() {
                   ))}
                 </div>
               )}
+              {filteredProducts.length > 0 && hasMore && !searchTerm && !selectedCategory && (
+                <div className="mt-8 flex justify-center">
+                  <Button 
+                    onClick={loadMoreProducts} 
+                    disabled={loadingMore}
+                    variant="outline"
+                    className="border-[#E67E22] text-[#E67E22] hover:bg-[#E67E22]/10 px-8"
+                  >
+                    {loadingMore ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Chargement...</>
+                    ) : (
+                      'Afficher plus de produits'
+                    )}
+                  </Button>
+                </div>
+              )}
+
             </div>
           </div>
         )}

@@ -172,6 +172,24 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             </span>
           </div>
           <p className="text-xs text-stone-500 max-w-xl">{pageDescription}</p>
+          {record && (
+            <div className="flex items-center gap-2 mt-1.5 text-[11px]">
+              {record.publishedAt ? (
+                <span className="text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium border border-emerald-100">
+                  Dernière publication : {new Date(record.publishedAt).toLocaleString('fr-FR')} par {record.publishedBy || 'Admin'}
+                </span>
+              ) : (
+                <span className="text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-medium border border-amber-100">
+                  ⚠️ Jamais publié
+                </span>
+              )}
+              {record.status === 'DRAFT' && record.publishedAt && (
+                <span className="text-red-600 bg-red-50 px-1.5 py-0.5 rounded font-medium border border-red-100 flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" /> Modifications en brouillon (Non publiées)
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Global Controls & Actions */}

@@ -120,15 +120,18 @@ export function Donation() {
       const paymentInit = await PaymentService.processPayment(
         finalAmt,
         currency,
-        'MOBILE_MONEY',
+        'FLUTTERWAVE',
         frequency,
-        { name: `${firstName} ${lastName}`, email, phone }
+        { name: `${firstName} ${lastName}`, email, phone },
+        docRef.id
       );
       
-      if (paymentInit.paymentStatus === 'SUCCESS') {
-        // Here we could redirect to provider URL if it exists:
-        // if (paymentInit.providerRedirectUrl) { window.location.href = paymentInit.providerRedirectUrl; return; }
-        
+      if (paymentInit.providerRedirectUrl) {
+        window.location.href = paymentInit.providerRedirectUrl;
+        return;
+      }
+      
+      if (paymentInit.paymentStatus === 'SUCCESS' || paymentInit.paymentStatus === 'PENDING') {
         navigate('/dons/succes', { 
           state: { 
             donationId: docRef.id, 

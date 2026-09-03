@@ -1,4 +1,6 @@
-import { Donation, DonationStatus, DonationFrequency } from '../types';
+const fs = require('fs');
+
+const content = `import { Donation, DonationStatus, DonationFrequency } from '../types';
 
 export class PaymentService {
   static async processPayment(
@@ -7,12 +9,11 @@ export class PaymentService {
     paymentMethod: string,
     frequency: DonationFrequency,
     donorData: { name: string; email: string; phone?: string },
-    orderId?: string,
-    customRedirectUrl?: string
+    orderId?: string
   ): Promise<Partial<Donation> & { providerRedirectUrl?: string }> {
     try {
       const transactionRef = 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-      const redirectUrl = customRedirectUrl || `${window.location.origin}/dons/succes?ref=${transactionRef}&donationId=${orderId || ''}`;
+      const redirectUrl = \`\${window.location.origin}/dons/succes?ref=\${transactionRef}&donationId=\${orderId || ''}\`;
 
       const response = await fetch('/api/payments/flutterwave', {
         method: 'POST',
@@ -54,3 +55,5 @@ export class PaymentService {
     }
   }
 }
+`;
+fs.writeFileSync('src/services/payment.ts', content);

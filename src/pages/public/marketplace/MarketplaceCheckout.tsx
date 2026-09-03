@@ -7,6 +7,7 @@ import { Loader2, ArrowRight, ShieldCheck } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { useAuthStore } from '../../../store/auth';
+import { PaymentService } from '../../../services/payment';
 import { useCartStore } from '../../../store/cart';
 import { Button } from '../../../components/ui/Button';
 
@@ -89,24 +90,26 @@ export function MarketplaceCheckout() {
 
       // 3. Initiate Abstract Payment Flow
       // Here we simulate the redirect to a payment aggregator and the callback
-      simulatePaymentAggregator(orderRef.id);
+      const paymentInit = await PaymentService.processPayment(
+        total,
+        'XAF',
+        'FLUTTERWAVE',
+        'ONE_TIME',
+        { name: `${data.firstName} ${data.lastName}`, email: data.email, phone: data.phone },
+        orderRef.id,
+        `${window.location.origin}/marketplace/confirmation/${orderRef.id}`
+      );
 
+      if (paymentInit.providerRedirectUrl) {
+        window.location.href = paymentInit.providerRedirectUrl;
+      } else {
+        navigate(`/marketplace/confirmation/${orderRef.id}?status=success`);
+      }
     } catch (error) {
       console.error('Error processing order:', error);
       setIsProcessing(false);
       alert('Une erreur est survenue lors de la création de la commande.');
     }
-  };
-
-  const simulatePaymentAggregator = (orderId: string) => {
-    // In production, this would redirect to the payment gateway (e.g., Stripe, MTN MoMo)
-    // window.location.href = `https://payment-gateway.com/pay?orderId=${orderId}`;
-    
-    // For now, we simulate a successful callback after a short delay
-    setTimeout(() => {
-      // We navigate to a confirmation processing page or directly to confirmation
-      navigate(`/marketplace/confirmation/${orderId}?status=success`);
-    }, 2000);
   };
 
   return (
