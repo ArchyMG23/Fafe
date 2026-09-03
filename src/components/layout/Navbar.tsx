@@ -92,8 +92,15 @@ export function Navbar() {
         }`}
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center group py-1" aria-label="Accueil FAFE">
-          <FafeLogo size={isScrolled ? 'sm' : 'md'} className="group-hover:opacity-95 transition-opacity" />
+        <Link to="/" className="flex items-center group py-1 z-50 shrink-0" aria-label="Accueil FAFE">
+          {/* Mobile Logo */}
+          <div className="md:hidden">
+            <FafeLogo size="sm" showSubtitle={false} className="group-hover:opacity-95 transition-opacity" />
+          </div>
+          {/* Desktop Logo */}
+          <div className="hidden md:block">
+            <FafeLogo size={isScrolled ? 'sm' : 'md'} className="group-hover:opacity-95 transition-opacity" />
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
@@ -123,18 +130,6 @@ export function Navbar() {
           </Link>
 
           <Link
-            to="/actualites"
-            className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/actualites') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
-            }`}
-          >
-            Actualités
-            {isActive('/actualites') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
-            )}
-          </Link>
-
-          <Link
             to="/entrepreneures"
             className={`relative py-2 text-sm font-semibold transition-colors ${
               isActive('/entrepreneures') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
@@ -147,45 +142,56 @@ export function Navbar() {
           </Link>
 
           <Link
-            to="/galerie"
+            to="/actualites"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/galerie') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/actualites') && !isActive('/evenements') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
             }`}
           >
-            Médiathèque
-            {isActive('/galerie') && (
+            Actualités
+            {isActive('/actualites') && !isActive('/evenements') && (
               <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
             )}
           </Link>
 
           <Link
-            to={user ? '/hub/dashboard' : '/hub'}
-            className="relative py-2 text-sm font-semibold text-stone-600 hover:text-[#6B3E1E] flex items-center gap-1.5 transition-colors"
+            to="/evenements"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/evenements') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
           >
-            <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
-            FAFE Hub
+            Événements
+            {isActive('/evenements') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
           </Link>
 
           <Link
             to="/dons"
-            className="relative py-1.5 px-3 rounded-full bg-[#E67E22]/10 text-[#E67E22] hover:bg-[#E67E22] hover:text-white font-bold text-xs transition-all"
+            className={`relative py-2 text-sm font-semibold transition-colors ${
+              isActive('/dons') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+            }`}
           >
-            Faire un don
+            Don
+            {isActive('/dons') && (
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+            )}
           </Link>
 
           <div className="flex items-center gap-1.5 ml-2 border-l border-stone-200 pl-4">
-            <button
-              onClick={toggleLanguage}
-              aria-label="Changer de langue"
-              className="text-xs font-bold uppercase text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
-            >
-              {language}
-            </button>
             <Link
-              to="/marketplace/panier"
+              to="/recherche"
+              aria-label="Recherche"
+              title="Recherche"
+              className="text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+            >
+              <Search className="w-5 h-5" />
+            </Link>
+            
+            <Link
+              to="/marketplace"
               aria-label="Marketplace FAFE"
               title="Marketplace"
-              className="text-[#6B3E1E] hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 relative"
+              className="text-stone-500 hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 relative"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartItemsCount > 0 && (
@@ -194,19 +200,40 @@ export function Navbar() {
                 </span>
               )}
             </Link>
+            
+            <button
+              onClick={toggleLanguage}
+              aria-label="Changer de langue"
+              className="text-xs font-bold uppercase text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+            >
+              {language}
+            </button>
+            
+            {user ? (
+              <Link to="/hub/dashboard" className="ml-2">
+                <Button className="bg-[#6B3E1E] hover:bg-[#532f17] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
+                  Espace Membre
+                </Button>
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2 ml-2">
+                <Link to="/hub/connexion">
+                  <Button variant="outline" className="border-stone-200 text-stone-700 hover:bg-stone-50 py-1.5 px-4 rounded-full font-bold text-xs">
+                    Connexion
+                  </Button>
+                </Link>
+                <Link to="/rejoindre">
+                  <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
+                    Rejoindre
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </nav>
 
         {/* Mobile Header Actions (Compact, Thumb-friendly) */}
         <div className="flex items-center gap-1 sm:gap-2 lg:hidden">
-          <button
-            onClick={toggleLanguage}
-            aria-label="Changer de langue"
-            className="text-xs font-bold uppercase text-stone-600 p-2.5 rounded-full hover:bg-stone-100 active:scale-95 transition-transform"
-          >
-            {language}
-          </button>
-          
           <Link
             to="/marketplace/panier"
             aria-label="Marketplace"

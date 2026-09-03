@@ -10,14 +10,18 @@ import { Eye, EyeOff, Check, X } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 
 export function Register() {
-  const { currentUser } = useAuthStore();
+  const { currentUser, userProfile } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentUser) {
-      navigate('/hub/dashboard', { replace: true });
+    if (currentUser && userProfile) {
+      if (['SUPER_ADMIN', 'ADMIN'].includes(userProfile.role)) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/hub/dashboard', { replace: true });
+      }
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, userProfile, navigate]);
 
   const [formData, setFormData] = useState({
     firstName: '',

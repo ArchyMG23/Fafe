@@ -1,7 +1,8 @@
 import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { db } from './firebase';
 import { Entrepreneur, Article, Project } from '../types';
-import { DEMO_ENTREPRENEURS, DEMO_ARTICLES, DEMO_PROJECTS } from './mockData';
+import { FAFEEvent } from '../types';
+import { ActionCategory, FAFEAction, ActionTestimonial, ActionStatistic } from '../types';
 
 export async function fetchEntrepreneurs(limitCount?: number, featuredOnly = false): Promise<Entrepreneur[]> {
   try {
@@ -14,23 +15,11 @@ export async function fetchEntrepreneurs(limitCount?: number, featuredOnly = fal
     if (limitCount) {
       entQuery = query(entQuery, limit(limitCount));
     }
-
     const snap = await getDocs(entQuery);
-    let results = snap.docs.map(d => ({ id: d.id, ...d.data() } as Entrepreneur));
-    
-    if (results.length === 0) {
-      let mock = DEMO_ENTREPRENEURS.map(e => ({ ...e, status: 'APPROVED', verificationStatus: 'VERIFIED' } as Entrepreneur));
-      if (featuredOnly) mock = mock.filter(m => m.isFeatured);
-      if (limitCount) mock = mock.slice(0, limitCount);
-      return mock;
-    }
-    return results;
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Entrepreneur));
   } catch (error) {
     console.error("Error fetching entrepreneurs:", error);
-    let mock = DEMO_ENTREPRENEURS.map(e => ({ ...e, status: 'APPROVED', verificationStatus: 'VERIFIED' } as Entrepreneur));
-    if (featuredOnly) mock = mock.filter(m => m.isFeatured);
-    if (limitCount) mock = mock.slice(0, limitCount);
-    return mock;
+    return [];
   }
 }
 
@@ -40,21 +29,11 @@ export async function fetchProjects(limitCount?: number): Promise<Project[]> {
     if (limitCount) {
       projQuery = query(projQuery, limit(limitCount));
     }
-
     const snap = await getDocs(projQuery);
-    let results = snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
-    
-    if (results.length === 0) {
-      let mock = [...DEMO_PROJECTS];
-      if (limitCount) mock = mock.slice(0, limitCount);
-      return mock;
-    }
-    return results;
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
   } catch (error) {
     console.error("Error fetching projects:", error);
-    let mock = [...DEMO_PROJECTS];
-    if (limitCount) mock = mock.slice(0, limitCount);
-    return mock;
+    return [];
   }
 }
 
@@ -68,26 +47,13 @@ export async function fetchArticles(limitCount?: number): Promise<Article[]> {
     if (limitCount) {
       artQuery = query(artQuery, limit(limitCount));
     }
-
     const snap = await getDocs(artQuery);
-    let results = snap.docs.map(d => ({ id: d.id, ...d.data() } as Article));
-    
-    if (results.length === 0) {
-      let mock = [...DEMO_ARTICLES];
-      if (limitCount) mock = mock.slice(0, limitCount);
-      return mock;
-    }
-    return results;
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Article));
   } catch (error) {
     console.error("Error fetching articles:", error);
-    let mock = [...DEMO_ARTICLES];
-    if (limitCount) mock = mock.slice(0, limitCount);
-    return mock;
+    return [];
   }
 }
-
-import { FAFEEvent } from '../types';
-import { DEMO_EVENTS } from './mockData';
 
 export async function fetchEvents(limitCount?: number): Promise<FAFEEvent[]> {
   try {
@@ -99,47 +65,28 @@ export async function fetchEvents(limitCount?: number): Promise<FAFEEvent[]> {
     if (limitCount) {
       evtQuery = query(evtQuery, limit(limitCount));
     }
-
     const snap = await getDocs(evtQuery);
-    let results = snap.docs.map(d => ({ id: d.id, ...d.data() } as FAFEEvent));
-    
-    if (results.length === 0) {
-      let mock = [...DEMO_EVENTS];
-      if (limitCount) mock = mock.slice(0, limitCount);
-      return mock as any[]; // typing might be a bit mismatched for FAFEEvent but close enough
-    }
-    return results;
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as FAFEEvent));
   } catch (error) {
     console.error("Error fetching events:", error);
-    let mock = [...DEMO_EVENTS];
-    if (limitCount) mock = mock.slice(0, limitCount);
-    return mock as any[];
+    return [];
   }
 }
 
-import { ActionCategory, FAFEAction, ActionTestimonial, ActionStatistic } from '../types';
-import { DEMO_ACTION_CATEGORIES, DEMO_ACTIONS, DEMO_ACTION_STATS, DEMO_ACTION_TESTIMONIALS } from './actionsMock';
-
+// Note: These action functions were previously entirely mocked. 
+// We are keeping them empty for now since there's no Firestore schema defined for them yet in this file.
 export async function fetchActionCategories(): Promise<ActionCategory[]> {
-  // In a real app, fetch from Firestore
-  return DEMO_ACTION_CATEGORIES.filter(c => c.isActive).sort((a, b) => a.order - b.order);
+  return [];
 }
 
 export async function fetchFAFEActions(limitCount?: number, featuredOnly = false): Promise<FAFEAction[]> {
-  let actions = DEMO_ACTIONS;
-  if (featuredOnly) {
-    actions = actions.filter(a => a.isFeatured);
-  }
-  if (limitCount) {
-    actions = actions.slice(0, limitCount);
-  }
-  return actions;
+  return [];
 }
 
 export async function fetchActionStats(): Promise<ActionStatistic[]> {
-  return DEMO_ACTION_STATS.filter(s => s.isVisible).sort((a, b) => a.order - b.order);
+  return [];
 }
 
 export async function fetchActionTestimonials(): Promise<ActionTestimonial[]> {
-  return DEMO_ACTION_TESTIMONIALS.filter(t => t.isVisible);
+  return [];
 }

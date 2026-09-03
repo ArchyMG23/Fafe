@@ -46,6 +46,12 @@ export function MemberDashboard() {
     }
   }, [currentUser, loading, navigate]);
 
+  useEffect(() => {
+    if (userProfile && ['SUPER_ADMIN', 'ADMIN'].includes(userProfile.role)) {
+      navigate('/admin', { replace: true });
+    }
+  }, [userProfile, navigate]);
+
   const handleLogout = async () => {
     await logout();
     navigate('/');

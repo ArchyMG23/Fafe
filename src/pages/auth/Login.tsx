@@ -14,13 +14,17 @@ export function Login() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { currentUser } = useAuthStore();
+  const { currentUser, userProfile } = useAuthStore();
 
   useEffect(() => {
-    if (currentUser) {
-      navigate('/hub/dashboard', { replace: true });
+    if (currentUser && userProfile) {
+      if (['SUPER_ADMIN', 'ADMIN'].includes(userProfile.role)) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/hub/dashboard', { replace: true });
+      }
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, userProfile, navigate]);
 
   const getErrorMessage = (err: any) => {
     const code = err.code || 'unknown';
