@@ -98,32 +98,6 @@ export function FafeOfficialEmblem({
              C 190 235, 175 225, 162 205 Z" 
         />
       </g>
-
-      {/* Typography: FAFE and Forum Africain des Femmes Entrepreneures */}
-      <g fill="#6B3E1E">
-        <text 
-          x="225" 
-          y="275" 
-          fontSize="76" 
-          fontWeight="900" 
-          letterSpacing="4" 
-          fontFamily="'Playfair Display', Georgia, serif"
-        >
-          FAFE
-        </text>
-        <text x="225" y="306" fontSize="21" fontWeight="800" letterSpacing="0.5" fontFamily="'Plus Jakarta Sans', Arial, sans-serif">Forum Africain</text>
-        <text x="225" y="332" fontSize="21" fontWeight="800" letterSpacing="0.5" fontFamily="'Plus Jakarta Sans', Arial, sans-serif">des Femmes</text>
-        <text x="225" y="358" fontSize="21" fontWeight="800" letterSpacing="0.5" fontFamily="'Plus Jakarta Sans', Arial, sans-serif">Entrepreneures</text>
-      </g>
-
-      {/* Bottom Chapter signature: CAMEROON (with Golden Star) */}
-      <g fontFamily="'Plus Jakarta Sans', Arial, sans-serif" fontWeight="900" fontSize="48" letterSpacing="6">
-        <text x="100" y="445" fill="#00843D">CA</text>
-        <text x="222" y="445" fill="#D8232A">M</text>
-        <polygon points="239,425 242,433 250,433 244,438 246,446 239,441 232,446 234,438 228,433 236,433" fill="#FCD116" />
-        <text x="272" y="445" fill="#D8232A">E</text>
-        <text x="312" y="445" fill="#FCD116">ROON</text>
-      </g>
     </svg>
   );
 }
@@ -133,14 +107,14 @@ export function FafeLogo({
   size = 'md',
   className = '',
   showSubtitle = true,
-  chapter,
+  chapter = 'Cameroon',
 }: FafeLogoProps) {
   // Dimensions for emblem and text pairing
   const sizeDimensions = {
-    sm: { symbol: 'w-9 h-9', text: 'text-lg', sub: 'text-[8px]', gap: 'gap-2.5' },
-    md: { symbol: 'w-11 h-11', text: 'text-xl', sub: 'text-[9.5px]', gap: 'gap-3' },
-    lg: { symbol: 'w-14 h-14', text: 'text-2xl', sub: 'text-[11px]', gap: 'gap-3.5' },
-    xl: { symbol: 'w-20 h-20', text: 'text-3xl', sub: 'text-xs', gap: 'gap-4' },
+    sm: { symbol: 'w-10 h-10', text: 'text-xl', sub: 'text-[9px]', gap: 'gap-2.5' },
+    md: { symbol: 'w-14 h-14', text: 'text-3xl', sub: 'text-[11px]', gap: 'gap-3' },
+    lg: { symbol: 'w-16 h-16', text: 'text-4xl', sub: 'text-xs', gap: 'gap-4' },
+    xl: { symbol: 'w-24 h-24', text: 'text-5xl', sub: 'text-sm', gap: 'gap-5' },
   };
 
   const dim = sizeDimensions[size];
@@ -156,8 +130,8 @@ export function FafeLogo({
 
       {/* Typography side */}
       {variant !== 'symbol-only' && (
-        <div className="flex flex-col justify-center">
-          <div className="flex items-center gap-1.5 leading-none">
+        <div className="flex flex-col justify-center pt-1">
+          <div className="flex items-baseline gap-2 leading-none mb-0.5">
             <span
               className={`font-heading font-extrabold tracking-tight ${
                 isLight ? 'text-white' : 'text-[#6B3E1E]'
@@ -166,15 +140,17 @@ export function FafeLogo({
               FAFE
             </span>
             {chapter && (
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#E67E22]/20 text-[#E67E22] uppercase tracking-wider">
+              <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-sm ${
+                isLight ? 'bg-white/20 text-white' : 'bg-[#E67E22]/10 text-[#E67E22]'
+              } uppercase tracking-wider`}>
                 {chapter}
               </span>
             )}
           </div>
           {showSubtitle && (
             <span
-              className={`uppercase font-bold tracking-widest leading-tight mt-0.5 ${
-                isLight ? 'text-[#D4AF37]' : 'text-[#6B3E1E]/75'
+              className={`uppercase font-bold tracking-widest leading-tight ${
+                isLight ? 'text-[#D4AF37]' : 'text-[#6B3E1E]/80'
               } ${dim.sub}`}
             >
               Forum Africain des Femmes Entrepreneures
