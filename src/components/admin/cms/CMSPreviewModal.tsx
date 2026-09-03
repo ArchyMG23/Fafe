@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState } from 'react';
 import { X, Monitor, Tablet, Smartphone, Globe, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Button } from '../../ui/Button';
@@ -151,7 +152,7 @@ export function CMSPreviewModal({
                 </div>
 
                 <div className="w-64 h-80 rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-stone-100 shrink-0">
-                  <img src={pcaHero.pcaPhoto} alt={pcaHero.pcaName} className="w-full h-full object-cover" />
+                  <FafeImage src={pcaHero.pcaPhoto} alt={pcaHero.pcaName} className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
@@ -217,7 +218,7 @@ export function CMSPreviewModal({
               <div className="grid sm:grid-cols-3 gap-6">
                 {bureauExecutif.members?.map((m: any, idx: number) => (
                   <div key={idx} className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm text-center">
-                    <img src={m.photo} alt={m.name} className="w-full aspect-[4/5] object-cover" />
+                    <FafeImage src={m.photo} alt={m.name} className="w-full aspect-[4/5] object-cover" />
                     <div className="p-4">
                       <h4 className="font-bold text-[#6B3E1E]">{m.name}</h4>
                       <p className="text-xs text-[#E67E22] font-semibold">{m.role?.[activeLang] || ""}</p>

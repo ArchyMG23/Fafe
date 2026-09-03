@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CreditCard, CheckCircle, Clock, AlertTriangle, FileText, Upload, Shield, Loader2, ArrowRight } from 'lucide-react';
@@ -415,7 +416,7 @@ export function MemberAdhesion() {
                     </div>
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#6B3E1E] font-bold text-xl overflow-hidden shadow-inner">
                       {userProfile?.photoURL ? (
-                         <img src={userProfile.photoURL} alt="Photo" className="w-full h-full object-cover" />
+                         <FafeImage src={userProfile.photoURL} alt="Photo" className="w-full h-full object-cover" />
                       ) : (
                          <span className="text-[#6B3E1E]">F</span>
                       )}

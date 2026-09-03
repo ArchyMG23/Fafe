@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import React, { useState, useEffect } from 'react';
 import { X, Upload, Image as ImageIcon, Search, Check, Trash2, Plus, Loader2 } from 'lucide-react';
 import { Button } from '../../ui/Button';
@@ -240,7 +241,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                       }`}
                     >
                       <div className="aspect-video relative overflow-hidden bg-stone-100">
-                        <img 
+                        <FafeImage 
                           src={item.url} 
                           alt={item.title} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -281,7 +282,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
               <div className="border-2 border-dashed border-stone-300 hover:border-[#E67E22] rounded-2xl p-8 text-center bg-stone-50/50 hover:bg-orange-50/20 transition-colors">
                 {uploadPreview ? (
                   <div className="space-y-4">
-                    <img 
+                    <FafeImage 
                       src={uploadPreview} 
                       alt="Aperçu" 
                       className="max-h-48 mx-auto rounded-xl object-contain shadow-sm border border-stone-200" 
@@ -363,7 +364,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
               {customUrl && (
                 <div className="p-3 bg-stone-50 rounded-xl border border-stone-200">
                   <p className="text-xs font-bold text-stone-500 mb-2">Aperçu immédiat :</p>
-                  <img 
+                  <FafeImage 
                     src={customUrl} 
                     alt="Aperçu" 
                     className="max-h-40 mx-auto rounded-lg object-contain"

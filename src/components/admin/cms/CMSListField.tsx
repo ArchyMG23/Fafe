@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import React, { useState } from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown, Edit2, Check, X, Image as ImageIcon } from 'lucide-react';
 import { Button } from '../../ui/Button';
@@ -130,7 +131,7 @@ export function CMSListField({
                   </span>
 
                   {item.photo && (
-                    <img src={item.photo} alt="mini" className="w-8 h-8 rounded-lg object-cover border shrink-0" />
+                    <FafeImage src={item.photo} alt="mini" className="w-8 h-8 rounded-lg object-cover border shrink-0" />
                   )}
 
                   <div className="min-w-0">

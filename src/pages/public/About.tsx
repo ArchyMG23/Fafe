@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { getPublishedCMSContent, defaultNousCMS } from '../../lib/cms';
@@ -81,7 +82,7 @@ export function About() {
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             <motion.div 
               className="lg:w-1/2"
@@ -122,7 +123,7 @@ export function About() {
               viewport={{ once: true }}
             >
               <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl">
-                <img 
+                <FafeImage 
                   src={pcaHero?.pcaPhoto} 
                   alt={pcaHero?.pcaName}
                   className="w-full h-full object-cover"
@@ -140,7 +141,7 @@ export function About() {
 
       {/* 2. PRÉSENTATION */}
       <section className="merged-section py-24 bg-white" id="presentation">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
             className="text-center mb-16 flex flex-col items-center"
             initial="hidden"
@@ -171,7 +172,7 @@ export function About() {
 
       {/* 3. NOTRE HISTOIRE */}
       <section className="merged-section py-24 bg-[#FAF9F6]" id="historique">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-20"
             initial="hidden"
@@ -222,7 +223,7 @@ export function About() {
 
       {/* 4. VISION ET MISSION */}
       <section className="merged-section py-24 bg-white" id="vision">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <motion.div 
               className="bg-[#FAF9F6] p-10 md:p-12 rounded-[2rem] border border-[#6B3E1E]/5 shadow-sm hover:shadow-lg transition-shadow"
@@ -264,7 +265,7 @@ export function About() {
 
       {/* 5. NOS VALEURS */}
       <section className="merged-section py-24 bg-[#FAF9F6]" id="valeurs">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-16"
             initial="hidden"
@@ -303,7 +304,7 @@ export function About() {
 
       {/* 6. GOUVERNANCE */}
       <section className="merged-section py-24 bg-white border-b border-[#6B3E1E]/5" id="gouvernance">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-4xl text-center">
           <motion.div 
             initial="hidden"
             whileInView="visible"
@@ -326,7 +327,7 @@ export function About() {
 
       {/* 7. BUREAU EXÉCUTIF */}
       <section className="merged-section py-24 bg-[#FAF9F6]" id="bureau-executif">
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-6xl">
           <motion.div 
             className="text-center mb-16"
             initial="hidden"
@@ -353,7 +354,7 @@ export function About() {
               >
                 <div className="aspect-[4/5] overflow-hidden relative bg-stone-100">
                   {member.photo ? (
-                    <img 
+                    <FafeImage 
                       src={member.photo} 
                       alt={member.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0"
@@ -382,7 +383,7 @@ export function About() {
 
       {/* 8. ÉQUIPE OPÉRATIONNELLE */}
       <section className="merged-section py-24 bg-white" id="equipe">
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-6xl">
           <motion.div 
             className="text-center mb-16"
             initial="hidden"
@@ -409,7 +410,7 @@ export function About() {
               >
                 <div className="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[#FAF9F6] shadow-lg relative bg-stone-100">
                   {member.photo ? (
-                    <img 
+                    <FafeImage 
                       src={member.photo} 
                       alt={member.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -430,7 +431,7 @@ export function About() {
 
       {/* 9. PARTENAIRES */}
       <section className="merged-section py-24 bg-[#FAF9F6]" id="partenaires">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
             className="text-center mb-16"
             initial="hidden"
@@ -461,7 +462,7 @@ export function About() {
                   viewport={{ once: true }}
                 >
                   {part.logo ? (
-                    <img src={part.logo} alt={part.name} className="max-w-full max-h-full object-contain" />
+                    <FafeImage src={part.logo} alt={part.name} className="max-w-full max-h-full object-contain" />
                   ) : (
                     <span className="text-sm font-bold text-stone-400">{part.name}</span>
                   )}
@@ -474,7 +475,7 @@ export function About() {
 
       {/* 10. RAPPORTS D'ACTIVITÉS */}
       <section className="merged-section py-24 bg-white" id="rapports">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-4xl">
           <motion.div 
             className="text-center mb-16"
             initial="hidden"
@@ -518,7 +519,7 @@ export function About() {
       {/* 11. CTA */}
       <section className="merged-section py-24 bg-[#522d14] relative overflow-hidden merged-section" id="about-cta">
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-10 rounded-full blur-[100px]"></div>
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
+        <div className="w-full max-w-7xl mx-auto px-4 relative z-10 text-center max-w-3xl">
           <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">
             Prête à rejoindre notre réseau ?
           </h2>

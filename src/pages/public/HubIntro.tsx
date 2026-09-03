@@ -5,7 +5,7 @@ import { Network, Users, Briefcase, GraduationCap } from 'lucide-react';
 export function HubIntro() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-20 px-4">
-      <div className="container mx-auto max-w-4xl text-center">
+      <div className="w-full max-w-7xl mx-auto max-w-4xl text-center">
         <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-6">
           Bienvenue sur le FAFE Hub
         </h1>

@@ -87,7 +87,7 @@ export function Navbar() {
       }`}
     >
       <div
-        className={`mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 max-w-7xl ${
+        className={`w-full mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 max-w-7xl ${
           isScrolled ? 'h-16' : 'h-18 md:h-20'
         }`}
       >
@@ -104,7 +104,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 h-full">
+        <nav className="hidden lg:flex items-center justify-center flex-1 gap-6 xl:gap-8 h-full mx-4">
           <Link
             to="/"
             className={`relative py-2 text-sm font-semibold transition-colors ${
@@ -176,61 +176,62 @@ export function Navbar() {
               <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
             )}
           </Link>
+        </nav>
 
-          <div className="flex items-center gap-1.5 ml-2 border-l border-stone-200 pl-4">
-            <Link
-              to="/recherche"
-              aria-label="Recherche"
-              title="Recherche"
-              className="text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
-            >
-              <Search className="w-5 h-5" />
+        {/* Desktop Actions */}
+        <div className="hidden lg:flex items-center gap-1.5 shrink-0 border-l border-stone-200 pl-4">
+          <Link
+            to="/recherche"
+            aria-label="Recherche"
+            title="Recherche"
+            className="text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+          >
+            <Search className="w-5 h-5" />
+          </Link>
+          
+          <Link
+            to="/marketplace"
+            aria-label="Marketplace FAFE"
+            title="Marketplace"
+            className="text-stone-500 hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 relative"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            {cartItemsCount > 0 && (
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                {cartItemsCount}
+              </span>
+            )}
+          </Link>
+          
+          <button
+            onClick={toggleLanguage}
+            aria-label="Changer de langue"
+            className="text-xs font-bold uppercase text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+          >
+            {language}
+          </button>
+          
+          {user ? (
+            <Link to="/hub/dashboard" className="ml-2">
+              <Button className="bg-[#6B3E1E] hover:bg-[#532f17] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
+                Espace Membre
+              </Button>
             </Link>
-            
-            <Link
-              to="/marketplace"
-              aria-label="Marketplace FAFE"
-              title="Marketplace"
-              className="text-stone-500 hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 relative"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cartItemsCount > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
-                  {cartItemsCount}
-                </span>
-              )}
-            </Link>
-            
-            <button
-              onClick={toggleLanguage}
-              aria-label="Changer de langue"
-              className="text-xs font-bold uppercase text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
-            >
-              {language}
-            </button>
-            
-            {user ? (
-              <Link to="/hub/dashboard" className="ml-2">
-                <Button className="bg-[#6B3E1E] hover:bg-[#532f17] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
-                  Espace Membre
+          ) : (
+            <div className="flex items-center gap-2 ml-2">
+              <Link to="/hub/connexion">
+                <Button variant="outline" className="border-stone-200 text-stone-700 hover:bg-stone-50 py-1.5 px-4 rounded-full font-bold text-xs">
+                  Connexion
                 </Button>
               </Link>
-            ) : (
-              <div className="flex items-center gap-2 ml-2">
-                <Link to="/hub/connexion">
-                  <Button variant="outline" className="border-stone-200 text-stone-700 hover:bg-stone-50 py-1.5 px-4 rounded-full font-bold text-xs">
-                    Connexion
-                  </Button>
-                </Link>
-                <Link to="/rejoindre">
-                  <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
-                    Rejoindre
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </nav>
+              <Link to="/rejoindre">
+                <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
+                  Rejoindre
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Mobile Header Actions (Compact, Thumb-friendly) */}
         <div className="flex items-center gap-1 sm:gap-2 lg:hidden">
@@ -268,7 +269,7 @@ export function Navbar() {
             transition={{ duration: 0.2 }}
             className="lg:hidden fixed inset-x-0 top-[64px] bottom-0 bg-white/98 backdrop-blur-md z-50 overflow-y-auto border-t border-stone-100 flex flex-col shadow-2xl"
           >
-            <div className="container mx-auto px-5 py-6 flex-grow flex flex-col justify-between max-w-lg">
+            <div className="w-full mx-auto px-5 py-6 flex-grow flex flex-col justify-between max-w-lg">
               
               <div className="space-y-6">
                 

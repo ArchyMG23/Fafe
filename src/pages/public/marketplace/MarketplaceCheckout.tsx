@@ -24,7 +24,7 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 export function MarketplaceCheckout() {
   const { items, getTotalPrice, clearCart } = useCartStore();
-  const { currentUser } = useAuthStore();
+  const { currentUser, userProfile } = useAuthStore();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -39,12 +39,12 @@ export function MarketplaceCheckout() {
   const { register, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      firstName: currentUser?.firstName || '',
-      lastName: currentUser?.lastName || '',
-      email: currentUser?.email || '',
-      phone: currentUser?.phone || '',
-      country: currentUser?.country || '',
-      city: currentUser?.city || '',
+      firstName: userProfile?.firstName || '',
+      lastName: userProfile?.lastName || '',
+      email: userProfile?.email || currentUser?.email || '',
+      phone: userProfile?.phone || '',
+      country: userProfile?.country || '',
+      city: userProfile?.city || '',
     }
   });
 
@@ -111,7 +111,7 @@ export function MarketplaceCheckout() {
 
   return (
     <div className="min-h-screen bg-stone-50 py-12">
-      <div className="container mx-auto px-4 max-w-5xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
         <h1 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-8">Finaliser la commande</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

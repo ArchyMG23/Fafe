@@ -120,7 +120,7 @@ export function NewsAndEvents() {
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[350px] h-[350px] bg-[#D4AF37] opacity-10 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[300px] h-[300px] bg-[#E67E22] opacity-10 rounded-full blur-[70px] pointer-events-none" />
         
-        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
           <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-2 block">
             Éditorial & Agenda
           </span>
@@ -157,7 +157,7 @@ export function NewsAndEvents() {
 
       {/* Content Section */}
       <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-7xl">
           {filteredItems.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-stone-200">
               <p className="text-stone-500 text-sm">Aucun contenu disponible pour ce filtre.</p>

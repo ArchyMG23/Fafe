@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { collection, query, getDocs, orderBy, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -447,7 +448,7 @@ export function AdminAdhesions() {
                   title="Aperçu PDF"
                 />
               ) : (
-                <img 
+                <FafeImage 
                   src={selectedProofUrl} 
                   alt="Preuve de paiement" 
                   className="max-h-[60vh] max-w-full object-contain rounded-lg shadow-sm" 

@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useEffect } from 'react';
 import { Routes, Route, useNavigate, Link, useLocation, Navigate } from 'react-router-dom';
 import { 
@@ -80,14 +81,14 @@ export function MemberDashboard() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-12">
-      <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-7xl">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-white p-6 rounded-2xl shadow-sm border border-[#6B3E1E]/5">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-[#E67E22]/10 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
               {userProfile.photoURL ? (
-                <img src={userProfile.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                <FafeImage src={userProfile.photoURL} alt="Profile" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-2xl font-bold text-[#E67E22]">
                   {userProfile.firstName.charAt(0)}{userProfile.lastName.charAt(0)}

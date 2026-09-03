@@ -158,7 +158,7 @@ export function EventRegistration() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4 max-w-3xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-3xl">
         <Link to={`/evenements/${event.slug}`} className="inline-flex items-center gap-2 text-stone-500 hover:text-[#E67E22] mb-8 font-medium transition-colors">
           <ArrowLeft className="w-4 h-4" /> Retour à l'événement
         </Link>

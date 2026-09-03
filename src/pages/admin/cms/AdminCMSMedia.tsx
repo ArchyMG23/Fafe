@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { Image as ImageIcon, Upload, Search, Trash2, Copy, Check, Filter, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
@@ -183,7 +184,7 @@ export function AdminCMSMedia() {
               className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-md transition-all group"
             >
               <div className="aspect-video relative overflow-hidden bg-stone-100">
-                <img 
+                <FafeImage 
                   src={item.url} 
                   alt={item.title} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -248,7 +249,7 @@ export function AdminCMSMedia() {
               <div className="border-2 border-dashed border-stone-300 rounded-2xl p-6 text-center bg-stone-50 hover:bg-orange-50/20 transition-colors">
                 {uploadPreview ? (
                   <div className="space-y-2">
-                    <img src={uploadPreview} alt="Aperçu" className="max-h-40 mx-auto rounded-xl object-contain shadow-xs" />
+                    <FafeImage src={uploadPreview} alt="Aperçu" className="max-h-40 mx-auto rounded-xl object-contain shadow-xs" />
                     <button
                       type="button"
                       onClick={() => { setUploadFile(null); setUploadPreview(null); }}

@@ -55,7 +55,7 @@ export function PublicEntrepreneurs() {
       {/* Hero */}
       <section className="pt-24 pb-20 lg:pt-32 lg:pb-32 bg-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#E67E22] opacity-5 rounded-full blur-[100px] -mt-40 -mr-40" />
-        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center max-w-4xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-4xl">
           <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6">
               {language === 'fr' 
@@ -80,7 +80,7 @@ export function PublicEntrepreneurs() {
 
       {/* Showcase */}
       <section className="py-24 bg-[#FAF9F6]">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">
               {language === 'fr' ? 'Entrepreneures à la une' : 'Featured Entrepreneurs'}
@@ -138,7 +138,7 @@ export function PublicEntrepreneurs() {
 
       {/* Stats/Impact */}
       <section className="py-24 bg-[#6B3E1E] text-white text-center">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
           <h2 className="text-3xl font-bold font-heading mb-12">
             {language === 'fr' ? 'Un réseau en constante croissance' : 'A constantly growing network'}
           </h2>
@@ -164,7 +164,7 @@ export function PublicEntrepreneurs() {
 
       {/* CTA to Hub */}
       <section className="py-24 bg-white text-center">
-        <div className="container mx-auto px-4 md:px-6 max-w-3xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-3xl">
           <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-6">
             {language === 'fr' 
               ? 'Rejoignez le mouvement ou trouvez votre partenaire d\'affaires' 

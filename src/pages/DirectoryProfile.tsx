@@ -101,7 +101,7 @@ export function DirectoryProfile() {
 
   if (!profile || profile.status !== 'APPROVED') {
     return (
-      <div className="container mx-auto px-4 py-24 text-center">
+      <div className="w-full max-w-7xl mx-auto px-4 py-24 text-center">
         <h2 className="text-2xl font-heading text-[#6B3E1E] mb-4">Profil introuvable ou en attente de validation</h2>
         <Link to="/hub/annuaire">
           <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">Retour à l'annuaire</Button>
@@ -112,7 +112,7 @@ export function DirectoryProfile() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-12">
-      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
         <Link to="/hub/annuaire" className="inline-flex items-center text-sm font-medium text-[#6B3E1E]/60 hover:text-[#E67E22] mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour à l'annuaire

@@ -43,7 +43,7 @@ import { MarketplaceLayout } from './pages/public/marketplace/MarketplaceLayout'
 
 function Placeholder({ title }: { title: string }) {
   return (
-    <div className="container mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center text-center">
+    <div className="w-full max-w-7xl mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center text-center">
       <h1 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">{title}</h1>
       <p className="text-[#6B3E1E]/60 max-w-md">
         Cette section est en cours de construction et sera disponible prochainement dans la prochaine version de la plateforme.

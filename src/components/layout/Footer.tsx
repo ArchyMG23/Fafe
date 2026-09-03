@@ -29,7 +29,7 @@ export function Footer() {
 
   return (
     <footer className="bg-[#6B3E1E] text-white pt-20 pb-10">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8 mb-16">
           
           <div className="lg:col-span-2">

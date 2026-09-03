@@ -80,7 +80,7 @@ export function Directory() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-16">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
         
         {/* Header */}
         <div className="mb-12 text-center max-w-3xl mx-auto">

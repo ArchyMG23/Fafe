@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -98,7 +99,7 @@ export function AdminEntrepreneurDetail() {
             <div className="flex flex-col items-center text-center">
               <div className="w-24 h-24 rounded-full bg-stone-100 overflow-hidden mb-4 border-2 border-white shadow-sm">
                 {profile.professionalPhoto ? (
-                  <img src={profile.professionalPhoto} alt="" className="w-full h-full object-cover" />
+                  <FafeImage src={profile.professionalPhoto} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-3xl font-bold text-stone-400 flex items-center justify-center h-full">
                     {profile.firstName.charAt(0)}{profile.lastName.charAt(0)}

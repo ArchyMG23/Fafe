@@ -108,7 +108,7 @@ export function MarketplaceConfirmation() {
 
   return (
     <div className="min-h-screen bg-stone-50 py-12">
-      <div className="container mx-auto px-4 max-w-2xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-stone-100 text-center relative overflow-hidden">
           {/* Decorative background */}
           <div className="absolute top-0 left-0 w-full h-32 bg-emerald-50 -z-10" />

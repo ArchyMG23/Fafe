@@ -6,6 +6,7 @@ interface FafeLogoProps {
   className?: string;
   showSubtitle?: boolean;
   chapter?: string;
+  badge?: string;
 }
 
 export function FafeOfficialEmblem({ 
@@ -108,11 +109,12 @@ export function FafeLogo({
   className = '',
   showSubtitle = true,
   chapter = 'Cameroon',
+  badge,
 }: FafeLogoProps) {
   // Dimensions for emblem and text pairing
   const sizeDimensions = {
-    sm: { symbol: 'w-10 h-10', text: 'text-xl', sub: 'text-[9px]', gap: 'gap-2.5' },
-    md: { symbol: 'w-14 h-14', text: 'text-3xl', sub: 'text-[11px]', gap: 'gap-3' },
+    sm: { symbol: 'w-10 h-10', text: 'text-xl', sub: 'text-[7px]', gap: 'gap-2.5' },
+    md: { symbol: 'w-14 h-14', text: 'text-3xl', sub: 'text-[9px]', gap: 'gap-3' },
     lg: { symbol: 'w-16 h-16', text: 'text-4xl', sub: 'text-xs', gap: 'gap-4' },
     xl: { symbol: 'w-24 h-24', text: 'text-5xl', sub: 'text-sm', gap: 'gap-5' },
   };
@@ -124,33 +126,44 @@ export function FafeLogo({
     <div className={`inline-flex items-center ${dim.gap} select-none ${className}`}>
       {/* Official Emblem Symbol */}
       <FafeOfficialEmblem 
-        className={`${dim.symbol} transition-transform duration-300 hover:scale-105`} 
+        className={`${dim.symbol} transition-transform duration-300 hover:scale-105 shrink-0`} 
         isLight={isLight} 
       />
 
       {/* Typography side */}
       {variant !== 'symbol-only' && (
-        <div className="flex flex-col justify-center pt-1">
-          <div className="flex items-baseline gap-2 leading-none mb-0.5">
+        <div className="flex flex-col justify-center">
+          <div className="flex items-center gap-2">
             <span
-              className={`font-heading font-extrabold tracking-tight ${
+              className={`font-heading font-extrabold tracking-tight leading-none ${
                 isLight ? 'text-white' : 'text-[#6B3E1E]'
               } ${dim.text}`}
             >
               FAFE
             </span>
-            {chapter && (
-              <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-sm ${
-                isLight ? 'bg-white/20 text-white' : 'bg-[#E67E22]/10 text-[#E67E22]'
-              } uppercase tracking-wider`}>
-                {chapter}
-              </span>
+            {(chapter || badge) && (
+              <div className="flex items-center gap-1.5 ml-1">
+                {chapter && (
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
+                    isLight ? 'bg-white/10 text-white' : 'bg-stone-100 text-stone-500'
+                  } uppercase tracking-wider`}>
+                    {chapter}
+                  </span>
+                )}
+                {badge && (
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
+                    isLight ? 'bg-[#E67E22] text-white' : 'bg-[#E67E22]/10 text-[#E67E22]'
+                  } uppercase tracking-wider`}>
+                    {badge}
+                  </span>
+                )}
+              </div>
             )}
           </div>
           {showSubtitle && (
             <span
-              className={`uppercase font-bold tracking-widest leading-tight ${
-                isLight ? 'text-[#D4AF37]' : 'text-[#6B3E1E]/80'
+              className={`uppercase font-bold tracking-[0.15em] mt-1 whitespace-nowrap ${
+                isLight ? 'text-[#D4AF37]' : 'text-[#6B3E1E]/70'
               } ${dim.sub}`}
             >
               Forum Africain des Femmes Entrepreneures

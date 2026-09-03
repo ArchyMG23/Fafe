@@ -53,7 +53,7 @@ export function News() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
-      <div className="container mx-auto px-4 max-w-6xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-4">
             Actualités & Ressources

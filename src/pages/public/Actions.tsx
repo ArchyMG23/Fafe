@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -130,7 +131,7 @@ export function Actions() {
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             <motion.div 
               className="lg:w-1/2"
@@ -161,7 +162,7 @@ export function Actions() {
               transition={{ duration: 0.8 }}
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] group">
-                <img 
+                <FafeImage 
                   src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&q=80" 
                   alt="Actions FAFE" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -175,7 +176,7 @@ export function Actions() {
 
       {/* 2. INTRODUCTION / NOTRE ENGAGEMENT */}
       <section className="merged-section py-20 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="max-w-4xl mx-auto text-center"
             initial="hidden"
@@ -202,7 +203,7 @@ export function Actions() {
 
       {/* 3. DOMAINES D'ACTION */}
       <section className="merged-section py-24 bg-[#FAF9F6]">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-16"
             initial="hidden"
@@ -241,7 +242,7 @@ export function Actions() {
                   
                   {category.image && (
                     <div className="absolute inset-0 z-0">
-                      <img 
+                      <FafeImage 
                         src={category.image} 
                         alt="" 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -278,7 +279,7 @@ export function Actions() {
       {/* 4. ACTIONS À LA UNE */}
       {featuredActions.length > 0 && (
         <section className="merged-section py-24 bg-white">
-          <div className="container mx-auto px-4 md:px-6">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
             <motion.div 
               className="text-center mb-16"
               initial="hidden"
@@ -304,7 +305,7 @@ export function Actions() {
                 variants={fadeInUp}
               >
                 <div className="md:w-1/2 relative overflow-hidden">
-                  <img 
+                  <FafeImage 
                     src={featuredActions[0].image} 
                     alt="" 
                     className="w-full h-full object-cover aspect-video md:aspect-auto transition-transform duration-700 group-hover:scale-105" 
@@ -352,7 +353,7 @@ export function Actions() {
                     variants={fadeInUp}
                   >
                     <div className="w-1/3 relative overflow-hidden">
-                      <img 
+                      <FafeImage 
                         src={action.image} 
                         alt="" 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -384,7 +385,7 @@ export function Actions() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#E67E22] opacity-10 rounded-full blur-[80px]"></div>
         
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center">
             {stats.map((stat, idx) => (
               <motion.div 
@@ -411,7 +412,7 @@ export function Actions() {
 
       {/* 6. TOUTES LES ACTIONS (FILTRABLES) */}
       <section className="merged-section py-24 bg-[#FAF9F6]">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
             <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">
               {language === 'fr' ? 'Toutes nos actions' : 'All our actions'}
@@ -485,7 +486,7 @@ export function Actions() {
                   className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col group"
                 >
                   <div className="relative aspect-video overflow-hidden">
-                    <img 
+                    <FafeImage 
                       src={action.image} 
                       alt="" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -522,7 +523,7 @@ export function Actions() {
       {/* 7. PROJETS EN COURS */}
       {projects.length > 0 && (
         <section className="merged-section py-24 bg-white">
-          <div className="container mx-auto px-4 md:px-6">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
             <div className="flex justify-between items-end mb-12">
               <motion.div 
                 initial="hidden"
@@ -554,7 +555,7 @@ export function Actions() {
                   className="rounded-2xl overflow-hidden bg-stone-50 border border-stone-100 group"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img 
+                    <FafeImage 
                       src={project.image} 
                       alt={project.title} 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -603,7 +604,7 @@ export function Actions() {
       {/* 8. HISTOIRES D'IMPACT (TÉMOIGNAGES) */}
       {testimonials.length > 0 && (
         <section className="merged-section py-24 bg-[#FAF9F6]">
-          <div className="container mx-auto px-4 md:px-6">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
             <motion.div 
               className="text-center mb-16"
               initial="hidden"
@@ -632,7 +633,7 @@ export function Actions() {
                     "{tl({ fr: testimonial.testimonialFR, en: testimonial.testimonialEN })}"
                   </p>
                   <div className="flex items-center gap-4">
-                    <img 
+                    <FafeImage 
                       src={testimonial.photo} 
                       alt="" 
                       className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
@@ -657,7 +658,7 @@ export function Actions() {
       {/* 8.5 ÉVÉNEMENTS ET ACTIVITÉS */}
       {events.length > 0 && (
         <section className="merged-section py-24 bg-white">
-          <div className="container mx-auto px-4 md:px-6">
+          <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
             <div className="flex justify-between items-end mb-12">
               <motion.div 
                 initial="hidden"
@@ -720,7 +721,7 @@ export function Actions() {
 
       {/* 9. COMMENT PARTICIPER (CTA) */}
       <section className="merged-section py-20 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-12"
             initial="hidden"
@@ -769,7 +770,7 @@ export function Actions() {
           <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-[#E67E22] via-transparent to-transparent"></div>
         </div>
         
-        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
           <motion.div
             initial="hidden"
             whileInView="visible"

@@ -85,7 +85,7 @@ export function ArticleDetail() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-4xl">
         
         <Link to="/actualites" className="inline-flex items-center text-sm font-bold text-stone-500 hover:text-[#E67E22] mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" /> Retour aux actualités

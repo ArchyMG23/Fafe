@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -45,7 +46,7 @@ export function AdminEntrepreneurs() {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-stone-200 overflow-hidden flex items-center justify-center shrink-0 border border-stone-200">
             {profile.professionalPhoto ? (
-              <img src={profile.professionalPhoto} alt="" className="w-full h-full object-cover" />
+              <FafeImage src={profile.professionalPhoto} alt="" className="w-full h-full object-cover" />
             ) : (
               <span className="font-bold text-[#6B3E1E]">{profile.firstName.charAt(0)}</span>
             )}

@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Search, Filter, ArrowRight, Tag, Loader2, Star, ShoppingBag } from 'lucide-react';
@@ -60,7 +61,7 @@ export function MarketplaceHome() {
     <div className="min-h-screen bg-stone-50 pb-20">
       {/* Header */}
       <div className="bg-[#6B3E1E] text-white py-16">
-        <div className="container mx-auto px-4 text-center">
+        <div className="w-full max-w-7xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-white/90 mb-6 tracking-widest uppercase">
             <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
             FAFE Boutique
@@ -83,7 +84,7 @@ export function MarketplaceHome() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 mt-8 md:mt-12">
+      <div className="w-full max-w-7xl mx-auto px-4 mt-8 md:mt-12">
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <Loader2 className="w-8 h-8 text-[#E67E22] animate-spin" />
@@ -183,7 +184,7 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
     <div className="group bg-white rounded-2xl border border-stone-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
       <Link to={`/marketplace/produit/${product.slug}`} className="block relative aspect-square bg-stone-50 overflow-hidden">
         {product.images && product.images[0] ? (
-          <img 
+          <FafeImage 
             src={product.images[0]} 
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

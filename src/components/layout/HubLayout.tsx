@@ -52,7 +52,7 @@ export function HubLayout() {
     return (
       <div className="min-h-screen bg-[#FAF9F6] flex flex-col">
         <header className="bg-white shadow-sm border-b border-stone-200 p-4">
-          <div className="container mx-auto flex justify-between items-center">
+          <div className="w-full max-w-7xl mx-auto flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2">
               <FafeLogo size="sm" showSubtitle={false} />
               <span className="text-xs bg-[#E67E22]/10 font-bold px-2 py-0.5 rounded text-[#E67E22] uppercase tracking-wider">Hub</span>

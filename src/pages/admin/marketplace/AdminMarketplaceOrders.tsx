@@ -89,7 +89,7 @@ export function AdminMarketplaceOrders() {
           updatedAt: Date.now()
         };
         transaction.update(orderRef, updateData);
-        if (selectedOrder) setSelectedOrder({ ...orderData, ...updateData });
+        if (selectedOrder) setSelectedOrder({ ...orderData, ...updateData } as Order);
       });
 
       await fetchOrders();

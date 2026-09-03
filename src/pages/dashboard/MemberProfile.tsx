@@ -1,3 +1,4 @@
+import { FafeImage } from '../../components/ui/FafeImage';
 import React, { useState, useRef, useEffect } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -200,7 +201,7 @@ export function MemberProfile() {
                   {isUploading ? (
                     <Loader2 className="w-8 h-8 animate-spin text-[#E67E22]" />
                   ) : userProfile.photoURL ? (
-                    <img src={userProfile.photoURL} alt="Profil" className="w-full h-full object-cover" />
+                    <FafeImage src={userProfile.photoURL} alt="Profil" className="w-full h-full object-cover" />
                   ) : (
                     <UserIcon className="w-16 h-16 text-stone-300" />
                   )}

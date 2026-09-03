@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Loader2, CheckCircle2, ShieldCheck, Tag } from 'lucide-react';
@@ -76,7 +77,7 @@ export function MarketplaceProduct() {
 
   return (
     <div className="min-h-screen bg-stone-50 py-12">
-      <div className="container mx-auto px-4">
+      <div className="w-full max-w-7xl mx-auto px-4">
         {/* Breadcrumb */}
         <Link to="/marketplace" className="inline-flex items-center text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" /> Retour à la boutique
@@ -89,7 +90,7 @@ export function MarketplaceProduct() {
             <div className="space-y-4">
               <div className="aspect-square rounded-2xl bg-stone-50 overflow-hidden border border-stone-100 relative">
                 {product.images && product.images[selectedImage] ? (
-                  <img 
+                  <FafeImage 
                     src={product.images[selectedImage]} 
                     alt={product.name}
                     className="w-full h-full object-cover"
@@ -118,7 +119,7 @@ export function MarketplaceProduct() {
                         selectedImage === idx ? 'border-[#E67E22] opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
                       }`}
                     >
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <FafeImage src={img} alt="" className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>

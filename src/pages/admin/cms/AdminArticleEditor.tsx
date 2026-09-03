@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore';
@@ -171,7 +172,7 @@ export function AdminArticleEditor() {
       {previewMode ? (
         <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
           <div className="max-w-3xl mx-auto prose prose-stone prose-orange">
-            {featuredImage && <img src={featuredImage} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8" />}
+            {featuredImage && <FafeImage src={featuredImage} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8" />}
             <h1 className="text-4xl font-bold font-heading text-[#6B3E1E] mb-4">{title || 'Titre de l\'article'}</h1>
             <p className="text-xl text-stone-500 italic mb-8 border-l-4 border-[#E67E22] pl-4">{excerpt}</p>
             <ReactMarkdown>{content || '*Le contenu s\'affichera ici...*'}</ReactMarkdown>
@@ -266,7 +267,7 @@ export function AdminArticleEditor() {
                 <Input value={featuredImage} onChange={e => setFeaturedImage(e.target.value)} placeholder="https://..." />
                 {featuredImage && (
                   <div className="mt-2 rounded-lg overflow-hidden border border-stone-200 h-32 bg-stone-50">
-                    <img src={featuredImage} alt="Preview" className="w-full h-full object-cover" />
+                    <FafeImage src={featuredImage} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 )}
               </div>

@@ -95,7 +95,7 @@ export function AdminOverview() {
             type: 'user',
             title: `Nouveau membre: ${data.firstName} ${data.lastName}`,
             date: data.createdAt,
-            icon: <UserPlus className="w-4 h-4 text-blue-500" />
+            icon: <UserPlus className="w-4 h-4 text-\[#E67E22\]" />
           });
         });
         
@@ -106,7 +106,7 @@ export function AdminOverview() {
             type: 'entrepreneur',
             title: `Nouveau profil: ${data.company}`,
             date: data.createdAt,
-            icon: <Briefcase className="w-4 h-4 text-purple-500" />
+            icon: <Briefcase className="w-4 h-4 text-\[#6B3E1E\]" />
           });
         });
 
@@ -124,17 +124,17 @@ export function AdminOverview() {
   }, []);
 
   const StatCard = ({ title, value, icon, subtitle, highlight = false }: any) => (
-    <div className={`bg-white p-6 rounded-xl border ${highlight ? 'border-[#E67E22] shadow-md' : 'border-stone-200 shadow-sm'}`}>
+    <div className={`bg-white p-6 rounded-2xl border transition-all duration-300 hover:shadow-md group ${highlight ? 'border-[#E67E22] shadow-sm ring-1 ring-[#E67E22]/20' : 'border-stone-200 shadow-sm hover:border-[#E67E22]/40'}`}>
       <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 rounded-lg ${highlight ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'bg-stone-100 text-stone-600'}`}>
+        <div className={`p-3 rounded-xl transition-colors ${highlight ? 'bg-[#E67E22] text-white shadow-sm shadow-[#E67E22]/20' : 'bg-[#E67E22]/10 text-[#E67E22] group-hover:bg-[#E67E22]/20'}`}>
           {icon}
         </div>
       </div>
-      <h3 className="text-3xl font-bold text-[#6B3E1E] mb-1">
+      <h3 className="text-3xl font-bold text-[#6B3E1E] mb-1 tracking-tight">
         {typeof value === 'number' && title.includes('Don') ? value.toLocaleString('fr-FR') + ' XAF' : value}
       </h3>
-      <p className="text-sm font-bold text-stone-500 uppercase tracking-wider">{title}</p>
-      {subtitle && <p className="text-xs text-stone-400 mt-2">{subtitle}</p>}
+      <p className="text-[11px] font-bold text-[#6B3E1E]/60 uppercase tracking-widest">{title}</p>
+      {subtitle && <p className="text-xs text-stone-500 mt-3 font-medium">{subtitle}</p>}
     </div>
   );
 
@@ -244,7 +244,7 @@ export function AdminOverview() {
           <h2 className="text-xl font-bold text-[#6B3E1E]">Raccourcis</h2>
           <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 space-y-2">
             <Link to="/admin/entrepreneures" className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 transition-colors group">
-              <div className="w-10 h-10 rounded bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded bg-[#E67E22]/10 text-[#E67E22] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Briefcase className="w-5 h-5" />
               </div>
               <div>
@@ -253,7 +253,7 @@ export function AdminOverview() {
               </div>
             </Link>
             <Link to="/admin/projets" className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 transition-colors group">
-              <div className="w-10 h-10 rounded bg-green-100 text-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded bg-[#6B3E1E]/10 text-[#6B3E1E] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FolderOpen className="w-5 h-5" />
               </div>
               <div>
@@ -262,7 +262,7 @@ export function AdminOverview() {
               </div>
             </Link>
             <Link to="/admin/contenus" className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 transition-colors group">
-              <div className="w-10 h-10 rounded bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileText className="w-5 h-5" />
               </div>
               <div>

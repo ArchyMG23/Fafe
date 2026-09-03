@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../../store/auth';
 import { collection, query, where, getDocs, doc, getDoc, orderBy } from 'firebase/firestore';
@@ -75,7 +76,7 @@ export function MemberEvents() {
             <div key={reg.id} className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col md:flex-row gap-6 items-start md:items-center">
               <div className="w-full md:w-48 h-32 bg-stone-100 rounded-xl overflow-hidden shrink-0 relative">
                 {reg.eventData?.coverImage ? (
-                  <img src={reg.eventData.coverImage} className="w-full h-full object-cover" alt="" />
+                  <FafeImage src={reg.eventData.coverImage} className="w-full h-full object-cover" alt="" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-stone-400"><Calendar /></div>
                 )}

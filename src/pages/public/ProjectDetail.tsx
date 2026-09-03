@@ -44,7 +44,7 @@ export function ProjectDetail() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] py-32">
-      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-4xl">
         <Link to="/projets-sociaux" className="inline-flex items-center text-[#E67E22] hover:text-[#c96a1a] font-medium mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour aux projets

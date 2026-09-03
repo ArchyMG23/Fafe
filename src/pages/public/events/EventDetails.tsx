@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getEventBySlug } from '../../../lib/events';
@@ -47,12 +48,12 @@ export function EventDetails() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4 max-w-5xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
         <div className="bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden">
           {/* Cover */}
           <div className="h-64 md:h-96 bg-stone-200 relative">
             {event.coverImage ? (
-              <img src={event.coverImage} alt={event.title} className="w-full h-full object-cover" />
+              <FafeImage src={event.coverImage} alt={event.title} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-[#6B3E1E] to-[#8E5B35]">
                 <Calendar className="w-20 h-20 text-white/20" />

@@ -95,7 +95,7 @@ function DynamicHeroSection() {
         <div className="absolute bottom-[-10%] left-[-5%] w-[50%] md:w-[35%] h-[45%] rounded-full bg-[#D4AF37] opacity-10 blur-[80px]" />
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Institutional Pitch */}
@@ -453,7 +453,7 @@ export function Home() {
 
       {/* 2. STATISTICS SECTION (Animated Counters & Compact Responsive Spacing) */}
       <section className="py-8 md:py-12 bg-white border-y border-[#6B3E1E]/5">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center p-3 sm:p-4 rounded-2xl bg-stone-50/60 md:bg-transparent border md:border-0 border-stone-100 group hover:bg-stone-50 transition-colors">
@@ -474,7 +474,7 @@ export function Home() {
 
       {/* 3. MISSIONS / NOTRE VOCATION */}
       <section className="py-12 md:py-20 bg-[#FAF9F6]">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
             <span className="inline-flex items-center gap-1 text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-2">
               <Sparkles className="w-3 h-3" /> Notre Vocation
@@ -525,7 +525,7 @@ export function Home() {
 
       {/* 4. ENTREPRENEURS HIGHLIGHT */}
       <section className="py-12 md:py-20 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
               <span className="text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-1 block">
@@ -583,7 +583,7 @@ export function Home() {
 
       {/* 5. COUNTRIES / CONTINENTAL PRESENCE */}
       <section className="py-12 md:py-20 bg-[#6B3E1E] text-white relative overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
           <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-2 block">
             Présence Continentale
           </span>
@@ -613,7 +613,7 @@ export function Home() {
 
       {/* 6. IMPACT & PROJETS */}
       <section className="py-12 md:py-20 bg-[#FAF9F6]">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
             <span className="text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-1 block">
               Impact & Développement
@@ -672,7 +672,7 @@ export function Home() {
 
       {/* 7. EVENTS SECTION */}
       <section className="py-12 md:py-20 bg-white border-t border-stone-100">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
               <span className="text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-1 block">Agenda</span>
@@ -691,7 +691,7 @@ export function Home() {
 
       {/* 8. NEWS SECTION */}
       <section className="py-12 md:py-20 bg-[#FAF9F6] border-t border-stone-100">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
               <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-1 block">
@@ -721,7 +721,7 @@ export function Home() {
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[350px] h-[350px] bg-[#E67E22] opacity-10 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[300px] h-[300px] bg-[#D4AF37] opacity-10 rounded-full blur-[70px] pointer-events-none" />
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
           <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6 text-[#D4AF37]">
             <Heart className="w-7 h-7" />
           </div>
@@ -746,7 +746,7 @@ export function Home() {
 
       {/* 10. PARTNERS */}
       <section className="py-12 md:py-16 bg-white border-t border-stone-100">
-        <div className="container mx-auto px-4 md:px-6 text-center">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 text-center">
           <span className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-8 block">
             Partenaires institutionnels & stratégiques
           </span>

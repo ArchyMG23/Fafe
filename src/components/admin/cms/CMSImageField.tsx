@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState } from 'react';
 import { Image as ImageIcon, FolderOpen, Link as LinkIcon, Trash2 } from 'lucide-react';
 import { Button } from '../../ui/Button';
@@ -45,7 +46,7 @@ export function CMSImageField({
         {/* Preview Thumbnail */}
         <div className={`relative rounded-lg overflow-hidden bg-stone-200 border border-stone-300 shrink-0 ${getAspectClass()}`}>
           {value ? (
-            <img 
+            <FafeImage 
               src={value} 
               alt={label} 
               className="w-full h-full object-cover"

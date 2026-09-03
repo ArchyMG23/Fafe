@@ -91,7 +91,7 @@ export function AboutAndActions() {
 function ContactSection() {
   return (
     <section className="merged-section py-24 bg-white" id="contact">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-6">
             Contactez-nous

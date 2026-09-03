@@ -34,7 +34,7 @@ export function Join() {
       {/* Hero Header */}
       <section className="bg-[#6B3E1E] text-white pt-32 pb-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
-        <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold font-heading mb-6">{tl(content.title)}</h1>
           <p className="text-xl max-w-2xl mx-auto text-white/80">
             {tl(content.subtitle)}
@@ -44,7 +44,7 @@ export function Join() {
 
       {/* Content */}
       <section className="py-20">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-16 items-start">
             
             {/* Left: Info */}

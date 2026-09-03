@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPublishedEvents } from '../../../lib/events';
@@ -36,7 +37,7 @@ export function EventList() {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
-      <div className="container mx-auto px-4 max-w-6xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-4">Événements</h1>
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
@@ -85,7 +86,7 @@ export function EventList() {
                 <div className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                   <div className="h-48 bg-stone-200 relative overflow-hidden">
                     {event.coverImage ? (
-                      <img src={event.coverImage} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <FafeImage src={event.coverImage} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-[#E67E22]/10 text-[#E67E22]">
                         <Calendar className="w-12 h-12" />

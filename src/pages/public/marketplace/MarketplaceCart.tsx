@@ -1,3 +1,4 @@
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowRight, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { useCartStore } from '../../../store/cart';
@@ -28,7 +29,7 @@ export function MarketplaceCart() {
 
   return (
     <div className="min-h-screen bg-stone-50 py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold font-heading text-[#6B3E1E]">Votre Panier</h1>
           <Link to="/marketplace" className="hidden sm:inline-flex items-center text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors">
@@ -44,7 +45,7 @@ export function MarketplaceCart() {
                 
                 <Link to={`/marketplace/produit/${item.productId}`} className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-stone-50 rounded-xl overflow-hidden border border-stone-100">
                   {item.image ? (
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <FafeImage src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <ShoppingBag className="w-8 h-8 text-stone-300" />

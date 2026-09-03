@@ -154,7 +154,7 @@ export function Donation() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] pt-32 pb-20">
-      <div className="container mx-auto px-4 max-w-5xl">
+      <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 bg-orange-100 rounded-full mb-6">
             <Heart className="w-8 h-8 text-[#E67E22]" />

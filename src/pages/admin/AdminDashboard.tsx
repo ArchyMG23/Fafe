@@ -4,13 +4,14 @@ import {
   Users, LayoutDashboard, Briefcase, Heart, Settings, 
   LogOut, Globe2, FolderOpen, Menu, X, Bell, Search,
   FileText, ShieldAlert, GraduationCap, Calendar, ShoppingCart, 
-  Package, MessageSquare, MapPin
+  Package, MessageSquare, MapPin, Trash2
 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 import { Button } from '../../components/ui/Button';
 import { FafeLogo } from '../../components/ui/FafeLogo';
 
 // Admin Views
+import { AdminTestData } from './AdminTestData';
 import { AdminOverview } from './AdminOverview';
 import { AdminMembers } from './AdminMembers';
 import { AdminMemberDetail } from './AdminMemberDetail';
@@ -128,6 +129,7 @@ export function AdminDashboard() {
         { path: "/admin/pays", icon: <MapPin className="w-4 h-4 mr-3" />, label: "Pays" },
         { path: "/admin/parametres", icon: <Settings className="w-4 h-4 mr-3" />, label: "Paramètres" },
         { path: "/admin/audit", icon: <ShieldAlert className="w-4 h-4 mr-3" />, label: "Sécurité & Audit" },
+        ...(userProfile.role === 'SUPER_ADMIN' ? [{ path: "/admin/donnees-test", icon: <Trash2 className="w-4 h-4 mr-3" />, label: "Données de Test" }] : []),
       ]
     }
   ];
@@ -138,8 +140,7 @@ export function AdminDashboard() {
       {/* Mobile Header & Sidebar Overlay */}
       <div className="md:hidden flex items-center justify-between bg-white border-b border-stone-200 p-4 sticky top-0 z-30">
         <Link to="/" className="flex items-center gap-2">
-          <FafeLogo size="sm" showSubtitle={false} />
-          <span className="text-xs bg-[#E67E22]/10 px-2 py-0.5 rounded font-bold text-[#E67E22] uppercase tracking-wider">Admin</span>
+          <FafeLogo size="sm" showSubtitle={false} badge="Admin" />
         </Link>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-[#6B3E1E]">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -152,14 +153,13 @@ export function AdminDashboard() {
 
       {/* Sidebar */}
       <aside className={`
-        fixed md:sticky top-0 left-0 h-screen w-64 bg-white border-r border-stone-200 flex flex-col z-30
+        fixed md:sticky top-0 left-0 h-screen w-64 shrink-0 bg-white border-r border-stone-200 flex flex-col z-30
         transition-transform duration-300 ease-in-out transform md:transform-none
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div className="p-5 border-b border-stone-200 hidden md:block">
           <Link to="/" className="flex items-center justify-between group">
-            <FafeLogo size="sm" showSubtitle={true} />
-            <span className="text-[10px] bg-[#E67E22]/10 font-bold px-2 py-1 rounded text-[#E67E22] uppercase tracking-wider">Admin</span>
+            <FafeLogo size="sm" showSubtitle={true} badge="Admin" />
           </Link>
         </div>
         
@@ -269,6 +269,7 @@ export function AdminDashboard() {
 
             <Route path="/parametres" element={<div className="p-8 text-center text-stone-500">Paramètres en construction</div>} />
             <Route path="/audit" element={<AdminAudit />} />
+            <Route path="/donnees-test" element={<AdminTestData />} />
             <Route path="/profil" element={<AdminProfile />} />
           </Routes>
         </main>
