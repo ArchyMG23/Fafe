@@ -60,46 +60,9 @@ export function Login() {
     setIsLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const docRef = doc(db, 'users', user.uid);
-      const docSnap = await getDoc(docRef);
-
-      const isSuperAdmin = user.email === 'yombivictor@gmail.com';
-
-      if (!docSnap.exists()) {
-        if (isSuperAdmin) {
-          const now = Date.now();
-          await setDoc(docRef, {
-            id: user.uid,
-            firstName: user.displayName?.split(' ')[0] || 'Super',
-            lastName: user.displayName?.split(' ').slice(1).join(' ') || 'Admin',
-            email: user.email,
-            phone: '',
-            country: 'Cameroun',
-            city: 'Yaoundé',
-            role: 'SUPER_ADMIN',
-            membershipStatus: 'ACTIVE',
-            status: 'ACTIVE',
-            createdAt: now,
-            updatedAt: now,
-            lastLoginAt: now
-          });
-          navigate('/admin');
-        } else {
-          // Normal user without account trying to login via Google
-          await user.delete(); // Remove the auth record
-          throw new Error('La connexion avec Google est réservée aux membres existants. Veuillez vous inscrire.');
-        }
-      } else {
-        if (isSuperAdmin && docSnap.data().role !== 'SUPER_ADMIN') {
-          await setDoc(docRef, { role: 'SUPER_ADMIN', membershipStatus: 'ACTIVE', updatedAt: Date.now() }, { merge: true });
-          navigate('/admin');
-        } else {
-          navigate('/hub/dashboard');
-        }
-      }
+      await signInWithPopup(auth, provider);
+      // Let the global auth listener (initAuth) handle profile auto-creation/repair
+      // and redirect logic will be triggered by the useEffect since currentUser and userProfile will update.
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la connexion Google');
     } finally {

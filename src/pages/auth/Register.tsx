@@ -68,30 +68,25 @@ export function Register() {
 
   const createUserDocument = async (user: any, additionalData: any) => {
     const docRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(docRef);
-
     const isSuperAdmin = user.email === 'yombivictor@gmail.com';
-
-    if (!docSnap.exists()) {
-      const now = Date.now();
-      await setDoc(docRef, {
-        id: user.uid,
-        firstName: additionalData.firstName || user.displayName?.split(' ')[0] || (isSuperAdmin ? 'Super' : 'Utilisateur'),
-        lastName: additionalData.lastName || user.displayName?.split(' ').slice(1).join(' ') || (isSuperAdmin ? 'Admin' : ''),
-        email: user.email,
-        phone: additionalData.phone || '',
-        country: additionalData.country || 'Sénégal',
-        city: additionalData.city || 'Dakar',
-        role: isSuperAdmin ? 'SUPER_ADMIN' : 'MEMBER',
-        membershipStatus: isSuperAdmin ? 'ACTIVE' : 'PENDING',
-        status: 'ACTIVE',
-        createdAt: now,
-        updatedAt: now,
-        lastLoginAt: now
-      });
-    } else if (isSuperAdmin && docSnap.data().role !== 'SUPER_ADMIN') {
-      await setDoc(docRef, { role: 'SUPER_ADMIN', membershipStatus: 'ACTIVE', updatedAt: Date.now() }, { merge: true });
-    }
+    const now = Date.now();
+    
+    // Use merge:true so that if the auth.ts auto-repair already created the profile,
+    // we simply merge the additional form fields (phone, country, city, etc.) into it.
+    await setDoc(docRef, {
+      id: user.uid,
+      firstName: additionalData.firstName || user.displayName?.split(' ')[0] || (isSuperAdmin ? 'Super' : 'Utilisateur'),
+      lastName: additionalData.lastName || user.displayName?.split(' ').slice(1).join(' ') || (isSuperAdmin ? 'Admin' : ''),
+      email: user.email,
+      phone: additionalData.phone || '',
+      country: additionalData.country || 'Sénégal',
+      city: additionalData.city || 'Dakar',
+      role: isSuperAdmin ? 'SUPER_ADMIN' : 'MEMBER',
+      membershipStatus: isSuperAdmin ? 'ACTIVE' : 'PENDING',
+      status: 'ACTIVE',
+      updatedAt: now,
+      lastLoginAt: now
+    }, { merge: true });
   };
 
   const handleRegister = async (e: React.FormEvent) => {
