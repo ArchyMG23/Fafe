@@ -59,23 +59,12 @@ export const initAuth = () => {
           if (docSnap.exists()) {
             const profileData = docSnap.data() as UserProfile;
             
-            // Auto-upgrade founder account to SUPER_ADMIN
-            if (user.email === 'yombivictor@gmail.com' && profileData.role !== 'SUPER_ADMIN') {
-              try {
-                await updateDoc(docRef, { role: 'SUPER_ADMIN' });
-                profileData.role = 'SUPER_ADMIN';
-                console.log('Founder account automatically upgraded to SUPER_ADMIN');
-              } catch (e) {
-                console.error('Failed to upgrade founder account', e);
-              }
-            }
-            
             useAuthStore.getState().setProfile(profileData);
             useAuthStore.setState({ loading: false, initialized: true });
           } else {
             // Auto-repair: Profile is missing! (Race condition from signup or incomplete Google login)
             const now = Date.now();
-            const isSuperAdmin = user.email === 'yombivictor@gmail.com';
+            const isSuperAdmin = false;
             
             const fallbackProfile = {
               id: user.uid,

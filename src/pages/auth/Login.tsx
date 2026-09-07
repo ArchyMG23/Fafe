@@ -47,7 +47,7 @@ export function Login() {
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/hub/dashboard');
+      // Let useEffect handle redirect based on role
     } catch (err: any) {
       setError(getErrorMessage(err));
     } finally {

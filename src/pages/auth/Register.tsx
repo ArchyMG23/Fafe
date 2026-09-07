@@ -68,7 +68,7 @@ export function Register() {
 
   const createUserDocument = async (user: any, additionalData: any) => {
     const docRef = doc(db, 'users', user.uid);
-    const isSuperAdmin = user.email === 'yombivictor@gmail.com';
+    const isSuperAdmin = false;
     const now = Date.now();
     
     // Use merge:true so that if the auth.ts auto-repair already created the profile,

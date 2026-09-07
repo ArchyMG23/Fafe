@@ -17,7 +17,7 @@ export function ScrollToTop() {
     }
 
     // Reliable scroll reset on mobile and desktop
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }, [pathname, hash]);
