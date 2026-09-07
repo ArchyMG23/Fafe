@@ -83,7 +83,7 @@ export function MarketplaceConfirmation() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50">
-        <Loader2 className="w-12 h-12 text-[#E67E22] animate-spin mb-4" />
+        <Loader2 className="w-12 h-12 text-[#00843D] animate-spin mb-4" />
         <p className="text-stone-500 font-medium animate-pulse">Vérification du paiement en cours...</p>
       </div>
     );
@@ -98,7 +98,7 @@ export function MarketplaceConfirmation() {
         <h1 className="text-2xl font-bold font-heading text-stone-800 mb-4 text-center">Échec de la commande</h1>
         <p className="text-stone-500 mb-8 max-w-md text-center">{error}</p>
         <Link to="/marketplace">
-          <Button className="bg-[#6B3E1E] hover:bg-[#532f17] text-white">
+          <Button className="bg-[#00843D] hover:bg-[#006830] text-white">
             Retour à la boutique
           </Button>
         </Link>
@@ -134,7 +134,7 @@ export function MarketplaceConfirmation() {
               </div>
               <div>
                 <span className="block text-stone-400 font-medium text-xs uppercase tracking-wider mb-1">Montant total</span>
-                <span className="font-bold text-[#E67E22]">{order.totalAmount.toLocaleString()} {order.currency}</span>
+                <span className="font-bold text-[#00843D]">{order.totalAmount.toLocaleString()} {order.currency}</span>
               </div>
               <div>
                 <span className="block text-stone-400 font-medium text-xs uppercase tracking-wider mb-1">Statut</span>
@@ -158,7 +158,7 @@ export function MarketplaceConfirmation() {
           </div>
 
           <Link to="/marketplace">
-            <Button className="w-full bg-[#6B3E1E] hover:bg-[#532f17] text-white py-4 rounded-xl font-bold text-lg shadow-md flex items-center justify-center group">
+            <Button className="w-full bg-[#00843D] hover:bg-[#006830] text-white py-4 rounded-xl font-bold text-lg shadow-md flex items-center justify-center group">
               <ShoppingBag className="w-5 h-5 mr-2" />
               Continuer mes achats
             </Button>

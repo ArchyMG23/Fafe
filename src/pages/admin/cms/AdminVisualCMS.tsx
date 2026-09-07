@@ -97,13 +97,13 @@ export function AdminVisualCMS() {
       
       {/* Sidebar - Sections */}
       <div className="w-64 bg-stone-50 border-r border-stone-200 p-4">
-        <h2 className="font-bold text-[#6B3E1E] mb-6 px-2">Éditeur Visuel</h2>
+        <h2 className="font-bold text-[#063F3A] mb-6 px-2">Éditeur Visuel</h2>
         
         <nav className="space-y-2">
           <button 
             onClick={() => setActiveSection('HERO')}
             className={`w-full text-left px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeSection === 'HERO' ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-600 hover:bg-stone-100'
+              activeSection === 'HERO' ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-600 hover:bg-stone-100'
             }`}
           >
             Homepage Hero
@@ -111,7 +111,7 @@ export function AdminVisualCMS() {
           <button 
             onClick={() => setActiveSection('BANK')}
             className={`w-full text-left px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeSection === 'BANK' ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-600 hover:bg-stone-100'
+              activeSection === 'BANK' ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-600 hover:bg-stone-100'
             }`}
           >
             Coordonnées Bancaires
@@ -127,7 +127,7 @@ export function AdminVisualCMS() {
             <button 
               onClick={() => setActiveTab('FR')}
               className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${
-                activeTab === 'FR' ? 'bg-white shadow-sm text-[#6B3E1E]' : 'text-stone-500 hover:text-stone-700'
+                activeTab === 'FR' ? 'bg-white shadow-sm text-[#063F3A]' : 'text-stone-500 hover:text-stone-700'
               }`}
             >
               FR
@@ -135,7 +135,7 @@ export function AdminVisualCMS() {
             <button 
               onClick={() => setActiveTab('EN')}
               className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${
-                activeTab === 'EN' ? 'bg-white shadow-sm text-[#6B3E1E]' : 'text-stone-500 hover:text-stone-700'
+                activeTab === 'EN' ? 'bg-white shadow-sm text-[#063F3A]' : 'text-stone-500 hover:text-stone-700'
               }`}
             >
               EN
@@ -157,7 +157,7 @@ export function AdminVisualCMS() {
             {activeSection === 'HERO' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold font-heading text-[#6B3E1E]">Slides Hero (Homepage)</h3>
+                  <h3 className="text-xl font-bold font-heading text-[#063F3A]">Slides Hero (Homepage)</h3>
                   <Button onClick={addSlide} variant="outline" size="sm" className="gap-2">
                     <Plus className="w-4 h-4" /> Ajouter Slide
                   </Button>
@@ -246,7 +246,7 @@ export function AdminVisualCMS() {
 
             {activeSection === 'BANK' && (
               <div className="space-y-6">
-                <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-4">Coordonnées Bancaires FAFE</h3>
+                <h3 className="text-xl font-bold font-heading text-[#063F3A] mb-4">Coordonnées Bancaires FAFE</h3>
                 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-4">
                   <div>

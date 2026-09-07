@@ -127,7 +127,7 @@ export function AdminMarketplaceOrders() {
                   {orders.map((order) => (
                     <tr 
                       key={order.id} 
-                      className={`cursor-pointer transition-colors ${selectedOrder?.id === order.id ? 'bg-[#E67E22]/5' : 'hover:bg-stone-50'}`}
+                      className={`cursor-pointer transition-colors ${selectedOrder?.id === order.id ? 'bg-[#C8102E]/5' : 'hover:bg-stone-50'}`}
                       onClick={() => setSelectedOrder(order)}
                     >
                       <td className="px-4 py-4 font-medium text-stone-800">
@@ -137,7 +137,7 @@ export function AdminMarketplaceOrders() {
                       <td className="px-4 py-4">
                         <div className="font-medium text-stone-700">{order.customerFirstName} {order.customerLastName}</div>
                       </td>
-                      <td className="px-4 py-4 font-bold text-[#6B3E1E]">
+                      <td className="px-4 py-4 font-bold text-[#063F3A]">
                         {order.totalAmount.toLocaleString()} {order.currency}
                       </td>
                       <td className="px-4 py-4">
@@ -218,7 +218,7 @@ export function AdminMarketplaceOrders() {
                   </div>
                   <div className="border-t border-stone-100 mt-4 pt-4 flex justify-between items-center">
                     <span className="font-bold text-stone-800">Total</span>
-                    <span className="font-bold text-[#E67E22] text-lg">{selectedOrder.totalAmount.toLocaleString()} {selectedOrder.currency}</span>
+                    <span className="font-bold text-[#00843D] text-lg">{selectedOrder.totalAmount.toLocaleString()} {selectedOrder.currency}</span>
                   </div>
                 </div>
 

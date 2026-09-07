@@ -86,7 +86,7 @@ export function AdminMarketplaceCategories() {
           <h1 className="text-2xl font-bold font-heading text-stone-800">Catégories Boutique</h1>
           <p className="text-stone-500">Gérez les catégories de la marketplace</p>
         </div>
-        <Button onClick={() => { setEditingCategory({ name: '', description: '' }); setIsEditing(true); }} className="bg-[#6B3E1E] text-white">
+        <Button onClick={() => { setEditingCategory({ name: '', description: '' }); setIsEditing(true); }} className="bg-[#00843D] text-white">
           <Plus className="w-4 h-4 mr-2" />
           Nouvelle Catégorie
         </Button>
@@ -103,7 +103,7 @@ export function AdminMarketplaceCategories() {
                 required
                 value={editingCategory?.name || ''}
                 onChange={e => setEditingCategory({ ...editingCategory, name: e.target.value })}
-                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
               />
             </div>
             <div>
@@ -111,13 +111,13 @@ export function AdminMarketplaceCategories() {
               <textarea
                 value={editingCategory?.description || ''}
                 onChange={e => setEditingCategory({ ...editingCategory, description: e.target.value })}
-                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 rows={3}
               />
             </div>
             <div className="flex justify-end gap-3">
               <Button variant="outline" type="button" onClick={() => setIsEditing(false)}>Annuler</Button>
-              <Button type="submit" disabled={loading} className="bg-[#E67E22] text-white">
+              <Button type="submit" disabled={loading} className="bg-[#C8102E] text-white">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Enregistrer'}
               </Button>
             </div>
@@ -147,7 +147,7 @@ export function AdminMarketplaceCategories() {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => { setEditingCategory(cat); setIsEditing(true); }} className="p-2 text-stone-400 hover:text-[#6B3E1E] transition-colors rounded-lg hover:bg-stone-100">
+                    <button onClick={() => { setEditingCategory(cat); setIsEditing(true); }} className="p-2 text-stone-400 hover:text-[#063F3A] transition-colors rounded-lg hover:bg-stone-100">
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button onClick={() => handleDelete(cat.id)} className="p-2 text-stone-400 hover:text-red-500 transition-colors rounded-lg hover:bg-stone-100">

@@ -41,7 +41,7 @@ export function MarketplaceProduct() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-50">
-        <Loader2 className="w-10 h-10 text-[#E67E22] animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#00843D] animate-spin" />
       </div>
     );
   }
@@ -49,10 +49,10 @@ export function MarketplaceProduct() {
   if (!product || product.status === 'DRAFT' || product.status === 'ARCHIVED') {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center bg-stone-50 px-4 text-center">
-        <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">Produit introuvable</h2>
+        <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">Produit introuvable</h2>
         <p className="text-stone-500 mb-8 max-w-md">Le produit que vous recherchez n'existe pas ou n'est plus disponible.</p>
         <Link to="/marketplace">
-          <Button className="bg-[#6B3E1E] hover:bg-[#532f17] text-white">
+          <Button className="bg-[#00843D] hover:bg-[#006830] text-white">
             <ArrowLeft className="w-4 h-4 mr-2" /> Retour à la boutique
           </Button>
         </Link>
@@ -79,7 +79,7 @@ export function MarketplaceProduct() {
     <div className="min-h-screen bg-stone-50 py-12">
       <div className="w-full max-w-7xl mx-auto px-4">
         {/* Breadcrumb */}
-        <Link to="/marketplace" className="inline-flex items-center text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors mb-8">
+        <Link to="/marketplace" className="inline-flex items-center text-sm font-medium text-stone-500 hover:text-[#00843D] transition-colors mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" /> Retour à la boutique
         </Link>
 
@@ -116,7 +116,7 @@ export function MarketplaceProduct() {
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
                       className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                        selectedImage === idx ? 'border-[#E67E22] opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
+                        selectedImage === idx ? 'border-[#00843D] opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
                       }`}
                     >
                       <FafeImage src={img} alt="" className="w-full h-full object-cover" />
@@ -131,14 +131,14 @@ export function MarketplaceProduct() {
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 {hasPromo && !isOutOfStock && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#E67E22]/10 text-[#E67E22] text-xs font-bold uppercase tracking-wider">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#C8102E]/10 text-[#00843D] text-xs font-bold uppercase tracking-wider">
                     <Tag className="w-3.5 h-3.5" />
                     Promotion
                   </span>
                 )}
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-bold font-heading text-[#6B3E1E] mb-4">
+              <h1 className="text-3xl sm:text-4xl font-bold font-heading text-[#063F3A] mb-4">
                 {product.name}
               </h1>
               
@@ -196,13 +196,13 @@ export function MarketplaceProduct() {
                       <Button 
                         onClick={handleAddToCart}
                         variant="outline"
-                        className="border-[#6B3E1E] text-[#6B3E1E] hover:bg-[#6B3E1E]/5 py-3 h-auto font-bold"
+                        className="border-[#063F3A] text-[#063F3A] hover:bg-[#00843D]/5 py-3 h-auto font-bold"
                       >
                         Ajouter au panier
                       </Button>
                       <Button 
                         onClick={handleBuyNow}
-                        className="bg-[#E67E22] hover:bg-[#c96a1a] text-white py-3 h-auto font-bold shadow-md"
+                        className="bg-[#C8102E] hover:bg-[#A30D25] text-white py-3 h-auto font-bold shadow-md"
                       >
                         Acheter maintenant
                       </Button>
@@ -229,7 +229,7 @@ export function MarketplaceProduct() {
         {/* Full Description */}
         {product.fullDescription && (
           <div className="mt-12 bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-stone-100">
-            <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-6">Description détaillée</h3>
+            <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-6">Description détaillée</h3>
             <div className="prose prose-stone max-w-none text-stone-600">
               {product.fullDescription.split('\n').map((paragraph, idx) => (
                 <p key={idx} className="mb-4">{paragraph}</p>

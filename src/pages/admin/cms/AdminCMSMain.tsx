@@ -105,10 +105,10 @@ export function AdminCMSMain() {
     <div className="space-y-6">
       
       {/* Top Banner Guide */}
-      <div className="bg-gradient-to-r from-[#6B3E1E] to-[#8C532B] text-white p-6 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-black/90 to-[#8C532B] text-white p-6 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 bg-[#E67E22] text-white text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+            <span className="px-2.5 py-0.5 bg-[#C8102E] text-white text-[10px] font-extrabold uppercase rounded-full tracking-wider">
               FAFE CMS ÉDITEUR
             </span>
             <span className="text-white/60 text-xs">| Mode Édition Structurée</span>
@@ -157,15 +157,15 @@ export function AdminCMSMain() {
                     onClick={() => handleSelectTab(page.id)}
                     className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
                       isActive 
-                        ? 'bg-[#E67E22]/10 text-[#E67E22] border border-[#E67E22]/30 shadow-xs' 
+                        ? 'bg-[#C8102E]/10 text-[#00843D] border border-[#00843D]/30 shadow-xs' 
                         : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#E67E22]' : 'text-stone-400'}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#00843D]' : 'text-stone-400'}`} />
                       <span className="truncate">{page.label}</span>
                     </div>
-                    {isActive && <ChevronRight className="w-4 h-4 shrink-0 text-[#E67E22]" />}
+                    {isActive && <ChevronRight className="w-4 h-4 shrink-0 text-[#00843D]" />}
                   </button>
                 );
               })}
@@ -183,30 +183,30 @@ export function AdminCMSMain() {
                 onClick={() => handleSelectTab('media')}
                 className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
                   activeTab === 'media' 
-                    ? 'bg-[#E67E22]/10 text-[#E67E22] border border-[#E67E22]/30 shadow-xs' 
+                    ? 'bg-[#C8102E]/10 text-[#00843D] border border-[#00843D]/30 shadow-xs' 
                     : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <FolderOpen className={`w-4 h-4 shrink-0 ${activeTab === 'media' ? 'text-[#E67E22]' : 'text-stone-400'}`} />
+                  <FolderOpen className={`w-4 h-4 shrink-0 ${activeTab === 'media' ? 'text-[#00843D]' : 'text-stone-400'}`} />
                   <span>Médiathèque</span>
                 </div>
-                {activeTab === 'media' && <ChevronRight className="w-4 h-4 shrink-0 text-[#E67E22]" />}
+                {activeTab === 'media' && <ChevronRight className="w-4 h-4 shrink-0 text-[#00843D]" />}
               </button>
 
               <button
                 onClick={() => handleSelectTab('history')}
                 className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
                   activeTab === 'history' 
-                    ? 'bg-[#E67E22]/10 text-[#E67E22] border border-[#E67E22]/30 shadow-xs' 
+                    ? 'bg-[#C8102E]/10 text-[#00843D] border border-[#00843D]/30 shadow-xs' 
                     : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <History className={`w-4 h-4 shrink-0 ${activeTab === 'history' ? 'text-[#E67E22]' : 'text-stone-400'}`} />
+                  <History className={`w-4 h-4 shrink-0 ${activeTab === 'history' ? 'text-[#00843D]' : 'text-stone-400'}`} />
                   <span>Historique & Audit</span>
                 </div>
-                {activeTab === 'history' && <ChevronRight className="w-4 h-4 shrink-0 text-[#E67E22]" />}
+                {activeTab === 'history' && <ChevronRight className="w-4 h-4 shrink-0 text-[#00843D]" />}
               </button>
             </nav>
           </div>

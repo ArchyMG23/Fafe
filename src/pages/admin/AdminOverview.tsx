@@ -106,7 +106,7 @@ export function AdminOverview() {
             type: 'entrepreneur',
             title: `Nouveau profil: ${data.company}`,
             date: data.createdAt,
-            icon: <Briefcase className="w-4 h-4 text-\[#6B3E1E\]" />
+            icon: <Briefcase className="w-4 h-4 text-\[#063F3A\]" />
           });
         });
 
@@ -124,16 +124,16 @@ export function AdminOverview() {
   }, []);
 
   const StatCard = ({ title, value, icon, subtitle, highlight = false }: any) => (
-    <div className={`bg-white p-6 rounded-2xl border transition-all duration-300 hover:shadow-md group ${highlight ? 'border-[#E67E22] shadow-sm ring-1 ring-[#E67E22]/20' : 'border-stone-200 shadow-sm hover:border-[#E67E22]/40'}`}>
+    <div className={`bg-white p-6 rounded-2xl border transition-all duration-300 hover:shadow-md group ${highlight ? 'border-[#00843D] shadow-sm ring-1 ring-[#E67E22]/20' : 'border-stone-200 shadow-sm hover:border-[#00843D]/40'}`}>
       <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 rounded-xl transition-colors ${highlight ? 'bg-[#E67E22] text-white shadow-sm shadow-[#E67E22]/20' : 'bg-[#E67E22]/10 text-[#E67E22] group-hover:bg-[#E67E22]/20'}`}>
+        <div className={`p-3 rounded-xl transition-colors ${highlight ? 'bg-[#C8102E] text-white shadow-sm shadow-[#E67E22]/20' : 'bg-[#C8102E]/10 text-[#00843D] group-hover:bg-[#C8102E]/20'}`}>
           {icon}
         </div>
       </div>
-      <h3 className="text-3xl font-bold text-[#6B3E1E] mb-1 tracking-tight">
+      <h3 className="text-3xl font-bold text-[#063F3A] mb-1 tracking-tight">
         {typeof value === 'number' && title.includes('Don') ? value.toLocaleString('fr-FR') + ' XAF' : value}
       </h3>
-      <p className="text-[11px] font-bold text-[#6B3E1E]/60 uppercase tracking-widest">{title}</p>
+      <p className="text-[11px] font-bold text-[#063F3A]/60 uppercase tracking-widest">{title}</p>
       {subtitle && <p className="text-xs text-stone-500 mt-3 font-medium">{subtitle}</p>}
     </div>
   );
@@ -141,7 +141,7 @@ export function AdminOverview() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#00843D] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -149,7 +149,7 @@ export function AdminOverview() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold font-heading text-[#6B3E1E]">Tableau de bord</h1>
+        <h1 className="text-3xl font-bold font-heading text-[#063F3A]">Tableau de bord</h1>
         <p className="text-stone-500 mt-1">Bienvenue dans l'espace d'administration FAFE.</p>
       </div>
 
@@ -187,14 +187,14 @@ export function AdminOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Alerts & Action items */}
         <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-xl font-bold text-[#6B3E1E] flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-[#E67E22]" /> À traiter
+          <h2 className="text-xl font-bold text-[#063F3A] flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-[#00843D]" /> À traiter
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
               <div>
                 <p className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-1">Dons en attente</p>
-                <p className="text-2xl font-bold text-[#6B3E1E]">{stats.pendingDonations}</p>
+                <p className="text-2xl font-bold text-[#063F3A]">{stats.pendingDonations}</p>
               </div>
               <Link to="/admin/dons" className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
                 <ArrowUpRight className="w-5 h-5 text-stone-600" />
@@ -203,7 +203,7 @@ export function AdminOverview() {
             <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
               <div>
                 <p className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-1">Profils en attente</p>
-                <p className="text-2xl font-bold text-[#6B3E1E]">{stats.pendingEntrepreneurs}</p>
+                <p className="text-2xl font-bold text-[#063F3A]">{stats.pendingEntrepreneurs}</p>
               </div>
               <Link to="/admin/entrepreneures" className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
                 <ArrowUpRight className="w-5 h-5 text-stone-600" />
@@ -213,8 +213,8 @@ export function AdminOverview() {
 
           <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-stone-100 flex justify-between items-center">
-              <h3 className="font-bold text-[#6B3E1E]">Activité Récente</h3>
-              <Link to="/admin/audit" className="text-sm text-[#E67E22] hover:underline font-medium">Tout voir</Link>
+              <h3 className="font-bold text-[#063F3A]">Activité Récente</h3>
+              <Link to="/admin/audit" className="text-sm text-[#00843D] hover:underline font-medium">Tout voir</Link>
             </div>
             <div className="p-6">
               {recentActivity.length > 0 ? (
@@ -241,10 +241,10 @@ export function AdminOverview() {
 
         {/* Quick Links */}
         <div className="space-y-6">
-          <h2 className="text-xl font-bold text-[#6B3E1E]">Raccourcis</h2>
+          <h2 className="text-xl font-bold text-[#063F3A]">Raccourcis</h2>
           <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 space-y-2">
             <Link to="/admin/entrepreneures" className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 transition-colors group">
-              <div className="w-10 h-10 rounded bg-[#E67E22]/10 text-[#E67E22] flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded bg-[#C8102E]/10 text-[#00843D] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Briefcase className="w-5 h-5" />
               </div>
               <div>
@@ -253,7 +253,7 @@ export function AdminOverview() {
               </div>
             </Link>
             <Link to="/admin/projets" className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 transition-colors group">
-              <div className="w-10 h-10 rounded bg-[#6B3E1E]/10 text-[#6B3E1E] flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded bg-[#00843D]/10 text-[#063F3A] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FolderOpen className="w-5 h-5" />
               </div>
               <div>

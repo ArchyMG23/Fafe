@@ -102,9 +102,9 @@ function PhotoGallery() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-heading text-[#6B3E1E]">Albums Photos Événements</h2>
+        <h2 className="text-2xl font-bold font-heading text-[#063F3A]">Albums Photos Événements</h2>
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-full text-xs font-semibold">
-          <Sparkles className="w-3 h-3 text-[#E67E22]" /> Données de démonstration
+          <Sparkles className="w-3 h-3 text-[#00843D]" /> Données de démonstration
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -117,7 +117,7 @@ function PhotoGallery() {
               </div>
             </div>
             <div className="p-5">
-              <h3 className="font-bold text-[#6B3E1E] text-base mb-2 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+              <h3 className="font-bold text-[#063F3A] text-base mb-2 group-hover:text-[#00843D] transition-colors line-clamp-2">
                 {photo.title}
               </h3>
               <div className="flex items-center justify-between text-xs text-stone-500">
@@ -136,9 +136,9 @@ function VideoGallery() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-heading text-[#6B3E1E]">Vidéothèque & Replays</h2>
+        <h2 className="text-2xl font-bold font-heading text-[#063F3A]">Vidéothèque & Replays</h2>
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-full text-xs font-semibold">
-          <Sparkles className="w-3 h-3 text-[#E67E22]" /> Données de démonstration
+          <Sparkles className="w-3 h-3 text-[#00843D]" /> Données de démonstration
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -147,7 +147,7 @@ function VideoGallery() {
             <div className="relative h-48 bg-stone-900 group cursor-pointer">
               <FafeImage src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-[#E67E22] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-full bg-[#C8102E] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <Play className="w-5 h-5 ml-0.5" fill="white" />
                 </div>
               </div>
@@ -156,7 +156,7 @@ function VideoGallery() {
               </span>
             </div>
             <div className="p-5">
-              <h3 className="font-bold text-[#6B3E1E] text-base mb-1">{vid.title}</h3>
+              <h3 className="font-bold text-[#063F3A] text-base mb-1">{vid.title}</h3>
               <p className="text-xs text-stone-500">{vid.speaker}</p>
             </div>
           </div>
@@ -170,26 +170,26 @@ function PodcastGallery() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-heading text-[#6B3E1E]">Podcasts : Voix de Femmes Panafricaines</h2>
+        <h2 className="text-2xl font-bold font-heading text-[#063F3A]">Podcasts : Voix de Femmes Panafricaines</h2>
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-full text-xs font-semibold">
-          <Sparkles className="w-3 h-3 text-[#E67E22]" /> Données de démonstration
+          <Sparkles className="w-3 h-3 text-[#00843D]" /> Données de démonstration
         </span>
       </div>
       <div className="space-y-4">
         {DEMO_PODCASTS.map((pod, i) => (
-          <div key={i} className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-[#E67E22]/50 transition-colors">
+          <div key={i} className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-[#00843D]/50 transition-colors">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#E67E22]/10 text-[#E67E22] flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-[#C8102E]/10 text-[#00843D] flex items-center justify-center shrink-0">
                 <Mic className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-[#6B3E1E] text-base">{pod.title}</h3>
+                <h3 className="font-bold text-[#063F3A] text-base">{pod.title}</h3>
                 <p className="text-xs text-stone-500 mt-0.5">{pod.guest} • {pod.date}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 self-end md:self-center">
               <span className="text-xs font-mono text-stone-500 bg-stone-100 px-2.5 py-1 rounded-full">{pod.duration}</span>
-              <button className="flex items-center gap-1.5 px-4 py-2 bg-[#6B3E1E] hover:bg-[#522f16] text-white rounded-xl text-xs font-bold transition-colors">
+              <button className="flex items-center gap-1.5 px-4 py-2 bg-[#00843D] hover:bg-[#522f16] text-white rounded-xl text-xs font-bold transition-colors">
                 <Play className="w-3.5 h-3.5" fill="white" /> Écouter
               </button>
             </div>
@@ -207,7 +207,7 @@ export function Gallery() {
     <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4">
             Médiathèque FAFE
           </h1>
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
@@ -225,7 +225,7 @@ export function Gallery() {
                 key={tab.path} 
                 to={tab.path}
                 className={`flex items-center px-6 py-3 rounded-full text-sm font-bold transition-all ${
-                  isActive ? 'bg-[#E67E22] text-white shadow-md' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'
+                  isActive ? 'bg-[#C8102E] text-white shadow-md' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'
                 }`}
               >
                 {tab.icon} {tab.label}

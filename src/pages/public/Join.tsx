@@ -32,11 +32,11 @@ export function Join() {
   return (
     <div className="min-h-screen bg-[#FAF9F6] pb-24">
       {/* Hero Header */}
-      <section className="bg-[#6B3E1E] text-white pt-32 pb-20 relative overflow-hidden">
+      <section className="bg-[#FAF9F6] text-[#063F3A] pt-32 pb-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
         <div className="w-full max-w-7xl mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold font-heading mb-6">{tl(content.title)}</h1>
-          <p className="text-xl max-w-2xl mx-auto text-white/80">
+          <p className="text-xl max-w-2xl mx-auto text-stone-600">
             {tl(content.subtitle)}
           </p>
         </div>
@@ -50,12 +50,12 @@ export function Join() {
             {/* Left: Info */}
             <div className="space-y-12">
               <div>
-                <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-8">{tl(content.whyJoin)}</h2>
+                <h2 className="text-3xl font-bold font-heading text-[#063F3A] mb-8">{tl(content.whyJoin)}</h2>
                 <div className="space-y-4">
                   {content.benefits.map((b, i) => (
                     <div key={i} className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#E67E22]/10 flex items-center justify-center shrink-0 mt-1">
-                        <CheckCircle className="w-5 h-5 text-[#E67E22]" />
+                      <div className="w-8 h-8 rounded-full bg-[#C8102E]/10 flex items-center justify-center shrink-0 mt-1">
+                        <CheckCircle className="w-5 h-5 text-[#00843D]" />
                       </div>
                       <p className="text-lg text-stone-700 leading-relaxed">{tl(b)}</p>
                     </div>
@@ -64,7 +64,7 @@ export function Join() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-6">{tl(content.stepsTitle)}</h2>
+                <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-6">{tl(content.stepsTitle)}</h2>
                 <div className="space-y-6 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[#D4AF37] before:to-transparent">
                   {[
                     { icon: UserIcon, text: content.step1 },
@@ -77,7 +77,7 @@ export function Join() {
                         <step.icon className="w-4 h-4" />
                       </div>
                       <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-stone-200 bg-white shadow-sm">
-                        <h3 className="font-bold text-[#6B3E1E]">{i + 1}. {tl(step.text)}</h3>
+                        <h3 className="font-bold text-[#063F3A]">{i + 1}. {tl(step.text)}</h3>
                       </div>
                     </div>
                   ))}
@@ -88,10 +88,10 @@ export function Join() {
             {/* Right: Call to action Box */}
             <div className="bg-white p-8 rounded-3xl shadow-xl border border-stone-100 sticky top-32">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-[#E67E22]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-8 h-8 text-[#E67E22]" />
+                <div className="w-16 h-16 bg-[#C8102E]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-8 h-8 text-[#00843D]" />
                 </div>
-                <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-2">
+                <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-2">
                   {language === 'fr' ? 'Démarrer votre adhésion' : 'Start your application'}
                 </h3>
                 <p className="text-stone-500">
@@ -108,7 +108,7 @@ export function Join() {
                     <p>{language === 'fr' ? 'Vous êtes connecté. Vous pouvez procéder à la demande.' : 'You are logged in. You can proceed with the application.'}</p>
                   </div>
                   <Link to="/hub/inscription">
-                    <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 text-lg font-bold shadow-lg">
+                    <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 text-lg font-bold shadow-lg">
                       {language === 'fr' ? "Accéder à ma demande" : "Access my application"}
                     </Button>
                   </Link>
@@ -116,12 +116,12 @@ export function Join() {
               ) : (
                 <div className="space-y-4">
                   <Link to="/hub/inscription">
-                    <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 text-lg font-bold shadow-lg">
+                    <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 text-lg font-bold shadow-lg">
                       {language === 'fr' ? 'Créer un compte' : 'Create an account'}
                     </Button>
                   </Link>
                   <p className="text-center text-sm text-stone-500 mt-4">
-                    {language === 'fr' ? 'Déjà un compte ?' : 'Already have an account?'} <Link to="/hub/connexion" className="text-[#6B3E1E] font-bold underline">{language === 'fr' ? 'Se connecter' : 'Log in'}</Link>
+                    {language === 'fr' ? 'Déjà un compte ?' : 'Already have an account?'} <Link to="/hub/connexion" className="text-[#063F3A] font-bold underline">{language === 'fr' ? 'Se connecter' : 'Log in'}</Link>
                   </p>
                 </div>
               )}

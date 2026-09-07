@@ -36,17 +36,17 @@ export function FafeImage({
 
     return (
       <div
-        className={`relative flex flex-col items-center justify-center bg-gradient-to-br from-[#FAF9F6] to-stone-200/80 text-[#6B3E1E] overflow-hidden select-none ${className}`}
+        className={`relative flex flex-col items-center justify-center bg-gradient-to-br from-[#FAF9F6] to-stone-200/80 text-[#063F3A] overflow-hidden select-none ${className}`}
         style={aspectRatio ? { aspectRatio } : undefined}
       >
         {/* Subtle patterned background */}
-        <div className="absolute inset-0 bg-[#E67E22]/5 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[#C8102E]/5 mix-blend-multiply" />
         
         {/* Subtle FAFE Monogram */}
-        <div className="relative z-10 w-12 h-12 rounded-full bg-[#E67E22]/15 text-[#E67E22] flex items-center justify-center font-bold text-xl ring-1 ring-[#D4AF37]/30 mb-1.5 shadow-sm">
+        <div className="relative z-10 w-12 h-12 rounded-full bg-[#C8102E]/15 text-[#00843D] flex items-center justify-center font-bold text-xl ring-1 ring-[#D4AF37]/30 mb-1.5 shadow-sm">
           <span>F</span>
         </div>
-        <span className="relative z-10 text-[10px] uppercase font-bold tracking-wider text-[#6B3E1E]/60 text-center px-2">
+        <span className="relative z-10 text-[10px] uppercase font-bold tracking-wider text-[#063F3A]/60 text-center px-2">
           {fallbackLabels[fallbackType] || 'FAFE'}
         </span>
       </div>

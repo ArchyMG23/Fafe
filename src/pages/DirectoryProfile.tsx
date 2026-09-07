@@ -94,7 +94,7 @@ export function DirectoryProfile() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
-        <Loader2 className="w-12 h-12 border-4 border-[#E67E22]/20 border-t-[#E67E22] rounded-full animate-spin mb-4" />
+        <Loader2 className="w-12 h-12 border-4 border-[#00843D]/20 border-t-[#E67E22] rounded-full animate-spin mb-4" />
       </div>
     );
   }
@@ -102,9 +102,9 @@ export function DirectoryProfile() {
   if (!profile || profile.status !== 'APPROVED') {
     return (
       <div className="w-full max-w-7xl mx-auto px-4 py-24 text-center">
-        <h2 className="text-2xl font-heading text-[#6B3E1E] mb-4">Profil introuvable ou en attente de validation</h2>
+        <h2 className="text-2xl font-heading text-[#063F3A] mb-4">Profil introuvable ou en attente de validation</h2>
         <Link to="/hub/annuaire">
-          <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">Retour à l'annuaire</Button>
+          <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white">Retour à l'annuaire</Button>
         </Link>
       </div>
     );
@@ -113,14 +113,14 @@ export function DirectoryProfile() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-12">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
-        <Link to="/hub/annuaire" className="inline-flex items-center text-sm font-medium text-[#6B3E1E]/60 hover:text-[#E67E22] mb-8 transition-colors">
+        <Link to="/hub/annuaire" className="inline-flex items-center text-sm font-medium text-[#063F3A]/60 hover:text-[#00843D] mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour à l'annuaire
         </Link>
         <div className="grid md:grid-cols-3 gap-8">
           {/* Left Column: Photo & Quick Info */}
           <div className="md:col-span-1 space-y-6">
-            <Card className="overflow-hidden border border-[#6B3E1E]/5 shadow-lg rounded-2xl bg-white">
+            <Card className="overflow-hidden border border-[#063F3A]/5 shadow-lg rounded-2xl bg-white">
               <div className="aspect-[4/5] relative bg-stone-100">
                 <FafeImage 
                   src={profile.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
@@ -134,35 +134,35 @@ export function DirectoryProfile() {
                 )}
               </div>
               <CardContent className="p-6">
-                <h1 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-1">
+                <h1 className="text-2xl font-bold font-heading text-[#063F3A] mb-1">
                   {profile.firstName} {profile.lastName}
                 </h1>
-                <p className="text-[10px] uppercase tracking-widest text-[#E67E22] font-bold mb-3">{profile.position || 'Fondatrice'}</p>
+                <p className="text-[10px] uppercase tracking-widest text-[#00843D] font-bold mb-3">{profile.position || 'Fondatrice'}</p>
                 
                 {profile.membershipNumber && (
-                  <div className="mb-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-50 border border-amber-200/80 text-[#6B3E1E] text-xs font-mono font-bold">
+                  <div className="mb-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-50 border border-amber-200/80 text-[#063F3A] text-xs font-mono font-bold">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
                     <span>N° {profile.membershipNumber}</span>
                   </div>
                 )}
                 
                 <div className="space-y-4 text-sm font-medium">
-                  <div className="flex items-center gap-3 text-[#6B3E1E]/80">
+                  <div className="flex items-center gap-3 text-[#063F3A]/80">
                     <Briefcase className="w-4 h-4 text-[#D4AF37]" />
-                    <span className="text-[#6B3E1E]">{profile.company}</span>
+                    <span className="text-[#063F3A]">{profile.company}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-[#6B3E1E]/80">
-                    <MapPin className="w-4 h-4 text-[#E67E22]" />
+                  <div className="flex items-center gap-3 text-[#063F3A]/80">
+                    <MapPin className="w-4 h-4 text-[#00843D]" />
                     <span>{profile.city}, {getCountryName(profile.country)}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-[#6B3E1E]/80">
+                  <div className="flex items-center gap-3 text-[#063F3A]/80">
                     <div className="w-4 h-4 flex items-center justify-center">
                       <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
                     </div>
                     <span>{getSectorName(profile.sector)}</span>
                   </div>
                   {profile.website && (
-                    <div className="flex items-center gap-3 text-[#E67E22]">
+                    <div className="flex items-center gap-3 text-[#00843D]">
                       <Globe className="w-4 h-4" />
                       <a href={profile.website} target="_blank" rel="noopener noreferrer" className="hover:underline truncate max-w-[200px]">
                         {profile.website.replace(/^https?:\/\//, '')}
@@ -173,38 +173,38 @@ export function DirectoryProfile() {
 
                 {/* Social Links */}
                 {profile.socialLinks && Object.values(profile.socialLinks).some(val => !!val) && (
-                  <div className="mt-6 pt-6 border-t border-[#6B3E1E]/10 flex gap-3">
+                  <div className="mt-6 pt-6 border-t border-[#063F3A]/10 flex gap-3">
                     {profile.socialLinks.linkedin && (
-                      <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#6B3E1E] hover:bg-[#E67E22] hover:text-white transition-colors">
+                      <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#063F3A] hover:bg-[#C8102E] hover:text-white transition-colors">
                         <Linkedin className="w-4 h-4" />
                       </a>
                     )}
                     {profile.socialLinks.twitter && (
-                      <a href={profile.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#6B3E1E] hover:bg-[#E67E22] hover:text-white transition-colors">
+                      <a href={profile.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#063F3A] hover:bg-[#C8102E] hover:text-white transition-colors">
                         <Twitter className="w-4 h-4" />
                       </a>
                     )}
                     {profile.socialLinks.facebook && (
-                      <a href={profile.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#6B3E1E] hover:bg-[#E67E22] hover:text-white transition-colors">
+                      <a href={profile.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#063F3A] hover:bg-[#C8102E] hover:text-white transition-colors">
                         <Facebook className="w-4 h-4" />
                       </a>
                     )}
                     {profile.socialLinks.instagram && (
-                      <a href={profile.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#6B3E1E] hover:bg-[#E67E22] hover:text-white transition-colors">
+                      <a href={profile.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#063F3A] hover:bg-[#C8102E] hover:text-white transition-colors">
                         <Instagram className="w-4 h-4" />
                       </a>
                     )}
                   </div>
                 )}
 
-                <div className="mt-8 pt-6 border-t border-[#6B3E1E]/10">
+                <div className="mt-8 pt-6 border-t border-[#063F3A]/10">
                   {contactSuccess ? (
                     <div className="w-full bg-green-50 text-green-700 py-3 rounded-xl flex justify-center items-center gap-2 text-sm font-bold">
                       <CheckCircle2 className="w-4 h-4" /> Demande envoyée
                     </div>
                   ) : (
                     <Button 
-                      className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-xl py-6 font-bold shadow-md"
+                      className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-xl py-6 font-bold shadow-md"
                       onClick={handleContact}
                       disabled={contacting}
                     >
@@ -217,7 +217,7 @@ export function DirectoryProfile() {
                     </Button>
                   )}
                   {!userProfile && !contactSuccess && (
-                    <p className="text-center text-[10px] text-[#6B3E1E]/60 mt-3 uppercase tracking-wider">
+                    <p className="text-center text-[10px] text-[#063F3A]/60 mt-3 uppercase tracking-wider">
                       Connexion requise
                     </p>
                   )}
@@ -228,51 +228,51 @@ export function DirectoryProfile() {
 
           {/* Right Column: Details */}
           <div className="md:col-span-2 space-y-8">
-            <section className="bg-white p-8 rounded-2xl shadow-sm border border-[#6B3E1E]/5">
-              <h2 className="text-xl font-bold font-heading text-[#6B3E1E] mb-6 flex items-center gap-3">
-                <span className="text-[10px] uppercase tracking-widest text-[#E67E22] font-bold">Présentation</span>
+            <section className="bg-white p-8 rounded-2xl shadow-sm border border-[#063F3A]/5">
+              <h2 className="text-xl font-bold font-heading text-[#063F3A] mb-6 flex items-center gap-3">
+                <span className="text-[10px] uppercase tracking-widest text-[#00843D] font-bold">Présentation</span>
                 <div className="flex-grow h-px bg-[#D4AF37]/20"></div>
               </h2>
-              <p className="text-[#6B3E1E]/80 leading-relaxed whitespace-pre-wrap text-[15px]">
+              <p className="text-[#063F3A]/80 leading-relaxed whitespace-pre-wrap text-[15px]">
                 {profile.description || "Aucune description fournie."}
               </p>
             </section>
 
             <div className="grid sm:grid-cols-2 gap-6">
-              <section className="bg-white p-8 rounded-2xl shadow-sm border border-[#6B3E1E]/5">
-                <h2 className="text-xl font-bold font-heading text-[#6B3E1E] mb-6 flex items-center gap-3">
-                  <span className="text-[10px] uppercase tracking-widest text-[#E67E22] font-bold">Expertise</span>
+              <section className="bg-white p-8 rounded-2xl shadow-sm border border-[#063F3A]/5">
+                <h2 className="text-xl font-bold font-heading text-[#063F3A] mb-6 flex items-center gap-3">
+                  <span className="text-[10px] uppercase tracking-widest text-[#00843D] font-bold">Expertise</span>
                   <div className="flex-grow h-px bg-[#D4AF37]/20"></div>
                 </h2>
                 <ul className="space-y-4">
                   {profile.expertise && profile.expertise.length > 0 ? (
                     profile.expertise.map((item, index) => (
-                      <li key={index} className="flex items-start gap-3 text-[#6B3E1E]/80 text-sm font-medium">
-                        <CheckCircle2 className="w-4 h-4 text-[#E67E22] shrink-0 mt-0.5" />
+                      <li key={index} className="flex items-start gap-3 text-[#063F3A]/80 text-sm font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-[#00843D] shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))
                   ) : (
-                    <li className="text-sm text-[#6B3E1E]/50 italic">Non renseigné</li>
+                    <li className="text-sm text-[#063F3A]/50 italic">Non renseigné</li>
                   )}
                 </ul>
               </section>
 
-              <section className="bg-white p-8 rounded-2xl shadow-sm border border-[#6B3E1E]/5">
-                <h2 className="text-xl font-bold font-heading text-[#6B3E1E] mb-6 flex items-center gap-3">
-                  <span className="text-[10px] uppercase tracking-widest text-[#E67E22] font-bold">Produits & Services</span>
+              <section className="bg-white p-8 rounded-2xl shadow-sm border border-[#063F3A]/5">
+                <h2 className="text-xl font-bold font-heading text-[#063F3A] mb-6 flex items-center gap-3">
+                  <span className="text-[10px] uppercase tracking-widest text-[#00843D] font-bold">Produits & Services</span>
                   <div className="flex-grow h-px bg-[#D4AF37]/20"></div>
                 </h2>
                 <ul className="space-y-4">
                   {profile.productsServices && profile.productsServices.length > 0 ? (
                     profile.productsServices.map((item, index) => (
-                      <li key={index} className="flex items-start gap-3 text-[#6B3E1E]/80 text-sm font-medium">
+                      <li key={index} className="flex items-start gap-3 text-[#063F3A]/80 text-sm font-medium">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shrink-0 mt-1.5"></div>
                         <span>{item}</span>
                       </li>
                     ))
                   ) : (
-                    <li className="text-sm text-[#6B3E1E]/50 italic">Non renseigné</li>
+                    <li className="text-sm text-[#063F3A]/50 italic">Non renseigné</li>
                   )}
                 </ul>
               </section>

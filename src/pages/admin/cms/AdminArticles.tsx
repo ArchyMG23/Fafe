@@ -51,7 +51,7 @@ export function AdminArticles() {
       header: 'Titre',
       accessor: (a) => (
         <div>
-          <div className="font-bold text-[#6B3E1E] max-w-sm truncate">{a.title}</div>
+          <div className="font-bold text-[#063F3A] max-w-sm truncate">{a.title}</div>
           <div className="text-xs text-stone-500 truncate">{a.slug}</div>
         </div>
       )
@@ -83,7 +83,7 @@ export function AdminArticles() {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="text-[#E67E22] hover:text-[#c96a1a] hover:bg-orange-50"
+          className="text-[#00843D] hover:text-[#c96a1a] hover:bg-orange-50"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/admin/contenus/articles/${a.id}`);
@@ -114,7 +114,7 @@ export function AdminArticles() {
         title="Articles & Actualités"
         description="Gérez les publications du blog public."
         action={
-          <Button onClick={() => navigate('/admin/contenus/articles/nouveau')} className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+          <Button onClick={() => navigate('/admin/contenus/articles/nouveau')} className="bg-[#C8102E] hover:bg-[#A30D25] text-white">
             <Plus className="w-4 h-4 mr-2" /> Créer un article
           </Button>
         }

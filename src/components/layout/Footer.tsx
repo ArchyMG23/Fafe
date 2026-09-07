@@ -28,7 +28,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#6B3E1E] text-white pt-20 pb-10">
+    <footer className="bg-[#063F3A] text-white pt-20 pb-10">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8 mb-16">
           
@@ -50,7 +50,7 @@ export function Footer() {
                   className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 w-full text-white placeholder:text-white/50 focus:outline-none focus:border-[#D4AF37]"
                   required
                 />
-                <Button type="submit" disabled={status === 'loading'} className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+                <Button type="submit" disabled={status === 'loading'} className="bg-[#C8102E] hover:bg-[#A30D25] text-white">
                   OK
                 </Button>
               </form>
@@ -80,7 +80,7 @@ export function Footer() {
             <h4 className="font-bold uppercase tracking-wider text-sm text-[#D4AF37] mb-6">Services</h4>
             <ul className="space-y-3 text-white/80">
               <li><Link to="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-              <li><Link to="/dons" className="hover:text-white transition-colors flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#E67E22]"></span>Dons</Link></li>
+              <li><Link to="/dons" className="hover:text-white transition-colors flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#C8102E]"></span>Dons</Link></li>
             </ul>
           </div>
 

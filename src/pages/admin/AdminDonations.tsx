@@ -88,7 +88,7 @@ export function AdminDonations() {
       header: 'Donateur',
       accessor: (d) => (
         <div>
-          <div className="font-bold text-[#6B3E1E]">
+          <div className="font-bold text-[#063F3A]">
             {d.anonymous ? 'Anonyme' : `${d.donorFirstName} ${d.donorLastName}`}
           </div>
           <div className="text-xs text-stone-500">{d.donorEmail}</div>
@@ -126,7 +126,7 @@ export function AdminDonations() {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="text-[#E67E22] hover:text-[#c96a1a] hover:bg-orange-50"
+          className="text-[#00843D] hover:text-[#c96a1a] hover:bg-orange-50"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/admin/dons/${d.id}`);
@@ -162,11 +162,11 @@ export function AdminDonations() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
           <p className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-2">Total Récolté (XAF)</p>
-          <p className="text-3xl font-bold text-[#E67E22]">{totalAmount.toLocaleString('fr-FR')}</p>
+          <p className="text-3xl font-bold text-[#00843D]">{totalAmount.toLocaleString('fr-FR')}</p>
         </div>
         <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
           <p className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-2">Total Dons</p>
-          <p className="text-3xl font-bold text-[#6B3E1E]">{totalDonations}</p>
+          <p className="text-3xl font-bold text-[#063F3A]">{totalDonations}</p>
         </div>
         <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
           <p className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-2">Dons Réussis</p>

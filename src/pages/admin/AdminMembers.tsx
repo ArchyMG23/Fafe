@@ -101,7 +101,7 @@ export function AdminMembers() {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-8 px-2 text-[#E67E22] hover:text-[#c96a1a] hover:bg-orange-50"
+          className="h-8 px-2 text-[#00843D] hover:text-[#c96a1a] hover:bg-orange-50"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/admin/membres/${m.id}`);

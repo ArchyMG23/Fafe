@@ -29,13 +29,13 @@ export function EventDetails() {
   };
 
   if (loading) {
-    return <div className="min-h-[60vh] flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full"></div></div>;
+    return <div className="min-h-[60vh] flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-[#00843D] border-t-transparent rounded-full"></div></div>;
   }
 
   if (!event) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center">
-        <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">Événement introuvable</h2>
+        <h2 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">Événement introuvable</h2>
         <Link to="/evenements"><Button variant="outline">Retour aux événements</Button></Link>
       </div>
     );
@@ -55,17 +55,17 @@ export function EventDetails() {
             {event.coverImage ? (
               <FafeImage src={event.coverImage} alt={event.title} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-[#6B3E1E] to-[#8E5B35]">
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-black/90 to-[#8E5B35]">
                 <Calendar className="w-20 h-20 text-white/20" />
               </div>
             )}
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold text-[#E67E22] shadow-sm uppercase tracking-wide">
+            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold text-[#00843D] shadow-sm uppercase tracking-wide">
               {event.eventType}
             </div>
           </div>
 
           <div className="p-8 md:p-12">
-            <h1 className="text-3xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-6 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-bold font-heading text-[#063F3A] mb-6 leading-tight">
               {event.title}
             </h1>
             
@@ -78,11 +78,11 @@ export function EventDetails() {
               {/* Sidebar Info */}
               <div className="space-y-6">
                 <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-stone-100">
-                  <h3 className="font-bold text-[#6B3E1E] mb-4 text-lg border-b border-stone-200 pb-2">Informations pratiques</h3>
+                  <h3 className="font-bold text-[#063F3A] mb-4 text-lg border-b border-stone-200 pb-2">Informations pratiques</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
-                      <Calendar className="w-5 h-5 text-[#E67E22] mt-0.5 shrink-0" />
+                      <Calendar className="w-5 h-5 text-[#00843D] mt-0.5 shrink-0" />
                       <div>
                         <p className="font-medium text-stone-800">Date</p>
                         <p className="text-sm text-stone-600">{new Date(event.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
@@ -90,7 +90,7 @@ export function EventDetails() {
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-[#E67E22] mt-0.5 shrink-0" />
+                      <Clock className="w-5 h-5 text-[#00843D] mt-0.5 shrink-0" />
                       <div>
                         <p className="font-medium text-stone-800">Heure</p>
                         <p className="text-sm text-stone-600">
@@ -104,9 +104,9 @@ export function EventDetails() {
 
                     <div className="flex items-start gap-3">
                       {event.online ? (
-                        <Globe2 className="w-5 h-5 text-[#E67E22] mt-0.5 shrink-0" />
+                        <Globe2 className="w-5 h-5 text-[#00843D] mt-0.5 shrink-0" />
                       ) : (
-                        <MapPin className="w-5 h-5 text-[#E67E22] mt-0.5 shrink-0" />
+                        <MapPin className="w-5 h-5 text-[#00843D] mt-0.5 shrink-0" />
                       )}
                       <div>
                         <p className="font-medium text-stone-800">Lieu</p>
@@ -117,7 +117,7 @@ export function EventDetails() {
                     
                     {event.price !== undefined && (
                       <div className="flex items-start gap-3 pt-4 border-t border-stone-200">
-                        <div className="w-5 h-5 rounded-full bg-[#E67E22]/10 flex items-center justify-center text-[#E67E22] font-bold shrink-0 mt-0.5">€</div>
+                        <div className="w-5 h-5 rounded-full bg-[#C8102E]/10 flex items-center justify-center text-[#00843D] font-bold shrink-0 mt-0.5">€</div>
                         <div>
                           <p className="font-medium text-stone-800">Tarif</p>
                           <p className="text-sm text-stone-600 font-bold">{event.price === 0 ? 'Participation gratuite' : `${event.price} ${event.currency || 'FCFA'}`}</p>
@@ -144,7 +144,7 @@ export function EventDetails() {
                      </div>
                   ) : event.registrationRequired ? (
                     <Link to={`/evenements/${event.slug}/inscription`}>
-                      <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 font-bold text-lg rounded-xl shadow-md">
+                      <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 font-bold text-lg rounded-xl shadow-md">
                         S'inscrire à l'événement
                       </Button>
                     </Link>

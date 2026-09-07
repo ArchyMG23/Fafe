@@ -124,13 +124,13 @@ export function AdminTestData() {
         {/* Users */}
         <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden flex flex-col">
           <div className="p-4 border-b border-stone-100 bg-stone-50/50">
-            <h3 className="font-bold text-[#6B3E1E]">Comptes Membres ({users.length})</h3>
+            <h3 className="font-bold text-[#063F3A]">Comptes Membres ({users.length})</h3>
           </div>
           <div className="p-4 flex-1 overflow-y-auto max-h-[500px]">
             {users.map(u => (
               <div key={u.id} className="flex items-center gap-3 p-3 hover:bg-stone-50 rounded-xl transition-colors border border-transparent hover:border-stone-100 group">
-                <button onClick={() => toggleUser(u.id)} className="text-stone-400 group-hover:text-[#E67E22] transition-colors">
-                  {selectedUserIds.has(u.id) ? <CheckSquare className="w-5 h-5 text-[#E67E22]" /> : <Square className="w-5 h-5" />}
+                <button onClick={() => toggleUser(u.id)} className="text-stone-400 group-hover:text-[#00843D] transition-colors">
+                  {selectedUserIds.has(u.id) ? <CheckSquare className="w-5 h-5 text-[#00843D]" /> : <Square className="w-5 h-5" />}
                 </button>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-sm truncate">{u.firstName} {u.lastName}</div>
@@ -147,13 +147,13 @@ export function AdminTestData() {
         {/* Projects */}
         <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden flex flex-col">
           <div className="p-4 border-b border-stone-100 bg-stone-50/50">
-            <h3 className="font-bold text-[#6B3E1E]">Projets / Entreprises ({projects.length})</h3>
+            <h3 className="font-bold text-[#063F3A]">Projets / Entreprises ({projects.length})</h3>
           </div>
           <div className="p-4 flex-1 overflow-y-auto max-h-[500px]">
             {projects.map(p => (
               <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-stone-50 rounded-xl transition-colors border border-transparent hover:border-stone-100 group">
-                <button onClick={() => toggleProject(p.id)} className="text-stone-400 group-hover:text-[#E67E22] transition-colors">
-                  {selectedProjectIds.has(p.id) ? <CheckSquare className="w-5 h-5 text-[#E67E22]" /> : <Square className="w-5 h-5" />}
+                <button onClick={() => toggleProject(p.id)} className="text-stone-400 group-hover:text-[#00843D] transition-colors">
+                  {selectedProjectIds.has(p.id) ? <CheckSquare className="w-5 h-5 text-[#00843D]" /> : <Square className="w-5 h-5" />}
                 </button>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-sm truncate">{p.title}</div>

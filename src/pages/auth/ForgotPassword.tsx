@@ -46,13 +46,13 @@ export function ForgotPassword() {
     <div className="bg-[#FAF9F6] min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">Mot de passe oublié</h2>
-          <p className="mt-2 text-[#6B3E1E]/80">
+          <h2 className="text-3xl font-bold font-heading text-[#063F3A]">Mot de passe oublié</h2>
+          <p className="mt-2 text-[#063F3A]/80">
             Entrez votre adresse e-mail pour réinitialiser votre mot de passe
           </p>
         </div>
         
-        <Card className="border border-[#6B3E1E]/5 shadow-xl rounded-2xl bg-white">
+        <Card className="border border-[#063F3A]/5 shadow-xl rounded-2xl bg-white">
           <CardContent className="p-8">
             {isSuccess ? (
               <div className="text-center">
@@ -62,7 +62,7 @@ export function ForgotPassword() {
                   Si un compte existe avec l'adresse <strong>{email}</strong>, un e-mail avec les instructions de réinitialisation vous a été envoyé.
                 </p>
                 <Link to="/hub/connexion">
-                  <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+                  <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white">
                     Retour à la connexion
                   </Button>
                 </Link>
@@ -76,7 +76,7 @@ export function ForgotPassword() {
                 )}
                 
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">
                     Adresse e-mail
                   </label>
                   <Input 
@@ -84,16 +84,16 @@ export function ForgotPassword() {
                     required 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="focus:border-[#E67E22]"
+                    className="focus:border-[#00843D]"
                   />
                 </div>
                 
-                <Button type="submit" className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 rounded-xl font-bold shadow-md" disabled={isLoading}>
+                <Button type="submit" className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 rounded-xl font-bold shadow-md" disabled={isLoading}>
                   {isLoading ? 'Envoi en cours...' : 'Envoyer les instructions'}
                 </Button>
                 
-                <div className="mt-6 text-center text-sm text-[#6B3E1E]/70 border-t border-[#6B3E1E]/10 pt-6">
-                  <Link to="/hub/connexion" className="font-bold text-[#E67E22] hover:underline">
+                <div className="mt-6 text-center text-sm text-[#063F3A]/70 border-t border-[#063F3A]/10 pt-6">
+                  <Link to="/hub/connexion" className="font-bold text-[#00843D] hover:underline">
                     Retour à la connexion
                   </Link>
                 </div>

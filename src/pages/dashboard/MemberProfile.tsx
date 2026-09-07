@@ -194,12 +194,12 @@ export function MemberProfile() {
         {/* Left Col: Main Profile Actions */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="border-0 shadow-sm overflow-hidden">
-            <div className="h-24 bg-gradient-to-r from-[#6B3E1E] to-[#E67E22]"></div>
+            <div className="h-24 bg-gradient-to-r from-black/90 to-[#E67E22]"></div>
             <CardContent className="pt-0 relative px-6 pb-6 text-center">
               <div className="relative w-32 h-32 mx-auto -mt-16 mb-4">
                 <div className="w-full h-full rounded-full border-4 border-white bg-stone-100 overflow-hidden shadow-md flex items-center justify-center">
                   {isUploading ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-[#E67E22]" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#00843D]" />
                   ) : userProfile.photoURL ? (
                     <FafeImage src={userProfile.photoURL} alt="Profil" className="w-full h-full object-cover" />
                   ) : (
@@ -208,7 +208,7 @@ export function MemberProfile() {
                 </div>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 p-2 bg-[#E67E22] text-white rounded-full shadow-lg hover:bg-[#c96a1a] transition-colors"
+                  className="absolute bottom-0 right-0 p-2 bg-[#C8102E] text-white rounded-full shadow-lg hover:bg-[#A30D25] transition-colors"
                   title="Modifier la photo"
                 >
                   <Camera className="w-5 h-5" />
@@ -222,7 +222,7 @@ export function MemberProfile() {
                 />
               </div>
               
-              <h2 className="text-xl font-bold font-heading text-[#6B3E1E]">
+              <h2 className="text-xl font-bold font-heading text-[#063F3A]">
                 {userProfile.firstName} {userProfile.lastName}
               </h2>
               <p className="text-stone-500 text-sm mb-4">{userProfile.email}</p>
@@ -250,7 +250,7 @@ export function MemberProfile() {
 
           {/* Member Card (Digital) */}
           {userProfile.membershipStatus === 'ACTIVE' && (
-            <Card className="bg-gradient-to-br from-[#6B3E1E] to-[#4A2A14] text-white border-0 shadow-lg overflow-hidden relative">
+            <Card className="bg-gradient-to-br from-black/90 to-[#4A2A14] text-white border-0 shadow-lg overflow-hidden relative">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37] rounded-full mix-blend-overlay opacity-20 -mr-10 -mt-10"></div>
               <CardContent className="p-6 relative z-10">
                 <div className="flex justify-between items-start mb-6">
@@ -290,19 +290,19 @@ export function MemberProfile() {
             <div className="flex overflow-x-auto border-b border-stone-100 p-2 gap-2 hide-scrollbar">
               <button 
                 onClick={() => setActiveTab('infos')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'infos' ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-500 hover:bg-stone-50 hover:text-[#6B3E1E]'}`}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'infos' ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-500 hover:bg-stone-50 hover:text-[#063F3A]'}`}
               >
                 <UserIcon className="w-4 h-4" /> Infos Personnelles
               </button>
               <button 
                 onClick={() => setActiveTab('pro')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'pro' ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-500 hover:bg-stone-50 hover:text-[#6B3E1E]'}`}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'pro' ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-500 hover:bg-stone-50 hover:text-[#063F3A]'}`}
               >
                 <Briefcase className="w-4 h-4" /> Profil Professionnel
               </button>
               <button 
                 onClick={() => setActiveTab('security')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'security' ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-500 hover:bg-stone-50 hover:text-[#6B3E1E]'}`}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'security' ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-500 hover:bg-stone-50 hover:text-[#063F3A]'}`}
               >
                 <Lock className="w-4 h-4" /> Sécurité
               </button>
@@ -324,31 +324,31 @@ export function MemberProfile() {
                   <div className="space-y-6 animate-fade-in">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Prénom</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Prénom</label>
                         <Input name="firstName" value={formData.firstName} onChange={handleChange} required />
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Nom</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Nom</label>
                         <Input name="lastName" value={formData.lastName} onChange={handleChange} required />
                       </div>
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Email</label>
+                      <label className="block text-sm font-bold text-[#063F3A] mb-2">Email</label>
                       <Input value={userProfile.email} disabled className="bg-stone-50 text-stone-500 cursor-not-allowed" />
                       <p className="text-xs text-stone-500 mt-1">L'adresse email est liée à votre authentification et ne peut être modifiée ici.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Téléphone</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Téléphone</label>
                         <div className="relative">
                           <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="phone" value={formData.phone} onChange={handleChange} className="pl-9" placeholder="+33 6 00 00 00 00" />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Pays de résidence</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Pays de résidence</label>
                         <div className="relative">
                           <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <select 
@@ -370,14 +370,14 @@ export function MemberProfile() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Ville</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Ville</label>
                         <div className="relative">
                           <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="city" value={formData.city} onChange={handleChange} className="pl-9" placeholder="Ex: Dakar, Paris..." />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Adresse</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Adresse</label>
                         <Input name="address" value={formData.address} onChange={handleChange} placeholder="Numéro et nom de rue" />
                       </div>
                     </div>
@@ -387,29 +387,29 @@ export function MemberProfile() {
                 {/* TAB: PROFIL PROFESSIONNEL */}
                 {activeTab === 'pro' && (
                   <div className="space-y-6 animate-fade-in">
-                    <div className="bg-[#E67E22]/5 border border-[#E67E22]/20 p-4 rounded-lg mb-6">
-                      <p className="text-sm text-[#6B3E1E]">
+                    <div className="bg-[#C8102E]/5 border border-[#00843D]/20 p-4 rounded-lg mb-6">
+                      <p className="text-sm text-[#063F3A]">
                         <strong>Profil Annuaire :</strong> Ces informations professionnelles permettront de compléter votre fiche dans l'Annuaire Panafricain FAFE (disponible prochainement).
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Nom de l'entreprise</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Nom de l'entreprise</label>
                         <div className="relative">
                           <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="company" value={formData.company} onChange={handleChange} className="pl-9" placeholder="Votre entreprise" />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Poste / Fonction</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Poste / Fonction</label>
                         <Input name="position" value={formData.position} onChange={handleChange} placeholder="Ex: Fondatrice, CEO..." />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Secteur d'activité</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Secteur d'activité</label>
                         <select 
                           name="sector" 
                           value={formData.sector} 
@@ -423,13 +423,13 @@ export function MemberProfile() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Domaine d'expertise principal</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Domaine d'expertise principal</label>
                         <Input name="expertise" value={formData.expertise} onChange={handleChange} placeholder="Ex: Marketing Digital, Finance, Agro-business..." />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Présentation de l'activité</label>
+                      <label className="block text-sm font-bold text-[#063F3A] mb-2">Présentation de l'activité</label>
                       <Textarea 
                         name="bio" 
                         value={formData.bio} 
@@ -441,28 +441,28 @@ export function MemberProfile() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-stone-100">
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Site Web</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Site Web</label>
                         <div className="relative">
                           <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="website" type="url" value={formData.website} onChange={handleChange} className="pl-9" placeholder="https://" />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">LinkedIn</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">LinkedIn</label>
                         <div className="relative">
                           <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="linkedin" type="url" value={formData.linkedin} onChange={handleChange} className="pl-9" placeholder="URL du profil" />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Instagram</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Instagram</label>
                         <div className="relative">
                           <Instagram className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="instagram" type="url" value={formData.instagram} onChange={handleChange} className="pl-9" placeholder="URL du compte" />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#6B3E1E] mb-2">Facebook</label>
+                        <label className="block text-sm font-bold text-[#063F3A] mb-2">Facebook</label>
                         <div className="relative">
                           <Facebook className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                           <Input name="facebook" type="url" value={formData.facebook} onChange={handleChange} className="pl-9" placeholder="URL de la page" />
@@ -476,13 +476,13 @@ export function MemberProfile() {
                 {activeTab === 'security' && (
                   <div className="space-y-6 animate-fade-in">
                     <div className="bg-stone-50 p-6 rounded-xl border border-stone-200">
-                      <h3 className="font-bold text-[#6B3E1E] mb-2 flex items-center gap-2">
-                        <Lock className="w-5 h-5 text-[#E67E22]" /> Mot de passe
+                      <h3 className="font-bold text-[#063F3A] mb-2 flex items-center gap-2">
+                        <Lock className="w-5 h-5 text-[#00843D]" /> Mot de passe
                       </h3>
                       <p className="text-sm text-stone-500 mb-4">
                         Vous pouvez demander un email sécurisé pour réinitialiser ou modifier votre mot de passe d'authentification.
                       </p>
-                      <Button type="button" variant="outline" onClick={handlePasswordReset} className="border-[#E67E22] text-[#E67E22] hover:bg-[#E67E22]/10">
+                      <Button type="button" variant="outline" onClick={handlePasswordReset} className="border-[#00843D] text-[#00843D] hover:bg-[#C8102E]/10">
                         Envoyer le lien de réinitialisation
                       </Button>
                     </div>
@@ -510,7 +510,7 @@ export function MemberProfile() {
                     <Button 
                       type="submit" 
                       disabled={isLoading || !isDirty} 
-                      className="bg-[#E67E22] hover:bg-[#c96a1a] text-white px-8"
+                      className="bg-[#C8102E] hover:bg-[#A30D25] text-white px-8"
                     >
                       {isLoading ? (
                         <>

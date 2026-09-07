@@ -19,8 +19,8 @@ export function DashboardOverview() {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-[#6B3E1E]/60 truncate">Statut du compte</p>
-                <p className="text-lg font-bold text-[#6B3E1E] truncate">{userProfile.status}</p>
+                <p className="text-sm font-medium text-[#063F3A]/60 truncate">Statut du compte</p>
+                <p className="text-lg font-bold text-[#063F3A] truncate">{userProfile.status}</p>
               </div>
             </div>
           </CardContent>
@@ -29,12 +29,12 @@ export function DashboardOverview() {
         <Card className="border-0 shadow-sm bg-white w-full">
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-orange-50 text-[#E67E22] rounded-xl shrink-0">
+              <div className="p-3 bg-orange-50 text-[#00843D] rounded-xl shrink-0">
                 <MapPin className="w-6 h-6" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-[#6B3E1E]/60 truncate">Pays</p>
-                <p className="text-lg font-bold text-[#6B3E1E] truncate">{userProfile.country || 'Non renseigné'}</p>
+                <p className="text-sm font-medium text-[#063F3A]/60 truncate">Pays</p>
+                <p className="text-lg font-bold text-[#063F3A] truncate">{userProfile.country || 'Non renseigné'}</p>
               </div>
             </div>
           </CardContent>
@@ -47,8 +47,8 @@ export function DashboardOverview() {
                 <Heart className="w-6 h-6" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-[#6B3E1E]/60 truncate">Dons réalisés</p>
-                <p className="text-lg font-bold text-[#6B3E1E] truncate">0</p>
+                <p className="text-sm font-medium text-[#063F3A]/60 truncate">Dons réalisés</p>
+                <p className="text-lg font-bold text-[#063F3A] truncate">0</p>
               </div>
             </div>
           </CardContent>
@@ -61,27 +61,27 @@ export function DashboardOverview() {
                 <Briefcase className="w-6 h-6" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-[#6B3E1E]/60 truncate">Profil Pro</p>
-                <p className="text-lg font-bold text-[#6B3E1E] truncate">Aucun</p>
+                <p className="text-sm font-medium text-[#063F3A]/60 truncate">Profil Pro</p>
+                <p className="text-lg font-bold text-[#063F3A] truncate">Aucun</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border border-[#E67E22]/20 shadow-sm bg-orange-50 w-full">
+      <Card className="border border-[#00843D]/20 shadow-sm bg-orange-50 w-full">
         <CardContent className="p-8">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex-1">
-              <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2">
+              <h3 className="text-xl font-bold font-heading text-[#063F3A] mb-2">
                 Vous êtes entrepreneure ? Créez votre profil professionnel.
               </h3>
-              <p className="text-[#6B3E1E]/70 max-w-2xl">
+              <p className="text-[#063F3A]/70 max-w-2xl">
                 Rejoignez l'annuaire panafricain pour augmenter votre visibilité, trouver des partenaires et développer votre réseau sur tout le continent.
               </p>
             </div>
             <Link to="/hub/dashboard/entrepreneure">
-              <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white whitespace-nowrap shadow-md rounded-xl font-bold">
+              <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white whitespace-nowrap shadow-md rounded-xl font-bold">
                 Créer mon profil <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>

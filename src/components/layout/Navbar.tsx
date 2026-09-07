@@ -80,11 +80,7 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100'
-          : 'bg-white border-b border-stone-100/70'
-      }`}
+      className={`fixed top-0 z-50 w-full transition-all duration-500 ${isScrolled ? 'bg-[#063F3A]/80 backdrop-blur-lg shadow-md border-b border-white/10 py-1' : 'bg-[#063F3A]/80 backdrop-blur-lg py-2'}`}
     >
       <div
         className={`w-full mx-auto flex items-center justify-between transition-all duration-300 px-4 md:px-8 lg:px-12 max-w-[1600px] ${
@@ -95,11 +91,11 @@ export function Navbar() {
         <Link to="/" className="flex items-center group py-1 z-50 shrink-0" aria-label="Accueil FAFE">
           {/* Mobile Logo */}
           <div className="md:hidden">
-            <FafeLogo size="sm" showSubtitle={false} className="group-hover:opacity-95 transition-opacity" />
+            <FafeLogo variant="light" size="sm" showSubtitle={false} className="group-hover:opacity-95 transition-opacity" />
           </div>
           {/* Desktop Logo */}
           <div className="hidden md:block">
-            <FafeLogo size={isScrolled ? 'sm' : 'md'} className="group-hover:opacity-95 transition-opacity" />
+            <FafeLogo variant="light" size={isScrolled ? "sm" : "md"} className="group-hover:opacity-95 transition-opacity" />
           </div>
         </Link>
 
@@ -108,83 +104,83 @@ export function Navbar() {
           <Link
             to="/"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/') ? 'text-white font-bold drop-shadow-sm' : 'text-white/80 hover:text-white'
             }`}
           >
             Accueil
             {isActive('/') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#C8102E] rounded-full" />
             )}
           </Link>
 
           <Link
             to="/nous"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/nous') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/nous') ? 'text-white font-bold drop-shadow-sm' : 'text-white/80 hover:text-white'
             }`}
           >
             Nous
             {isActive('/nous') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#C8102E] rounded-full" />
             )}
           </Link>
 
           <Link
             to="/entrepreneures"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/entrepreneures') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/entrepreneures') ? 'text-white font-bold drop-shadow-sm' : 'text-white/80 hover:text-white'
             }`}
           >
             Entrepreneures
             {isActive('/entrepreneures') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#C8102E] rounded-full" />
             )}
           </Link>
 
           <Link
             to="/actualites"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/actualites') && !isActive('/evenements') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/actualites') && !isActive('/evenements') ? 'text-white font-bold drop-shadow-sm' : 'text-white/80 hover:text-white'
             }`}
           >
             Actualités
             {isActive('/actualites') && !isActive('/evenements') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#C8102E] rounded-full" />
             )}
           </Link>
 
           <Link
             to="/evenements"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/evenements') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/evenements') ? 'text-white font-bold drop-shadow-sm' : 'text-white/80 hover:text-white'
             }`}
           >
             Événements
             {isActive('/evenements') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#C8102E] rounded-full" />
             )}
           </Link>
 
           <Link
             to="/dons"
             className={`relative py-2 text-sm font-semibold transition-colors ${
-              isActive('/dons') ? 'text-[#E67E22]' : 'text-stone-600 hover:text-[#6B3E1E]'
+              isActive('/dons') ? 'text-white font-bold drop-shadow-sm' : 'text-white/80 hover:text-white'
             }`}
           >
             Don
             {isActive('/dons') && (
-              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#E67E22] rounded-full" />
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[#C8102E] rounded-full" />
             )}
           </Link>
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden lg:flex items-center gap-2 lg:gap-3 shrink-0 border-l border-stone-200 pl-4 xl:pl-6 ml-auto">
+        <div className="hidden lg:flex items-center gap-2 lg:gap-3 shrink-0 border-l border-white/20 pl-4 xl:pl-6 ml-auto">
           <Link
             to="/recherche"
             aria-label="Recherche"
             title="Recherche"
-            className="text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+            className="text-white/80 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
           >
             <Search className="w-5 h-5" />
           </Link>
@@ -193,7 +189,7 @@ export function Navbar() {
             to="/marketplace"
             aria-label="Marketplace FAFE"
             title="Marketplace"
-            className="text-stone-500 hover:text-[#E67E22] transition-colors p-2 rounded-full hover:bg-stone-50 relative"
+            className="text-white/80 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10 relative"
           >
             <ShoppingCart className="w-5 h-5" />
             {cartItemsCount > 0 && (
@@ -206,26 +202,26 @@ export function Navbar() {
           <button
             onClick={toggleLanguage}
             aria-label="Changer de langue"
-            className="text-xs font-bold uppercase text-stone-500 hover:text-[#6B3E1E] transition-colors p-2 rounded-full hover:bg-stone-50"
+            className="text-xs font-bold uppercase text-white/80 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
           >
             {language}
           </button>
           
           {user ? (
             <Link to="/hub/dashboard" className="ml-2">
-              <Button className="bg-[#6B3E1E] hover:bg-[#532f17] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
+              <Button className="bg-[#00843D] hover:bg-[#006830] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
                 Espace Membre
               </Button>
             </Link>
           ) : (
             <div className="flex items-center gap-2 ml-2">
               <Link to="/hub/connexion">
-                <Button variant="outline" className="border-stone-200 text-stone-700 hover:bg-stone-50 py-1.5 px-4 rounded-full font-bold text-xs">
+                <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 py-1.5 px-4 backdrop-blur-sm rounded-full font-bold text-xs">
                   Connexion
                 </Button>
               </Link>
               <Link to="/rejoindre">
-                <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
+                <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white py-1.5 px-4 rounded-full font-bold text-xs shadow-md">
                   Rejoindre
                 </Button>
               </Link>
@@ -238,7 +234,7 @@ export function Navbar() {
           <Link
             to="/marketplace/panier"
             aria-label="Marketplace"
-            className="p-2.5 text-[#6B3E1E] hover:text-[#E67E22] rounded-full hover:bg-stone-100 active:scale-95 transition-transform relative"
+            className="p-2.5 text-white hover:text-[#FCD116] rounded-full hover:bg-stone-100 active:scale-95 transition-transform relative"
           >
             <ShoppingCart className="w-5 h-5" />
             {cartItemsCount > 0 && (
@@ -249,12 +245,12 @@ export function Navbar() {
           </Link>
 
           <button
-            className="p-2.5 text-[#6B3E1E] hover:text-[#E67E22] rounded-full hover:bg-stone-100 active:scale-95 transition-transform ml-0.5"
+            className="p-2.5 text-white hover:text-[#FCD116] rounded-full hover:bg-stone-100 active:scale-95 transition-transform ml-0.5"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isOpen}
           >
-            {isOpen ? <X className="w-6 h-6 text-[#E67E22]" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-6 h-6 text-[#00843D]" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
@@ -279,7 +275,7 @@ export function Navbar() {
                     to="/"
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center justify-between p-3.5 rounded-xl font-bold text-base transition-colors ${
-                      isActive('/') ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-[#6B3E1E] hover:bg-stone-50'
+                      isActive('/') ? 'bg-[#00843D]/10 text-[#00843D]' : 'text-[#063F3A] hover:bg-stone-50'
                     }`}
                   >
                     <span>ACCUEIL</span>
@@ -296,21 +292,21 @@ export function Navbar() {
                     <Link
                       to="/nous"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <span>Présentation & Vision</span>
                     </Link>
                     <Link
                       to="/nous#categories"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <span>Nos actions & programmes</span>
                     </Link>
                     <Link
                       to="/nous#contact"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <span>Contact & Secrétariat</span>
                     </Link>
@@ -326,14 +322,14 @@ export function Navbar() {
                     <Link
                       to="/actualites"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <span>Actualités & Événements</span>
                     </Link>
                     <Link
                       to="/galerie"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <span>Médiathèque (Photos & Vidéos)</span>
                     </Link>
@@ -348,10 +344,10 @@ export function Navbar() {
                   <Link
                     to="/entrepreneures"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                   >
                     <span>Annuaire Panafricain</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#6B3E1E]">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#063F3A]">
                       Talents
                     </span>
                   </Link>
@@ -366,7 +362,7 @@ export function Navbar() {
                     <Link
                       to={user ? "/hub/dashboard" : "/hub"}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
@@ -378,10 +374,10 @@ export function Navbar() {
                     <Link
                       to="/marketplace"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#6B3E1E] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                      className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <ShoppingCart className="w-4 h-4 text-[#6B3E1E]" />
+                        <ShoppingCart className="w-4 h-4 text-[#063F3A]" />
                         <span>Marketplace</span>
                       </div>
                       <div className="flex flex-col items-end">
@@ -397,10 +393,10 @@ export function Navbar() {
                     <Link
                       to="/dons"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center justify-between p-3 rounded-xl bg-orange-50/80 text-[#E67E22] text-sm font-bold transition-colors"
+                      className="flex items-center justify-between p-3 rounded-xl bg-orange-50/80 text-[#00843D] text-sm font-bold transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <Heart className="w-4 h-4 text-[#E67E22]" />
+                        <Heart className="w-4 h-4 text-[#00843D]" />
                         <span>Faire un don</span>
                       </div>
                       <span className="text-xs font-semibold uppercase tracking-wider">Soutenir</span>
@@ -414,7 +410,7 @@ export function Navbar() {
               <div className="pt-6 mt-6 border-t border-stone-200/80 space-y-3 pb-4">
                 {user ? (
                   <Link to="/hub/dashboard" onClick={() => setIsOpen(false)} className="block">
-                    <Button className="w-full bg-[#6B3E1E] hover:bg-[#532f17] text-white py-3.5 rounded-full font-bold text-sm shadow-md flex items-center justify-center gap-2">
+                    <Button className="w-full bg-[#00843D] hover:bg-[#006830] text-white py-3.5 rounded-full font-bold text-sm shadow-md flex items-center justify-center gap-2">
                       <UserIcon className="w-4 h-4 text-[#D4AF37]" />
                       Mon Espace Membre
                     </Button>
@@ -430,7 +426,7 @@ export function Navbar() {
                       </Button>
                     </Link>
                     <Link to="/rejoindre" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-3 rounded-full font-bold text-xs sm:text-sm shadow-md">
+                      <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-3 rounded-full font-bold text-xs sm:text-sm shadow-md">
                         Rejoindre le FAFE
                       </Button>
                     </Link>

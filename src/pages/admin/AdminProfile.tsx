@@ -16,12 +16,12 @@ export function AdminProfile() {
 
       <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
         <div className="flex items-center gap-6 mb-8">
-          <div className="w-24 h-24 rounded-full bg-[#6B3E1E] flex items-center justify-center font-bold text-3xl text-white">
+          <div className="w-24 h-24 rounded-full bg-[#00843D] flex items-center justify-center font-bold text-3xl text-white">
             {userProfile.firstName.charAt(0)}{userProfile.lastName.charAt(0)}
           </div>
           <div>
             <h2 className="text-2xl font-bold text-stone-900">{userProfile.firstName} {userProfile.lastName}</h2>
-            <p className="text-[#E67E22] font-bold mt-1">{userProfile.role}</p>
+            <p className="text-[#00843D] font-bold mt-1">{userProfile.role}</p>
           </div>
         </div>
 
@@ -37,7 +37,7 @@ export function AdminProfile() {
           </div>
           
           <div className="pt-4 flex gap-2">
-            <Button disabled className="bg-[#E67E22] text-white opacity-50">Mettre à jour le profil</Button>
+            <Button disabled className="bg-[#C8102E] text-white opacity-50">Mettre à jour le profil</Button>
             <p className="text-xs text-stone-400 mt-2">La modification du profil est désactivée dans cette démo.</p>
           </div>
         </div>

@@ -103,7 +103,7 @@ export function CMSListField({
           type="button"
           size="sm"
           onClick={handleAddItem}
-          className="bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs h-8"
+          className="bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs h-8"
         >
           <Plus className="w-3.5 h-3.5 mr-1" />
           Ajouter un élément
@@ -119,7 +119,7 @@ export function CMSListField({
               key={index}
               className={`rounded-xl border transition-all ${
                 isEditing 
-                  ? 'border-[#E67E22] bg-orange-50/10 shadow-sm' 
+                  ? 'border-[#00843D] bg-orange-50/10 shadow-sm' 
                   : 'border-stone-200 bg-stone-50/50 hover:bg-stone-50'
               }`}
             >
@@ -164,7 +164,7 @@ export function CMSListField({
                   <button
                     type="button"
                     onClick={() => setEditingIndex(isEditing ? null : index)}
-                    className="p-1.5 text-[#E67E22] hover:bg-[#E67E22]/10 rounded-lg transition-colors ml-1"
+                    className="p-1.5 text-[#00843D] hover:bg-[#C8102E]/10 rounded-lg transition-colors ml-1"
                   >
                     {isEditing ? <Check className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
                   </button>

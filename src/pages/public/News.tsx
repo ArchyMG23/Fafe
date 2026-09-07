@@ -55,7 +55,7 @@ export function News() {
     <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4">
             Actualités & Ressources
           </h1>
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
@@ -65,11 +65,11 @@ export function News() {
 
         {/* Filters */}
         <div className="flex flex-wrap justify-center gap-2 mb-12">
-          <Link to="/actualites" className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${!slug ? 'bg-[#E67E22] text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'}`}>
+          <Link to="/actualites" className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${!slug ? 'bg-[#C8102E] text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'}`}>
             Tout
           </Link>
           {categories.filter(c => c.status === 'ACTIVE').map(cat => (
-            <Link key={cat.id} to={`/actualites/categorie/${cat.slug}`} className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${slug === cat.slug ? 'bg-[#E67E22] text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'}`}>
+            <Link key={cat.id} to={`/actualites/categorie/${cat.slug}`} className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${slug === cat.slug ? 'bg-[#C8102E] text-white' : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'}`}>
               {cat.name}
             </Link>
           ))}
@@ -77,7 +77,7 @@ export function News() {
 
         {loading ? (
           <div className="flex justify-center p-20">
-            <Loader2 className="w-10 h-10 animate-spin text-[#E67E22]" />
+            <Loader2 className="w-10 h-10 animate-spin text-[#00843D]" />
           </div>
         ) : articles.length === 0 ? (
           <div className="text-center p-20 bg-white rounded-2xl border border-stone-200">
@@ -94,14 +94,14 @@ export function News() {
                     <div className="w-full h-full flex items-center justify-center text-stone-300">Sans image</div>
                   )}
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[#E67E22] text-xs font-bold uppercase tracking-wider rounded-full">
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[#00843D] text-xs font-bold uppercase tracking-wider rounded-full">
                       {getCategoryName(article.categoryId)}
                     </span>
                   </div>
                 </div>
                 
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-3 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+                  <h3 className="text-xl font-bold font-heading text-[#063F3A] mb-3 group-hover:text-[#00843D] transition-colors line-clamp-2">
                     {article.title}
                   </h3>
                   <p className="text-stone-600 text-sm mb-4 line-clamp-3 flex-grow">
@@ -112,7 +112,7 @@ export function News() {
                     <div className="flex items-center text-xs text-stone-500 gap-4">
                       <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {new Date(article.publishedAt || article.createdAt).toLocaleDateString('fr-FR')}</span>
                     </div>
-                    <span className="text-[#E67E22] group-hover:translate-x-1 transition-transform">
+                    <span className="text-[#00843D] group-hover:translate-x-1 transition-transform">
                       <ArrowRight className="w-5 h-5" />
                     </span>
                   </div>

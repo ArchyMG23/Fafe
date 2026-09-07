@@ -84,22 +84,22 @@ export function Directory() {
         
         {/* Header */}
         <div className="mb-12 text-center max-w-3xl mx-auto">
-          <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-4">Annuaire Panafricain</h2>
-          <h1 className="text-3xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-6 leading-tight">
+          <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-4">Annuaire Panafricain</h2>
+          <h1 className="text-3xl md:text-5xl font-bold font-heading text-[#063F3A] mb-6 leading-tight">
             Les femmes qui entreprennent font avancer l'Afrique.
           </h1>
-          <p className="text-lg text-[#6B3E1E]/70 leading-relaxed">
+          <p className="text-lg text-[#063F3A]/70 leading-relaxed">
             Découvrez les entrepreneures du réseau FAFE et explorez les talents, entreprises et expertises qui façonnent l'économie africaine.
           </p>
         </div>
 
         {/* Main Search */}
         <div className="max-w-4xl mx-auto mb-8 relative">
-          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-[#6B3E1E]/40" />
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-[#063F3A]/40" />
           <input 
             type="text"
             placeholder="Rechercher une entrepreneure, une entreprise ou une expertise..." 
-            className="w-full pl-16 pr-6 h-16 bg-white border border-[#6B3E1E]/10 focus:border-[#E67E22] focus:ring-2 focus:ring-[#E67E22]/20 rounded-2xl text-lg text-[#6B3E1E] shadow-sm transition-all outline-none"
+            className="w-full pl-16 pr-6 h-16 bg-white border border-[#063F3A]/10 focus:border-[#00843D] focus:ring-2 focus:ring-[#E67E22]/20 rounded-2xl text-lg text-[#063F3A] shadow-sm transition-all outline-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -110,7 +110,7 @@ export function Directory() {
           <Button 
             variant="outline" 
             onClick={() => setShowFilters(!showFilters)}
-            className="border-[#6B3E1E]/10 text-[#6B3E1E]"
+            className="border-[#063F3A]/10 text-[#063F3A]"
           >
             <SlidersHorizontal className="w-4 h-4 mr-2" />
             Filtres
@@ -118,12 +118,12 @@ export function Directory() {
         </div>
 
         {/* Advanced Filters */}
-        <div className={`bg-white p-6 rounded-2xl shadow-sm border border-[#6B3E1E]/10 mb-12 ${showFilters ? 'block' : 'hidden md:block'}`}>
+        <div className={`bg-white p-6 rounded-2xl shadow-sm border border-[#063F3A]/10 mb-12 ${showFilters ? 'block' : 'hidden md:block'}`}>
           <div className="grid md:grid-cols-4 gap-4 items-end">
             <div>
-              <label className="block text-xs font-bold text-[#6B3E1E]/60 uppercase tracking-wider mb-2">Pays</label>
+              <label className="block text-xs font-bold text-[#063F3A]/60 uppercase tracking-wider mb-2">Pays</label>
               <select 
-                className="flex h-12 w-full rounded-xl border border-[#6B3E1E]/10 bg-[#FAF9F6] px-4 py-2 text-sm text-[#6B3E1E] focus:outline-none focus:border-[#E67E22] transition-colors appearance-none"
+                className="flex h-12 w-full rounded-xl border border-[#063F3A]/10 bg-[#FAF9F6] px-4 py-2 text-sm text-[#063F3A] focus:outline-none focus:border-[#00843D] transition-colors appearance-none"
                 value={countryFilter}
                 onChange={(e) => setCountryFilter(e.target.value)}
                 style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236B3E1E\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.2em' }}
@@ -135,9 +135,9 @@ export function Directory() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#6B3E1E]/60 uppercase tracking-wider mb-2">Ville</label>
+              <label className="block text-xs font-bold text-[#063F3A]/60 uppercase tracking-wider mb-2">Ville</label>
               <select 
-                className="flex h-12 w-full rounded-xl border border-[#6B3E1E]/10 bg-[#FAF9F6] px-4 py-2 text-sm text-[#6B3E1E] focus:outline-none focus:border-[#E67E22] transition-colors appearance-none"
+                className="flex h-12 w-full rounded-xl border border-[#063F3A]/10 bg-[#FAF9F6] px-4 py-2 text-sm text-[#063F3A] focus:outline-none focus:border-[#00843D] transition-colors appearance-none"
                 value={cityFilter}
                 onChange={(e) => setCityFilter(e.target.value)}
                 style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236B3E1E\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.2em' }}
@@ -149,9 +149,9 @@ export function Directory() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#6B3E1E]/60 uppercase tracking-wider mb-2">Secteur</label>
+              <label className="block text-xs font-bold text-[#063F3A]/60 uppercase tracking-wider mb-2">Secteur</label>
               <select 
-                className="flex h-12 w-full rounded-xl border border-[#6B3E1E]/10 bg-[#FAF9F6] px-4 py-2 text-sm text-[#6B3E1E] focus:outline-none focus:border-[#E67E22] transition-colors appearance-none"
+                className="flex h-12 w-full rounded-xl border border-[#063F3A]/10 bg-[#FAF9F6] px-4 py-2 text-sm text-[#063F3A] focus:outline-none focus:border-[#00843D] transition-colors appearance-none"
                 value={sectorFilter}
                 onChange={(e) => setSectorFilter(e.target.value)}
                 style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236B3E1E\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.2em' }}
@@ -179,7 +179,7 @@ export function Directory() {
         {/* Results count */}
         {!loading && (
           <div className="mb-6 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-[#6B3E1E]">
+            <h3 className="text-lg font-bold text-[#063F3A]">
               {filteredEntrepreneurs.length} {filteredEntrepreneurs.length === 1 ? 'résultat' : 'résultats'}
             </h3>
           </div>
@@ -188,13 +188,13 @@ export function Directory() {
         {/* Results Grid */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="w-12 h-12 border-4 border-[#E67E22]/20 border-t-[#E67E22] rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-[#6B3E1E]/60 font-medium">Chargement de l'annuaire...</p>
+            <div className="w-12 h-12 border-4 border-[#00843D]/20 border-t-[#E67E22] rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-[#063F3A]/60 font-medium">Chargement de l'annuaire...</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredEntrepreneurs.map(entrepreneure => (
-              <div key={entrepreneure.id} className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-[#6B3E1E]/5">
+              <div key={entrepreneure.id} className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-[#063F3A]/5">
                 <div className="w-full aspect-[4/5] bg-stone-100 relative overflow-hidden">
                   <FafeImage 
                     src={entrepreneure.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
@@ -205,8 +205,8 @@ export function Directory() {
                   
                   {/* Location badge */}
                   <div className="absolute top-4 left-4">
-                    <span className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-bold text-[#6B3E1E] uppercase tracking-widest shadow-sm flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-[#E67E22]" />
+                    <span className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-bold text-[#063F3A] uppercase tracking-widest shadow-sm flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3 text-[#00843D]" />
                       {getCountryName(entrepreneure.country)}
                     </span>
                   </div>
@@ -222,19 +222,19 @@ export function Directory() {
                 </div>
                 
                 <div className="p-6 flex-grow flex flex-col">
-                  <h3 className="font-bold text-xl leading-tight text-[#6B3E1E] mb-2 group-hover:text-[#E67E22] transition-colors">
+                  <h3 className="font-bold text-xl leading-tight text-[#063F3A] mb-2 group-hover:text-[#00843D] transition-colors">
                     {entrepreneure.firstName} {entrepreneure.lastName}
                   </h3>
-                  <p className="text-sm text-[#6B3E1E]/70 mb-4 font-medium flex items-center gap-2 line-clamp-2">
+                  <p className="text-sm text-[#063F3A]/70 mb-4 font-medium flex items-center gap-2 line-clamp-2">
                     <Briefcase className="w-4 h-4 text-[#D4AF37] shrink-0" />
                     <span className="truncate">{entrepreneure.position || 'Fondatrice'}, {entrepreneure.company}</span>
                   </p>
                   
-                  <div className="mt-auto pt-4 border-t border-[#6B3E1E]/10 flex items-center justify-between">
-                    <span className="text-[10px] bg-[#FAF9F6] px-3 py-1.5 rounded-full font-bold text-[#6B3E1E] uppercase tracking-wider truncate max-w-[60%]">
+                  <div className="mt-auto pt-4 border-t border-[#063F3A]/10 flex items-center justify-between">
+                    <span className="text-[10px] bg-[#FAF9F6] px-3 py-1.5 rounded-full font-bold text-[#063F3A] uppercase tracking-wider truncate max-w-[60%]">
                       {getSectorName(entrepreneure.sector)}
                     </span>
-                    <Link to={`/hub/annuaire/${entrepreneure.id}`} className="text-[#E67E22] text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    <Link to={`/hub/annuaire/${entrepreneure.id}`} className="text-[#00843D] text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
                       Profil <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -245,12 +245,12 @@ export function Directory() {
         )}
 
         {!loading && filteredEntrepreneurs.length === 0 && (
-          <div className="text-center py-24 bg-white rounded-2xl border border-[#6B3E1E]/5 shadow-sm mt-8">
-            <h3 className="text-2xl font-heading font-bold text-[#6B3E1E] mb-3">Aucun résultat ne correspond à vos critères de recherche.</h3>
-            <p className="text-[#6B3E1E]/60 mb-6 max-w-lg mx-auto">Essayez de modifier vos filtres ou d'utiliser des termes de recherche plus génériques.</p>
+          <div className="text-center py-24 bg-white rounded-2xl border border-[#063F3A]/5 shadow-sm mt-8">
+            <h3 className="text-2xl font-heading font-bold text-[#063F3A] mb-3">Aucun résultat ne correspond à vos critères de recherche.</h3>
+            <p className="text-[#063F3A]/60 mb-6 max-w-lg mx-auto">Essayez de modifier vos filtres ou d'utiliser des termes de recherche plus génériques.</p>
             <Button 
               onClick={resetFilters}
-              className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-8 py-6 font-bold"
+              className="bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-8 py-6 font-bold"
             >
               Réinitialiser les filtres
             </Button>

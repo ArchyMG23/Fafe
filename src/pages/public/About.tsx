@@ -79,7 +79,7 @@ export function About() {
       {/* 1. HERO PCA */}
       <section className="merged-section relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden bg-[#FAF9F6] merged-section" id="about-hero">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-5 rounded-full blur-[100px]"></div>
+        <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#C8102E] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
 
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -91,26 +91,26 @@ export function About() {
               viewport={{ once: true }}
               variants={fadeInUp}
             >
-              <div className="inline-block px-4 py-1.5 bg-[#E67E22]/10 rounded-full mb-6">
-                <span className="text-sm font-bold tracking-widest text-[#E67E22] uppercase">
+              <div className="inline-block px-4 py-1.5 bg-[#C8102E]/10 rounded-full mb-6">
+                <span className="text-sm font-bold tracking-widest text-[#00843D] uppercase">
                   {getTxt(pcaHero?.heroLabel, "À PROPOS DU FAFE")}
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#063F3A] leading-tight mb-6">
                 {getTxt(pcaHero?.heroTitle, "NOUS")}
               </h1>
               <p className="text-lg md:text-xl text-stone-600 leading-relaxed mb-12 max-w-2xl">
                 {getTxt(pcaHero?.heroDescription)}
               </p>
 
-              <div className="border-l-4 border-[#E67E22] pl-6 py-2">
+              <div className="border-l-4 border-[#00843D] pl-6 py-2">
                 <div className="text-sm font-bold tracking-widest text-stone-400 uppercase mb-1">
                   PCA DU FAFE
                 </div>
-                <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-1">
+                <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-1">
                   {pcaHero?.pcaName}
                 </h3>
-                <p className="text-[#E67E22] font-medium">
+                <p className="text-[#00843D] font-medium">
                   {getTxt(pcaHero?.pcaTitle)}
                 </p>
               </div>
@@ -128,12 +128,12 @@ export function About() {
                   alt={pcaHero?.pcaName}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#6B3E1E]/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90/40 to-transparent"></div>
               </div>
               
               {/* African motif decoration */}
               <div className="absolute -bottom-6 -left-6 w-32 h-32 border-[12px] border-[#D4AF37] rounded-full opacity-30 -z-10"></div>
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-[#E67E22] rounded-full opacity-10 -z-10"></div>
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-[#C8102E] rounded-full opacity-10 -z-10"></div>
             </motion.div>
           </div>
         </div>
@@ -152,7 +152,7 @@ export function About() {
             <div className="w-20 h-20 md:w-24 md:h-24 mb-6 transition-transform hover:scale-105 duration-300">
               <FafeOfficialEmblem className="w-full h-full" />
             </div>
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-4">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-4">
               {getTxt(presentation?.title, "QUI SOMMES-NOUS ?")}
             </h2>
             <div className="w-16 h-1 bg-[#D4AF37] mx-auto"></div>
@@ -180,10 +180,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               {getTxt(historique?.title, "NOTRE HISTOIRE")}
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               {getTxt(historique?.subtitle, "Les jalons de notre évolution")}
             </h3>
           </motion.div>
@@ -191,7 +191,7 @@ export function About() {
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative">
               {/* Line connector for desktop */}
-              <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-[#6B3E1E]/10 -translate-y-1/2 z-0"></div>
+              <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-[#00843D]/10 -translate-y-1/2 z-0"></div>
               
               {historique?.events?.map((evt: any, idx: number) => (
                 <motion.div 
@@ -203,15 +203,15 @@ export function About() {
                 >
                   {/* Vertical line connector for mobile */}
                   {idx !== historique.events.length - 1 && (
-                    <div className="md:hidden absolute left-[15px] top-8 bottom-[-48px] w-0.5 bg-[#6B3E1E]/10 z-0"></div>
+                    <div className="md:hidden absolute left-[15px] top-8 bottom-[-48px] w-0.5 bg-[#00843D]/10 z-0"></div>
                   )}
 
-                  <div className="w-8 h-8 rounded-full bg-[#E67E22] flex items-center justify-center shrink-0 md:mb-6 shadow-lg group-hover:scale-125 transition-transform duration-300 relative z-10">
+                  <div className="w-8 h-8 rounded-full bg-[#C8102E] flex items-center justify-center shrink-0 md:mb-6 shadow-lg group-hover:scale-125 transition-transform duration-300 relative z-10">
                     <div className="w-3 h-3 bg-white rounded-full"></div>
                   </div>
                   <div className="ml-6 md:ml-0 md:text-center">
                     <div className="text-2xl font-bold font-heading text-[#D4AF37] mb-2">{evt.year}</div>
-                    <h4 className="text-lg font-bold text-[#6B3E1E] mb-2">{getTxt(evt.title || evt.titleFR)}</h4>
+                    <h4 className="text-lg font-bold text-[#063F3A] mb-2">{getTxt(evt.title || evt.titleFR)}</h4>
                     <p className="text-sm text-stone-600">{getTxt(evt.description || evt.descriptionFR)}</p>
                   </div>
                 </motion.div>
@@ -226,15 +226,15 @@ export function About() {
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <motion.div 
-              className="bg-[#FAF9F6] p-10 md:p-12 rounded-[2rem] border border-[#6B3E1E]/5 shadow-sm hover:shadow-lg transition-shadow"
+              className="bg-[#FAF9F6] p-10 md:p-12 rounded-[2rem] border border-[#063F3A]/5 shadow-sm hover:shadow-lg transition-shadow"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6 } }}
               viewport={{ once: true }}
             >
-              <div className="w-16 h-16 bg-[#E67E22]/10 rounded-2xl flex items-center justify-center mb-8">
-                <Globe className="w-8 h-8 text-[#E67E22]" />
+              <div className="w-16 h-16 bg-[#C8102E]/10 rounded-2xl flex items-center justify-center mb-8">
+                <Globe className="w-8 h-8 text-[#00843D]" />
               </div>
-              <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-6">
+              <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-6">
                 {getTxt(vision?.title, "NOTRE VISION")}
               </h3>
               <p className="text-lg text-stone-600 leading-relaxed">
@@ -243,7 +243,7 @@ export function About() {
             </motion.div>
 
             <motion.div 
-              className="bg-[#6B3E1E] p-10 md:p-12 rounded-[2rem] shadow-xl text-white relative overflow-hidden"
+              className="bg-[#00843D] p-10 md:p-12 rounded-[2rem] shadow-xl text-white relative overflow-hidden"
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6 } }}
               viewport={{ once: true }}
@@ -273,10 +273,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               Notre fondation
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               Nos Valeurs
             </h3>
           </motion.div>
@@ -285,15 +285,15 @@ export function About() {
             {valeurs?.map((valeur: any, idx: number) => (
               <motion.div
                 key={idx}
-                className="bg-white px-8 py-10 rounded-2xl border border-[#6B3E1E]/5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.33%-16px)] text-center group"
+                className="bg-white px-8 py-10 rounded-2xl border border-[#063F3A]/5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.33%-16px)] text-center group"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: idx * 0.1 } }}
                 viewport={{ once: true }}
               >
-                <div className="w-16 h-16 mx-auto bg-[#FAF9F6] rounded-xl flex items-center justify-center mb-6 text-[#E67E22] group-hover:scale-110 group-hover:bg-[#E67E22] group-hover:text-white transition-all duration-300">
+                <div className="w-16 h-16 mx-auto bg-[#FAF9F6] rounded-xl flex items-center justify-center mb-6 text-[#00843D] group-hover:scale-110 group-hover:bg-[#C8102E] group-hover:text-white transition-all duration-300">
                   {getIcon(valeur.icon)}
                 </div>
-                <h4 className="text-lg font-bold text-[#6B3E1E] tracking-wide uppercase">
+                <h4 className="text-lg font-bold text-[#063F3A] tracking-wide uppercase">
                   {getTxt(valeur.title || valeur.titleFR)}
                 </h4>
               </motion.div>
@@ -303,7 +303,7 @@ export function About() {
       </section>
 
       {/* 6. GOUVERNANCE */}
-      <section className="merged-section py-24 bg-white border-b border-[#6B3E1E]/5" id="gouvernance">
+      <section className="merged-section py-24 bg-white border-b border-[#063F3A]/5" id="gouvernance">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-4xl text-center">
           <motion.div 
             initial="hidden"
@@ -311,10 +311,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               Organisation
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-8">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A] mb-8">
               {getTxt(gouvernance?.title, "Gouvernance")}
             </h3>
             
@@ -335,10 +335,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               Direction
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               {getTxt(bureauExecutif?.title, "Le Bureau Exécutif")}
             </h3>
           </motion.div>
@@ -347,7 +347,7 @@ export function About() {
             {bureauExecutif?.members?.map((member: any, idx: number) => (
               <motion.div
                 key={idx}
-                className="bg-white rounded-[2rem] overflow-hidden border border-[#6B3E1E]/5 shadow-md hover:shadow-xl transition-shadow group"
+                className="bg-white rounded-[2rem] overflow-hidden border border-[#063F3A]/5 shadow-md hover:shadow-xl transition-shadow group"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: idx * 0.1 } }}
                 viewport={{ once: true }}
@@ -372,8 +372,8 @@ export function About() {
                       <div className="w-2 h-2 bg-[#D4AF37] rounded-full"></div>
                     </div>
                   </div>
-                  <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2 pt-2">{member.name}</h4>
-                  <p className="text-[#E67E22] font-medium text-sm">{getTxt(member.role || member.roleFR)}</p>
+                  <h4 className="text-xl font-bold font-heading text-[#063F3A] mb-2 pt-2">{member.name}</h4>
+                  <p className="text-[#00843D] font-medium text-sm">{getTxt(member.role || member.roleFR)}</p>
                 </div>
               </motion.div>
             ))}
@@ -391,10 +391,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               Au quotidien
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               {getTxt(equipe?.title, "L'Équipe Opérationnelle")}
             </h3>
           </motion.div>
@@ -421,7 +421,7 @@ export function About() {
                     </div>
                   )}
                 </div>
-                <h4 className="text-lg font-bold text-[#6B3E1E] mb-1">{member.name}</h4>
+                <h4 className="text-lg font-bold text-[#063F3A] mb-1">{member.name}</h4>
                 <p className="text-stone-500 text-sm">{getTxt(member.role || member.roleFR)}</p>
               </motion.div>
             ))}
@@ -439,10 +439,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               Confiance
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               {partenaires?.titleFR || "Nos Partenaires"}
             </h3>
           </motion.div>
@@ -483,10 +483,10 @@ export function About() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold tracking-widest text-[#E67E22] uppercase mb-3">
+            <h2 className="text-sm font-bold tracking-widest text-[#00843D] uppercase mb-3">
               Transparence
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               {rapports?.titleFR || "Rapports d'Activités"}
             </h3>
           </motion.div>
@@ -498,18 +498,18 @@ export function About() {
                 href={rapport.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-6 bg-[#FAF9F6] rounded-2xl border border-stone-200 hover:border-[#E67E22]/30 hover:shadow-md transition-all group"
+                className="flex items-center justify-between p-6 bg-[#FAF9F6] rounded-2xl border border-stone-200 hover:border-[#00843D]/30 hover:shadow-md transition-all group"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: idx * 0.1 } }}
                 viewport={{ once: true }}
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#E67E22] shadow-sm">
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#00843D] shadow-sm">
                     <Download className="w-5 h-5" />
                   </div>
-                  <span className="font-bold text-[#6B3E1E] group-hover:text-[#E67E22] transition-colors">{rapport.titleFR}</span>
+                  <span className="font-bold text-[#063F3A] group-hover:text-[#00843D] transition-colors">{rapport.titleFR}</span>
                 </div>
-                <ArrowRight className="w-5 h-5 text-stone-300 group-hover:text-[#E67E22] group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-5 h-5 text-stone-300 group-hover:text-[#00843D] group-hover:translate-x-1 transition-all" />
               </motion.a>
             ))}
           </div>
@@ -517,8 +517,8 @@ export function About() {
       </section>
 
       {/* 11. CTA */}
-      <section className="merged-section py-24 bg-[#522d14] relative overflow-hidden merged-section" id="about-cta">
-        <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-10 rounded-full blur-[100px]"></div>
+      <section className="merged-section py-24 bg-[#042D29] relative overflow-hidden merged-section" id="about-cta">
+        <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#C8102E] opacity-10 rounded-full blur-[100px]"></div>
         <div className="w-full max-w-7xl mx-auto px-4 relative z-10 text-center max-w-3xl">
           <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">
             Prête à rejoindre notre réseau ?
@@ -527,7 +527,7 @@ export function About() {
             Devenez membre du FAFE et accédez à un réseau puissant de femmes entrepreneures à travers l'Afrique.
           </p>
           <Link to="/rejoindre">
-            <Button size="lg" className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-10 py-6 text-lg shadow-xl hover:scale-105 transition-transform duration-300">
+            <Button size="lg" className="bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-10 py-6 text-lg shadow-xl hover:scale-105 transition-transform duration-300">
               Rejoindre le FAFE
             </Button>
           </Link>

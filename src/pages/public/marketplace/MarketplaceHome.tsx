@@ -97,7 +97,7 @@ export function MarketplaceHome() {
   return (
     <div className="min-h-screen bg-stone-50 pb-20">
       {/* Header */}
-      <div className="bg-[#6B3E1E] text-white py-16">
+      <div className="bg-[#00843D] text-white py-16">
         <div className="w-full max-w-7xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-white/90 mb-6 tracking-widest uppercase">
             <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
@@ -154,14 +154,14 @@ export function MarketplaceHome() {
             <div className="space-y-6">
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
                 <h3 className="font-bold text-stone-800 mb-4 flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-[#E67E22]" />
+                  <Filter className="w-4 h-4 text-[#00843D]" />
                   Catégories
                 </h3>
                 <div className="space-y-2">
                   <button
                     onClick={() => setSelectedCategory(null)}
                     className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                      selectedCategory === null ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-600 hover:bg-stone-50'
+                      selectedCategory === null ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-600 hover:bg-stone-50'
                     }`}
                   >
                     Toutes les catégories
@@ -171,7 +171,7 @@ export function MarketplaceHome() {
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
                       className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                        selectedCategory === category.id ? 'bg-[#E67E22]/10 text-[#E67E22]' : 'text-stone-600 hover:bg-stone-50'
+                        selectedCategory === category.id ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-600 hover:bg-stone-50'
                       }`}
                     >
                       {category.name}
@@ -185,7 +185,7 @@ export function MarketplaceHome() {
             <div className="lg:col-span-3">
               {featuredProducts.length > 0 && !searchTerm && !selectedCategory && (
                 <div className="mb-12">
-                  <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-6 flex items-center gap-2">
+                  <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-6 flex items-center gap-2">
                     <Star className="w-6 h-6 text-[#D4AF37]" />
                     Produits en vedette
                   </h2>
@@ -233,7 +233,7 @@ export function MarketplaceHome() {
                     onClick={loadMoreProducts} 
                     disabled={loadingMore}
                     variant="outline"
-                    className="border-[#E67E22] text-[#E67E22] hover:bg-[#E67E22]/10 px-8"
+                    className="border-[#00843D] text-[#00843D] hover:bg-[#C8102E]/10 px-8"
                   >
                     {loadingMore ? (
                       <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Chargement...</>
@@ -280,7 +280,7 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
             </span>
           ) : (
             hasPromo && (
-              <span className="bg-[#E67E22] text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm flex items-center gap-1">
+              <span className="bg-[#C8102E] text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm flex items-center gap-1">
                 <Tag className="w-3 h-3" />
                 Promo
               </span>
@@ -291,7 +291,7 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
 
       <div className="p-5 flex-grow flex flex-col">
         <Link to={`/marketplace/produit/${product.slug}`} className="block mb-2">
-          <h3 className="font-bold text-stone-800 line-clamp-1 group-hover:text-[#E67E22] transition-colors">{product.name}</h3>
+          <h3 className="font-bold text-stone-800 line-clamp-1 group-hover:text-[#00843D] transition-colors">{product.name}</h3>
         </Link>
         <p className="text-sm text-stone-500 line-clamp-2 mb-4 flex-grow">
           {product.shortDescription}
@@ -302,10 +302,10 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
             {hasPromo ? (
               <div className="flex flex-col">
                 <span className="text-xs text-stone-400 line-through">{product.price.toLocaleString()} {product.currency}</span>
-                <span className="font-bold text-lg text-[#6B3E1E]">{product.promotionalPrice?.toLocaleString()} {product.currency}</span>
+                <span className="font-bold text-lg text-[#063F3A]">{product.promotionalPrice?.toLocaleString()} {product.currency}</span>
               </div>
             ) : (
-              <span className="font-bold text-lg text-[#6B3E1E]">{product.price.toLocaleString()} {product.currency}</span>
+              <span className="font-bold text-lg text-[#063F3A]">{product.price.toLocaleString()} {product.currency}</span>
             )}
           </div>
 
@@ -319,7 +319,7 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
             className={`rounded-full w-10 h-10 p-0 flex items-center justify-center flex-shrink-0 shadow-sm ${
               isOutOfStock 
                 ? 'bg-stone-100 text-stone-400' 
-                : 'bg-[#6B3E1E] text-white hover:bg-[#E67E22]'
+                : 'bg-[#00843D] text-white hover:bg-[#C8102E]'
             }`}
           >
             <ShoppingCart className="w-4 h-4" />

@@ -128,7 +128,7 @@ export function Actions() {
       {/* 1. HERO - NOS ACTIONS */}
       <section className="merged-section relative pt-24 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-[#FAF9F6] merged-section" id="actions-hero">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#E67E22] opacity-5 rounded-full blur-[100px]"></div>
+        <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#C8102E] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
 
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -139,11 +139,11 @@ export function Actions() {
               animate="visible"
               variants={fadeInUp}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E67E22]/20 text-[#E67E22] text-sm font-bold tracking-wide uppercase mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#00843D]/20 text-[#00843D] text-sm font-bold tracking-wide uppercase mb-6 shadow-sm">
                 <Globe2 className="w-4 h-4" />
                 {language === 'fr' ? 'Nos Actions' : 'Our Actions'}
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#063F3A] leading-tight mb-6">
                 {language === 'fr' 
                   ? "Agir aujourd'hui pour construire l'entrepreneuriat féminin africain de demain."
                   : "Acting today to build tomorrow's African female entrepreneurship."}
@@ -184,10 +184,10 @@ export function Actions() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-sm font-bold text-[#E67E22] tracking-widest uppercase mb-4">
+            <h2 className="text-sm font-bold text-[#00843D] tracking-widest uppercase mb-4">
               {language === 'fr' ? 'Notre Engagement' : 'Our Commitment'}
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-8 leading-tight">
+            <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A] mb-8 leading-tight">
               {language === 'fr' 
                 ? "Nous transformons les ambitions entrepreneuriales en opportunités concrètes."
                 : "We transform entrepreneurial ambitions into concrete opportunities."}
@@ -211,10 +211,10 @@ export function Actions() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A] mb-4">
               {language === 'fr' ? "Nos Domaines d'Action" : 'Our Areas of Action'}
             </h2>
-            <div className="w-20 h-1 bg-[#E67E22] mx-auto rounded-full"></div>
+            <div className="w-20 h-1 bg-[#C8102E] mx-auto rounded-full"></div>
           </motion.div>
 
           <motion.div 
@@ -261,10 +261,10 @@ export function Actions() {
                     <h3 className="text-2xl font-bold font-heading mb-2 transform transition-transform group-hover:-translate-y-1">
                       {tl({ fr: category.titleFR, en: category.titleEN })}
                     </h3>
-                    <p className="text-white/80 mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 line-clamp-2">
+                    <p className="text-stone-600 mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 line-clamp-2">
                       {tl({ fr: category.descriptionFR || '', en: category.descriptionEN || '' })}
                     </p>
-                    <div className="flex items-center text-sm font-bold text-[#E67E22] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex items-center text-sm font-bold text-[#00843D] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {language === 'fr' ? 'Découvrir' : 'Discover'}
                       <ArrowRight className="w-4 h-4 ml-2 transform group-hover:translate-x-2 transition-transform" />
                     </div>
@@ -287,10 +287,10 @@ export function Actions() {
               viewport={{ once: true }}
               variants={fadeInUp}
             >
-              <h2 className="text-sm font-bold text-[#E67E22] tracking-widest uppercase mb-4">
+              <h2 className="text-sm font-bold text-[#00843D] tracking-widest uppercase mb-4">
                 {language === 'fr' ? 'À la une' : 'Featured'}
               </h2>
-              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-4">
+              <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A] mb-4">
                 {language === 'fr' ? "Programmes & Actions Phares" : "Flagship Programs & Actions"}
               </h3>
             </motion.div>
@@ -310,12 +310,12 @@ export function Actions() {
                     alt="" 
                     className="w-full h-full object-cover aspect-video md:aspect-auto transition-transform duration-700 group-hover:scale-105" 
                   />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#E67E22] uppercase tracking-wider">
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#00843D] uppercase tracking-wider">
                     {language === 'fr' ? 'Programme' : 'Program'}
                   </div>
                 </div>
                 <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
-                  <h4 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">
+                  <h4 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">
                     {tl({ fr: featuredActions[0].titleFR, en: featuredActions[0].titleEN })}
                   </h4>
                   <p className="text-stone-600 mb-6 line-clamp-3">
@@ -334,7 +334,7 @@ export function Actions() {
                     </li>
                   </ul>
                   <Link to={featuredActions[0].ctaLink || `/nos-actions/${featuredActions[0].slug}`}>
-                    <Button className="w-full sm:w-auto bg-[#6B3E1E] hover:bg-[#8B5E34] text-white rounded-full">
+                    <Button className="w-full sm:w-auto bg-[#00843D] hover:bg-[#006830] text-white rounded-full">
                       {tl({ fr: featuredActions[0].ctaTextFR || 'Découvrir', en: featuredActions[0].ctaTextEN || 'Discover' })}
                     </Button>
                   </Link>
@@ -360,14 +360,14 @@ export function Actions() {
                       />
                     </div>
                     <div className="w-2/3 p-5 flex flex-col justify-center">
-                      <h4 className="text-lg font-bold font-heading text-[#6B3E1E] mb-2 line-clamp-2 group-hover:text-[#E67E22] transition-colors">
+                      <h4 className="text-lg font-bold font-heading text-[#063F3A] mb-2 line-clamp-2 group-hover:text-[#00843D] transition-colors">
                         {tl({ fr: action.titleFR, en: action.titleEN })}
                       </h4>
                       <div className="flex items-center text-xs text-stone-500 mb-3">
                         <MapPin className="w-3 h-3 mr-1" />
                         {action.country || 'Panafricain'}
                       </div>
-                      <Link to={action.ctaLink || `/nos-actions/${action.slug}`} className="text-sm font-bold text-[#E67E22] flex items-center mt-auto">
+                      <Link to={action.ctaLink || `/nos-actions/${action.slug}`} className="text-sm font-bold text-[#00843D] flex items-center mt-auto">
                         {language === 'fr' ? 'Voir' : 'View'}
                         <ArrowRight className="w-3 h-3 ml-1" />
                       </Link>
@@ -381,9 +381,9 @@ export function Actions() {
       )}
 
       {/* 5. IMPACT EN CHIFFRES */}
-      <section className="merged-section py-20 bg-[#6B3E1E] text-white relative overflow-hidden">
+      <section className="merged-section py-20 bg-[#FAF9F6] text-[#063F3A] border-y border-stone-100 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#E67E22] opacity-10 rounded-full blur-[80px]"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#C8102E] opacity-10 rounded-full blur-[80px]"></div>
         
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center">
@@ -401,7 +401,7 @@ export function Actions() {
                   <span>{stat.value}</span>
                   {stat.suffix && <span>{stat.suffix}</span>}
                 </div>
-                <div className="text-sm md:text-base font-medium text-white/80 uppercase tracking-wide">
+                <div className="text-sm md:text-base font-medium text-stone-600 uppercase tracking-wide">
                   {tl({ fr: stat.labelFR, en: stat.labelEN })}
                 </div>
               </motion.div>
@@ -414,7 +414,7 @@ export function Actions() {
       <section className="merged-section py-24 bg-[#FAF9F6]">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
-            <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">
+            <h2 className="text-3xl font-bold font-heading text-[#063F3A]">
               {language === 'fr' ? 'Toutes nos actions' : 'All our actions'}
             </h2>
             
@@ -428,7 +428,7 @@ export function Actions() {
                   placeholder={language === 'fr' ? 'Rechercher une action...' : 'Search an action...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full md:w-64 pl-9 pr-4 py-2 rounded-full border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#E67E22] transition-all"
+                  className="w-full md:w-64 pl-9 pr-4 py-2 rounded-full border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-all"
                 />
               </div>
               <div className="flex flex-wrap gap-2">
@@ -436,7 +436,7 @@ export function Actions() {
                 onClick={() => setActiveFilter('all')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   activeFilter === 'all' 
-                    ? 'bg-[#E67E22] text-white' 
+                    ? 'bg-[#C8102E] text-white' 
                     : 'bg-white text-stone-600 hover:bg-stone-100 border border-stone-200'
                 }`}
               >
@@ -448,7 +448,7 @@ export function Actions() {
                   onClick={() => setActiveFilter(cat.id)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     activeFilter === cat.id 
-                      ? 'bg-[#E67E22] text-white' 
+                      ? 'bg-[#C8102E] text-white' 
                       : 'bg-white text-stone-600 hover:bg-stone-100 border border-stone-200'
                   }`}
                 >
@@ -462,7 +462,7 @@ export function Actions() {
           {filteredActions.length === 0 ? (
             <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-stone-100">
               <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-[#6B3E1E] mb-2">
+              <h3 className="text-xl font-bold text-[#063F3A] mb-2">
                 {language === 'fr' ? 'Actions à venir' : 'Upcoming actions'}
               </h3>
               <p className="text-stone-500">
@@ -491,12 +491,12 @@ export function Actions() {
                       alt="" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                     />
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#6B3E1E]">
+                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#063F3A]">
                       {categories.find(c => c.id === action.categoryId)?.titleFR || 'Action'}
                     </div>
                   </div>
                   <div className="p-6 flex-grow flex flex-col">
-                    <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-3 group-hover:text-[#E67E22] transition-colors">
+                    <h3 className="text-xl font-bold font-heading text-[#063F3A] mb-3 group-hover:text-[#00843D] transition-colors">
                       {tl({ fr: action.titleFR, en: action.titleEN })}
                     </h3>
                     <p className="text-stone-600 text-sm mb-6 line-clamp-3">
@@ -507,7 +507,7 @@ export function Actions() {
                         <MapPin className="w-3 h-3 mr-1" />
                         {action.country || 'Panafricain'}
                       </div>
-                      <Link to={action.ctaLink || `/nos-actions/${action.slug}`} className="text-sm font-bold text-[#E67E22] hover:text-[#c96a1a] flex items-center">
+                      <Link to={action.ctaLink || `/nos-actions/${action.slug}`} className="text-sm font-bold text-[#00843D] hover:text-[#c96a1a] flex items-center">
                         {language === 'fr' ? 'Découvrir' : 'Discover'}
                         <ArrowRight className="w-4 h-4 ml-1" />
                       </Link>
@@ -531,14 +531,14 @@ export function Actions() {
                 viewport={{ once: true }}
                 variants={fadeInUp}
               >
-                <h2 className="text-sm font-bold text-[#E67E22] tracking-widest uppercase mb-2">
+                <h2 className="text-sm font-bold text-[#00843D] tracking-widest uppercase mb-2">
                   {language === 'fr' ? 'Projets Sociaux' : 'Social Projects'}
                 </h2>
-                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
                   {language === 'fr' ? 'Nos projets en cours' : 'Our ongoing projects'}
                 </h3>
               </motion.div>
-              <Link to="/projets-sociaux" className="hidden md:flex items-center text-[#E67E22] font-bold hover:text-[#c96a1a] transition-colors">
+              <Link to="/projets-sociaux" className="hidden md:flex items-center text-[#00843D] font-bold hover:text-[#c96a1a] transition-colors">
                 {language === 'fr' ? 'Voir tous les projets' : 'View all projects'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
@@ -565,7 +565,7 @@ export function Actions() {
                     <div className="flex items-center text-xs font-bold text-[#D4AF37] mb-2 uppercase tracking-wide">
                       {project.country || 'Panafricain'}
                     </div>
-                    <h4 className="text-xl font-bold font-heading text-[#6B3E1E] mb-3 line-clamp-2">
+                    <h4 className="text-xl font-bold font-heading text-[#063F3A] mb-3 line-clamp-2">
                       {project.title}
                     </h4>
                     
@@ -576,20 +576,20 @@ export function Actions() {
                       <div className="mb-6">
                         <div className="flex justify-between text-xs text-stone-500 mb-2">
                           <span>{language === 'fr' ? 'Objectif du projet' : 'Project goal'}</span>
-                          <span className="font-bold text-[#E67E22]">
+                          <span className="font-bold text-[#00843D]">
                             {Math.round((project.raisedAmount / project.targetAmount) * 100)}%
                           </span>
                         </div>
                         <div className="w-full h-2 bg-stone-200 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-[#E67E22]" 
+                            className="h-full bg-[#C8102E]" 
                             style={{ width: `${Math.min(Math.round((project.raisedAmount / project.targetAmount) * 100), 100)}%` }}
                           ></div>
                         </div>
                       </div>
                     )}
                     <Link to={`/projets-sociaux/${project.id}`}>
-                      <Button variant="outline" className="w-full border-stone-200 text-[#6B3E1E] hover:bg-white hover:border-[#E67E22] hover:text-[#E67E22]">
+                      <Button variant="outline" className="w-full border-stone-200 text-[#063F3A] hover:bg-white hover:border-[#00843D] hover:text-[#00843D]">
                         {language === 'fr' ? 'Découvrir le projet' : 'Discover the project'}
                       </Button>
                     </Link>
@@ -612,7 +612,7 @@ export function Actions() {
               viewport={{ once: true }}
               variants={fadeInUp}
             >
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A] mb-4">
                 {language === 'fr' ? "Des actions qui changent des parcours" : 'Actions that change paths'}
               </h2>
               <div className="w-20 h-1 bg-[#D4AF37] mx-auto rounded-full"></div>
@@ -628,7 +628,7 @@ export function Actions() {
                   variants={fadeInUp}
                   className="bg-white p-8 rounded-2xl shadow-sm border border-stone-100 relative"
                 >
-                  <div className="text-6xl text-[#E67E22]/10 absolute top-4 left-4 font-serif">"</div>
+                  <div className="text-6xl text-[#00843D]/10 absolute top-4 left-4 font-serif">"</div>
                   <p className="text-stone-600 italic mb-8 relative z-10">
                     "{tl({ fr: testimonial.testimonialFR, en: testimonial.testimonialEN })}"
                   </p>
@@ -639,7 +639,7 @@ export function Actions() {
                       className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
                     />
                     <div>
-                      <h4 className="font-bold text-[#6B3E1E]">
+                      <h4 className="font-bold text-[#063F3A]">
                         {testimonial.firstName} {testimonial.lastName}
                       </h4>
                       <p className="text-sm text-stone-500">
@@ -666,14 +666,14 @@ export function Actions() {
                 viewport={{ once: true }}
                 variants={fadeInUp}
               >
-                <h2 className="text-sm font-bold text-[#E67E22] tracking-widest uppercase mb-2">
+                <h2 className="text-sm font-bold text-[#00843D] tracking-widest uppercase mb-2">
                   {language === 'fr' ? 'Agenda' : 'Agenda'}
                 </h2>
-                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
                   {language === 'fr' ? 'Prochains rendez-vous' : 'Upcoming events'}
                 </h3>
               </motion.div>
-              <Link to="/evenements" className="hidden md:flex items-center text-[#E67E22] font-bold hover:text-[#c96a1a] transition-colors">
+              <Link to="/evenements" className="hidden md:flex items-center text-[#00843D] font-bold hover:text-[#c96a1a] transition-colors">
                 {language === 'fr' ? 'Tous les événements' : 'All events'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
@@ -691,15 +691,15 @@ export function Actions() {
                 >
                   <div className="flex items-start gap-4 mb-4">
                     <div className="bg-white text-center p-3 rounded-xl border border-stone-100 shadow-sm min-w-[70px]">
-                      <div className="text-sm font-bold text-[#E67E22] uppercase">
+                      <div className="text-sm font-bold text-[#00843D] uppercase">
                         {new Date(evt.startDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' })}
                       </div>
-                      <div className="text-2xl font-bold font-heading text-[#6B3E1E] leading-none">
+                      <div className="text-2xl font-bold font-heading text-[#063F3A] leading-none">
                         {new Date(evt.startDate).getDate()}
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold font-heading text-[#6B3E1E] group-hover:text-[#E67E22] transition-colors line-clamp-2">
+                      <h4 className="text-lg font-bold font-heading text-[#063F3A] group-hover:text-[#00843D] transition-colors line-clamp-2">
                         {evt.title}
                       </h4>
                       <p className="text-xs text-stone-500 mt-1 flex items-center">
@@ -708,7 +708,7 @@ export function Actions() {
                       </p>
                     </div>
                   </div>
-                  <Link to={`/evenements/${evt.slug}`} className="text-sm font-bold text-[#E67E22] hover:text-[#c96a1a] flex items-center mt-4">
+                  <Link to={`/evenements/${evt.slug}`} className="text-sm font-bold text-[#00843D] hover:text-[#c96a1a] flex items-center mt-4">
                     {language === 'fr' ? 'S\'inscrire' : 'Register'}
                     <ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -729,7 +729,7 @@ export function Actions() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">
+            <h2 className="text-3xl font-bold font-heading text-[#063F3A]">
               {language === 'fr' ? "Vous aussi, passez à l'action" : 'You too, take action'}
             </h2>
           </motion.div>
@@ -750,9 +750,9 @@ export function Actions() {
                   className="bg-[#FAF9F6] p-6 rounded-2xl text-center hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-stone-100 group"
                 >
                   <div className="w-12 h-12 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                    <item.icon className="w-5 h-5 text-[#E67E22]" />
+                    <item.icon className="w-5 h-5 text-[#00843D]" />
                   </div>
-                  <h4 className="font-bold text-[#6B3E1E] group-hover:text-[#E67E22] transition-colors">
+                  <h4 className="font-bold text-[#063F3A] group-hover:text-[#00843D] transition-colors">
                     {tl({ fr: item.titleFR, en: item.titleEN })}
                   </h4>
                 </motion.div>
@@ -763,11 +763,11 @@ export function Actions() {
       </section>
 
       {/* 10. CTA FINAL */}
-      <section className="merged-section py-24 bg-[#6B3E1E] relative overflow-hidden">
+      <section className="merged-section py-24 bg-[#00843D] text-white relative overflow-hidden">
         {/* Abstract background elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#D4AF37] via-transparent to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-[#E67E22] via-transparent to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-[#C8102E] via-transparent to-transparent"></div>
         </div>
         
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
@@ -785,7 +785,7 @@ export function Actions() {
             </h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/rejoindre">
-                <Button size="lg" className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-8 py-6 font-bold shadow-lg">
+                <Button size="lg" className="bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-8 py-6 font-bold shadow-lg">
                   {language === 'fr' ? 'Rejoindre le FAFE' : 'Join FAFE'}
                 </Button>
               </Link>

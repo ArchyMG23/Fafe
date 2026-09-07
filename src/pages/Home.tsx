@@ -85,13 +85,13 @@ function DynamicHeroSection() {
 
   return (
     <section
-      className="relative pt-8 pb-12 md:pt-14 md:pb-20 lg:pt-16 lg:pb-24 overflow-hidden bg-[#FAF9F6]"
+      className="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-36 lg:pb-24 overflow-hidden bg-[#FAF9F6]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Decorative ambient gradients */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-5%] w-[60%] md:w-[45%] h-[50%] rounded-full bg-[#E67E22] opacity-8 blur-[90px]" />
+        <div className="absolute top-[-10%] right-[-5%] w-[60%] md:w-[45%] h-[50%] rounded-full bg-[#C8102E] opacity-8 blur-[90px]" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[50%] md:w-[35%] h-[45%] rounded-full bg-[#D4AF37] opacity-10 blur-[80px]" />
       </div>
 
@@ -100,12 +100,12 @@ function DynamicHeroSection() {
           
           {/* Left Column: Institutional Pitch */}
           <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E67E22]/20 text-[#E67E22] text-xs md:text-sm font-bold tracking-wide uppercase mb-6 shadow-sm">
-              <Globe2 className="w-4 h-4 text-[#E67E22]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#00843D]/20 text-[#00843D] text-xs md:text-sm font-bold tracking-wide uppercase mb-6 shadow-sm">
+              <Globe2 className="w-4 h-4 text-[#00843D]" />
               {language === "fr" ? "Réseau Panafricain" : "Pan-African Network"}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold font-heading text-[#6B3E1E] leading-[1.15] mb-5 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold font-heading text-[#063F3A] leading-[1.15] mb-5 tracking-tight">
               {tl(heroText.title)}
             </h1>
 
@@ -117,7 +117,7 @@ function DynamicHeroSection() {
               <Link to={heroText.link || "/rejoindre"} className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-8 py-5 font-bold text-base shadow-lg shadow-[#E67E22]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full sm:w-auto bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-8 py-5 font-bold text-base shadow-lg shadow-[#C8102E]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {tl(heroText.buttonText) || "Rejoindre le réseau"}
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -127,7 +127,7 @@ function DynamicHeroSection() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full sm:w-auto border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-6 py-5 font-semibold text-base"
+                  className="w-full sm:w-auto border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-6 py-5 font-semibold text-base"
                 >
                   Découvrir le FAFE
                 </Button>
@@ -137,9 +137,9 @@ function DynamicHeroSection() {
 
           {/* Right Column: Superimposed Card on Photo */}
           <div className="relative mx-auto max-w-sm sm:max-w-md lg:max-w-md xl:max-w-[450px] w-full">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#E67E22] to-[#D4AF37] rounded-[2.5rem] blur-2xl opacity-20 transform -rotate-1" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#C8102E] to-[#D4AF37] rounded-[2.5rem] blur-2xl opacity-20 transform -rotate-1" />
             
-            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] bg-stone-900 ring-1 ring-[#6B3E1E]/10">
+            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] bg-stone-900 ring-1 ring-[#063F3A]/10">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`slide-${currentEnt.id}-${currentIndex}`}
@@ -164,8 +164,8 @@ function DynamicHeroSection() {
                   <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#E67E22] animate-ping" />
-                        <span className="text-[10px] sm:text-xs font-bold text-[#E67E22] tracking-wider uppercase">
+                        <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
+                        <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
                           À LA UNE
                         </span>
                       </div>
@@ -174,7 +174,7 @@ function DynamicHeroSection() {
                       </span>
                     </div>
 
-                    <h3 className="text-lg sm:text-xl font-bold font-heading text-[#6B3E1E] leading-tight mb-0.5 truncate">
+                    <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
                       {currentEnt.firstName} {currentEnt.lastName}
                     </h3>
                     
@@ -184,13 +184,13 @@ function DynamicHeroSection() {
 
                     <div className="flex items-center justify-between pt-2 border-t border-stone-100">
                       <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-[#E67E22]" />
+                        <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
                         {currentEnt.country}
                       </div>
                       
                       <Link
                         to={`/hub/annuaire/${currentEnt.id}`}
-                        className="inline-flex items-center text-xs sm:text-sm font-bold text-[#E67E22] hover:text-[#c96a1a] transition-colors group"
+                        className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
                       >
                         Découvrir son profil
                         <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
@@ -209,8 +209,8 @@ function DynamicHeroSection() {
                   onClick={() => setCurrentIndex(index)}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     index === currentIndex
-                      ? "bg-[#E67E22] w-7"
-                      : "bg-[#6B3E1E]/20 hover:bg-[#6B3E1E]/40 w-2"
+                      ? "bg-[#C8102E] w-7"
+                      : "bg-[#00843D]/20 hover:bg-[#00843D]/40 w-2"
                   }`}
                   aria-label={`Voir entrepreneure ${index + 1}`}
                 />
@@ -267,13 +267,13 @@ function DynamicNews() {
             )}
           </div>
           <div className="p-5 sm:p-6 flex flex-col flex-grow">
-            <h3 className="text-lg sm:text-xl font-bold font-heading text-[#6B3E1E] mb-2.5 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+            <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] mb-2.5 group-hover:text-[#00843D] transition-colors line-clamp-2">
               {article.title}
             </h3>
             <p className="text-stone-600 mb-4 line-clamp-2 text-sm leading-relaxed flex-grow">
               {article.excerpt}
             </p>
-            <span className="text-[#E67E22] font-bold text-sm inline-flex items-center group-hover:gap-2 transition-all mt-auto">
+            <span className="text-[#00843D] font-bold text-sm inline-flex items-center group-hover:gap-2 transition-all mt-auto">
               Lire l'article <ArrowRight className="w-4 h-4 ml-1" />
             </span>
           </div>
@@ -350,32 +350,32 @@ function DynamicEvents() {
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
             />
             <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl text-center shadow-md">
-              <div className="text-[#E67E22] font-extrabold text-lg leading-none">
+              <div className="text-[#00843D] font-extrabold text-lg leading-none">
                 {new Date(event.startDate).getDate()}
               </div>
-              <div className="text-[#6B3E1E] text-[10px] font-bold uppercase mt-0.5">
+              <div className="text-[#063F3A] text-[10px] font-bold uppercase mt-0.5">
                 {new Date(event.startDate).toLocaleString('fr-FR', { month: 'short' })}
               </div>
             </div>
             {event.online && (
-              <div className="absolute top-3 right-3 bg-[#E67E22] text-white px-2.5 py-1 rounded-full text-[10px] font-bold shadow-sm">
+              <div className="absolute top-3 right-3 bg-[#C8102E] text-white px-2.5 py-1 rounded-full text-[10px] font-bold shadow-sm">
                 En ligne
               </div>
             )}
           </div>
           <CardContent className="p-5 sm:p-6 flex flex-col flex-grow">
-            <h3 className="font-bold font-heading text-lg sm:text-xl text-[#6B3E1E] mb-2 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+            <h3 className="font-bold font-heading text-lg sm:text-xl text-[#063F3A] mb-2 group-hover:text-[#00843D] transition-colors line-clamp-2">
               {event.title}
             </h3>
             <div className="flex items-center gap-1.5 text-stone-500 text-xs sm:text-sm mb-3">
-              <MapPin className="w-3.5 h-3.5 text-[#E67E22] shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-[#00843D] shrink-0" />
               <span className="truncate">{event.online ? "Événement virtuel" : `${event.city}, ${event.country}`}</span>
             </div>
             <p className="text-stone-600 text-xs sm:text-sm line-clamp-2 mb-5 flex-grow leading-relaxed">
               {event.shortDescription || event.description}
             </p>
             <Link to={`/actualites`} className="mt-auto block">
-              <Button variant="outline" className="w-full border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E] hover:text-white transition-all rounded-full py-2 text-xs sm:text-sm font-semibold">
+              <Button variant="outline" className="w-full border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D] hover:text-white transition-all rounded-full py-2 text-xs sm:text-sm font-semibold">
                 Détails de l'événement
               </Button>
             </Link>
@@ -414,25 +414,25 @@ export function Home() {
       end: 5000,
       suffix: "+",
       label: "Femmes accompagnées",
-      icon: <Heart className="w-5 h-5 md:w-6 md:h-6 text-[#E67E22]" />,
+      icon: <Heart className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
     },
     {
       end: 15,
       suffix: "+",
       label: "Pays africains",
-      icon: <Globe2 className="w-5 h-5 md:w-6 md:h-6 text-[#E67E22]" />,
+      icon: <Globe2 className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
     },
     {
       end: 200,
       suffix: "+",
       label: "Projets financés",
-      icon: <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-[#E67E22]" />,
+      icon: <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
     },
     {
       end: 85,
       suffix: "%",
       label: "Taux de réussite",
-      icon: <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#E67E22]" />,
+      icon: <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
     },
   ];
 
@@ -452,7 +452,7 @@ export function Home() {
       <DynamicHeroSection />
 
       {/* 2. STATISTICS SECTION (Animated Counters & Compact Responsive Spacing) */}
-      <section className="py-8 md:py-12 bg-white border-y border-[#6B3E1E]/5">
+      <section className="py-8 md:py-12 bg-white border-y border-[#063F3A]/5">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {stats.map((stat, index) => (
@@ -460,7 +460,7 @@ export function Home() {
                 <div className="w-12 h-12 md:w-14 md:h-14 mx-auto bg-white md:bg-[#FAF9F6] rounded-xl md:rounded-2xl flex items-center justify-center mb-2.5 md:mb-3 shadow-xs group-hover:scale-105 transition-transform duration-300">
                   {stat.icon}
                 </div>
-                <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-heading text-[#6B3E1E] mb-1">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-heading text-[#063F3A] mb-1">
                   <AnimatedCounter end={stat.end} suffix={stat.suffix} />
                 </div>
                 <div className="text-xs sm:text-xs font-bold text-stone-500 uppercase tracking-wider leading-tight">
@@ -476,10 +476,10 @@ export function Home() {
       <section className="py-12 md:py-20 bg-[#FAF9F6]">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
-            <span className="inline-flex items-center gap-1 text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-2">
+            <span className="inline-flex items-center gap-1 text-xs font-bold tracking-widest text-[#00843D] uppercase mb-2">
               <Sparkles className="w-3 h-3" /> Notre Vocation
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E] leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A] leading-tight">
               Trois piliers pour la réussite de vos projets
             </h2>
           </div>
@@ -510,7 +510,7 @@ export function Home() {
                   <div className="text-4xl md:text-5xl mb-4 transform group-hover:scale-110 transition-transform">
                     {mission.icon}
                   </div>
-                  <h3 className="text-lg md:text-xl font-bold font-heading text-[#6B3E1E] mb-2.5">
+                  <h3 className="text-lg md:text-xl font-bold font-heading text-[#063F3A] mb-2.5">
                     {mission.title}
                   </h3>
                   <p className="text-stone-600 text-sm md:text-base leading-relaxed">
@@ -528,17 +528,17 @@ export function Home() {
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
-              <span className="text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-1 block">
+              <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">
                 Annuaire Panafricain
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
                 Découvrez les talents du réseau
               </h2>
             </div>
             <Link to="/entrepreneures">
               <Button
                 variant="outline"
-                className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold"
+                className="group border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold"
               >
                 Voir l'annuaire complet
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
@@ -557,14 +557,14 @@ export function Home() {
                       fallbackType="person"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-[#6B3E1E]/80 to-transparent">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-[#6B3E1E] uppercase tracking-wider">
-                        <MapPin className="w-3 h-3 text-[#E67E22]" /> {ent.country}
+                    <div className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-[#063F3A] uppercase tracking-wider">
+                        <MapPin className="w-3 h-3 text-[#00843D]" /> {ent.country}
                       </span>
                     </div>
                   </div>
                   <CardContent className="p-5 flex flex-col flex-grow">
-                    <h3 className="text-base font-bold font-heading text-[#6B3E1E] mb-1 group-hover:text-[#E67E22] transition-colors truncate">
+                    <h3 className="text-base font-bold font-heading text-[#063F3A] mb-1 group-hover:text-[#00843D] transition-colors truncate">
                       {ent.firstName} {ent.lastName}
                     </h3>
                     <p className="text-xs font-bold text-[#D4AF37] mb-2 truncate">
@@ -582,9 +582,9 @@ export function Home() {
       </section>
 
       {/* 5. COUNTRIES / CONTINENTAL PRESENCE */}
-      <section className="py-12 md:py-20 bg-[#6B3E1E] text-white relative overflow-hidden">
+      <section className="py-12 md:py-20 bg-[#FAF9F6] text-[#063F3A] relative overflow-hidden">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
-          <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-2 block">
+          <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-2 block">
             Présence Continentale
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading mb-8">
@@ -595,7 +595,7 @@ export function Home() {
             {countries.map((country) => (
               <span
                 key={country}
-                className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-white/20 bg-white/10 text-xs sm:text-sm font-semibold flex items-center gap-2 backdrop-blur-xs"
+                className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-stone-200 bg-white text-stone-700 shadow-sm text-xs sm:text-sm font-semibold flex items-center gap-2 backdrop-blur-xs"
               >
                 <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
                 {country}
@@ -604,7 +604,7 @@ export function Home() {
           </div>
 
           <Link to="/entrepreneures">
-            <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-6 py-2.5 text-xs sm:text-sm font-bold shadow-md">
+            <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-6 py-2.5 text-xs sm:text-sm font-bold shadow-md">
               Explorer les membres par pays →
             </Button>
           </Link>
@@ -615,10 +615,10 @@ export function Home() {
       <section className="py-12 md:py-20 bg-[#FAF9F6]">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
-            <span className="text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-1 block">
+            <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">
               Impact & Développement
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
               Transformer l'entrepreneuriat en impact
             </h2>
           </div>
@@ -638,7 +638,7 @@ export function Home() {
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute top-3 left-3">
-                      <span className="bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-bold text-[#E67E22] uppercase tracking-widest shadow-xs">
+                      <span className="bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-bold text-[#00843D] uppercase tracking-widest shadow-xs">
                         {project.country}
                       </span>
                     </div>
@@ -648,7 +648,7 @@ export function Home() {
                       <span className="w-1.5 h-1.5 rounded-full bg-[#00843D]" />
                       Projet Actif
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold font-heading text-[#6B3E1E] mb-2 leading-snug">
+                    <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] mb-2 leading-snug">
                       {project.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-stone-600 mb-5 leading-relaxed line-clamp-3">
@@ -657,7 +657,7 @@ export function Home() {
                     <Link to="/projets-sociaux" className="mt-auto">
                       <Button
                         variant="outline"
-                        className="border-[#D4AF37]/50 text-[#6B3E1E] hover:bg-[#D4AF37] hover:text-white transition-all rounded-full px-5 py-2 text-xs font-bold w-full sm:w-auto"
+                        className="border-[#D4AF37]/50 text-[#063F3A] hover:bg-[#D4AF37] hover:text-white transition-all rounded-full px-5 py-2 text-xs font-bold w-full sm:w-auto"
                       >
                         En savoir plus
                       </Button>
@@ -675,11 +675,11 @@ export function Home() {
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
-              <span className="text-xs font-bold tracking-widest text-[#E67E22] uppercase mb-1 block">Agenda</span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">Nos prochains événements</h2>
+              <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">Agenda</span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">Nos prochains événements</h2>
             </div>
             <Link to="/actualites">
-              <Button variant="outline" className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold">
+              <Button variant="outline" className="group border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold">
                 Voir tout l'agenda
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -697,14 +697,14 @@ export function Home() {
               <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-1 block">
                 Éditorial
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#6B3E1E]">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
                 Actualités & inspirations
               </h2>
             </div>
             <Link to="/actualites">
               <Button
                 variant="outline"
-                className="group border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold"
+                className="group border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold"
               >
                 Toutes les actualités
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
@@ -717,8 +717,8 @@ export function Home() {
       </section>
 
       {/* 9. DONATION CTA */}
-      <section className="py-16 md:py-24 bg-[#522d14] relative overflow-hidden text-white">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[350px] h-[350px] bg-[#E67E22] opacity-10 rounded-full blur-[80px] pointer-events-none" />
+      <section className="py-16 md:py-24 bg-[#063F3A] relative overflow-hidden text-white">
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[350px] h-[350px] bg-[#C8102E] opacity-10 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[300px] h-[300px] bg-[#D4AF37] opacity-10 rounded-full blur-[70px] pointer-events-none" />
 
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
@@ -729,14 +729,14 @@ export function Home() {
             Votre soutien ouvre de{" "}
             <span className="text-[#D4AF37]">nouvelles opportunités.</span>
           </h2>
-          <p className="text-white/80 text-base sm:text-lg mb-8 leading-relaxed max-w-xl mx-auto">
+          <p className="text-stone-600 text-base sm:text-lg mb-8 leading-relaxed max-w-xl mx-auto">
             Chaque contribution participe au développement de l'entrepreneuriat
             féminin africain en finançant des formations et des projets d'avenir.
           </p>
           <Link to="/dons">
             <Button
               size="lg"
-              className="bg-[#E67E22] hover:bg-[#c96a1a] text-white shadow-xl px-10 py-5 rounded-full font-bold text-base hover:scale-105 transition-transform duration-300"
+              className="bg-[#C8102E] hover:bg-[#A30D25] text-white shadow-xl px-10 py-5 rounded-full font-bold text-base hover:scale-105 transition-transform duration-300"
             >
               Faire un don
             </Button>
@@ -754,7 +754,7 @@ export function Home() {
             {partners.map((p) => (
               <span
                 key={p}
-                className="font-heading font-bold text-lg md:text-xl text-[#6B3E1E] hover:text-[#E67E22] transition-colors"
+                className="font-heading font-bold text-lg md:text-xl text-[#063F3A] hover:text-[#00843D] transition-colors"
               >
                 {p}
               </span>

@@ -217,7 +217,7 @@ export function MemberEntrepreneurProfile() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-3" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-3" />
         <p className="text-stone-500 text-sm">Chargement de votre profil entrepreneure...</p>
       </div>
     );
@@ -227,15 +227,15 @@ export function MemberEntrepreneurProfile() {
     <div className="space-y-6 max-w-4xl">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold font-heading text-[#6B3E1E]">Profil Entrepreneure & Annuaire</h2>
-          <p className="text-[#6B3E1E]/70 text-sm mt-1">
+          <h2 className="text-2xl font-bold font-heading text-[#063F3A]">Profil Entrepreneure & Annuaire</h2>
+          <p className="text-[#063F3A]/70 text-sm mt-1">
             Complétez votre fiche professionnelle pour être visible auprès des investisseurs, partenaires et clientes du réseau panafricain.
           </p>
         </div>
 
         {profile && profile.status === 'APPROVED' && (
           <Link to={`/hub/annuaire/${profile.id}`}>
-            <Button variant="outline" className="text-[#E67E22] border-[#E67E22]/30 hover:bg-orange-50 font-bold text-sm">
+            <Button variant="outline" className="text-[#00843D] border-[#00843D]/30 hover:bg-orange-50 font-bold text-sm">
               <Globe className="w-4 h-4 mr-2" /> Voir ma fiche publique
             </Button>
           </Link>
@@ -257,7 +257,7 @@ export function MemberEntrepreneurProfile() {
             </div>
           </div>
           <Link to="/hub/adhesion" className="shrink-0 w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs sm:text-sm font-bold shadow-sm">
+            <Button className="w-full md:w-auto bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs sm:text-sm font-bold shadow-sm">
               Valider mon adhésion <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
           </Link>
@@ -297,25 +297,25 @@ export function MemberEntrepreneurProfile() {
         </div>
       )}
 
-      <Card className="border-[#6B3E1E]/10 shadow-sm overflow-hidden bg-white">
+      <Card className="border-[#063F3A]/10 shadow-sm overflow-hidden bg-white">
         <form onSubmit={handleSubmit}>
           <CardContent className="p-6 md:p-8 space-y-8">
             {/* Informations Personnelles */}
             <section>
-              <h3 className="text-lg font-bold text-[#6B3E1E] mb-4 border-b border-[#6B3E1E]/10 pb-2 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-[#063F3A] mb-4 border-b border-[#063F3A]/10 pb-2 flex items-center gap-2">
                 Identité de l'Entrepreneure
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Prénom <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Prénom <span className="text-red-500">*</span></label>
                   <Input name="firstName" value={formData.firstName} onChange={handleChange} required />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Nom <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Nom <span className="text-red-500">*</span></label>
                   <Input name="lastName" value={formData.lastName} onChange={handleChange} required />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Photo professionnelle (URL Portrait)</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Photo professionnelle (URL Portrait)</label>
                   <Input 
                     name="professionalPhoto" 
                     placeholder="https://..." 
@@ -331,26 +331,26 @@ export function MemberEntrepreneurProfile() {
 
             {/* Entreprise & Rôle */}
             <section>
-              <h3 className="text-lg font-bold text-[#6B3E1E] mb-4 border-b border-[#6B3E1E]/10 pb-2 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-[#063F3A] mb-4 border-b border-[#063F3A]/10 pb-2 flex items-center gap-2">
                 Entreprise & Activité
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Nom de l'entreprise / Organisation <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Nom de l'entreprise / Organisation <span className="text-red-500">*</span></label>
                   <Input name="company" value={formData.company} onChange={handleChange} required placeholder="ex: Kanza AgriTech" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Poste / Fonction <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Poste / Fonction <span className="text-red-500">*</span></label>
                   <Input name="position" placeholder="ex: Fondatrice & Directrice Générale" value={formData.position} onChange={handleChange} required />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Secteur d'activité <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Secteur d'activité <span className="text-red-500">*</span></label>
                   <select 
                     name="sector"
                     value={formData.sector}
                     onChange={handleChange}
                     required
-                    className="flex h-12 w-full rounded-xl border border-[#6B3E1E]/20 bg-white px-4 py-2 text-sm text-[#6B3E1E] focus:outline-none focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#E67E22] transition-colors"
+                    className="flex h-12 w-full rounded-xl border border-[#063F3A]/20 bg-white px-4 py-2 text-sm text-[#063F3A] focus:outline-none focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
                   >
                     <option value="">Sélectionnez un secteur</option>
                     {SECTORS.map(s => (
@@ -359,7 +359,7 @@ export function MemberEntrepreneurProfile() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Site Web Professionnel</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Site Web Professionnel</label>
                   <Input name="website" type="url" placeholder="https://..." value={formData.website} onChange={handleChange} />
                 </div>
               </div>
@@ -367,18 +367,18 @@ export function MemberEntrepreneurProfile() {
 
             {/* Localisation */}
             <section>
-              <h3 className="text-lg font-bold text-[#6B3E1E] mb-4 border-b border-[#6B3E1E]/10 pb-2">
+              <h3 className="text-lg font-bold text-[#063F3A] mb-4 border-b border-[#063F3A]/10 pb-2">
                 Zone Géographique d'Opération
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Pays d'opération principal <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Pays d'opération principal <span className="text-red-500">*</span></label>
                   <select 
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
                     required
-                    className="flex h-12 w-full rounded-xl border border-[#6B3E1E]/20 bg-white px-4 py-2 text-sm text-[#6B3E1E] focus:outline-none focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#E67E22] transition-colors"
+                    className="flex h-12 w-full rounded-xl border border-[#063F3A]/20 bg-white px-4 py-2 text-sm text-[#063F3A] focus:outline-none focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
                   >
                     <option value="">Sélectionnez un pays</option>
                     {AFRICAN_COUNTRIES.map(c => (
@@ -387,7 +387,7 @@ export function MemberEntrepreneurProfile() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Ville <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Ville <span className="text-red-500">*</span></label>
                   <Input name="city" value={formData.city} onChange={handleChange} required placeholder="ex: Kinshasa, Dakar, Abidjan..." />
                 </div>
               </div>
@@ -395,12 +395,12 @@ export function MemberEntrepreneurProfile() {
 
             {/* Description & Offre */}
             <section>
-              <h3 className="text-lg font-bold text-[#6B3E1E] mb-4 border-b border-[#6B3E1E]/10 pb-2">
+              <h3 className="text-lg font-bold text-[#063F3A] mb-4 border-b border-[#063F3A]/10 pb-2">
                 Description de l'Activité & Produits / Services
               </h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Présentation de l'entreprise <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Présentation de l'entreprise <span className="text-red-500">*</span></label>
                   <Textarea 
                     name="description" 
                     rows={4} 
@@ -411,7 +411,7 @@ export function MemberEntrepreneurProfile() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Produits ou Services phares (séparés par des virgules)</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Produits ou Services phares (séparés par des virgules)</label>
                   <Input 
                     name="productsServices" 
                     value={formData.productsServices} 
@@ -420,7 +420,7 @@ export function MemberEntrepreneurProfile() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Domaines d'expertise / Mots-clés (séparés par des virgules)</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Domaines d'expertise / Mots-clés (séparés par des virgules)</label>
                   <Input 
                     name="expertise" 
                     value={formData.expertise} 
@@ -433,24 +433,24 @@ export function MemberEntrepreneurProfile() {
 
             {/* Réseaux Sociaux */}
             <section>
-              <h3 className="text-lg font-bold text-[#6B3E1E] mb-4 border-b border-[#6B3E1E]/10 pb-2">
+              <h3 className="text-lg font-bold text-[#063F3A] mb-4 border-b border-[#063F3A]/10 pb-2">
                 Contacts & Réseaux Sociaux Professionnels
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">LinkedIn</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">LinkedIn</label>
                   <Input name="social_linkedin" value={formData.socialLinks.linkedin} onChange={handleChange} placeholder="https://linkedin.com/in/..." />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">WhatsApp Professionnel</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">WhatsApp Professionnel</label>
                   <Input name="social_whatsapp" value={formData.socialLinks.whatsapp} onChange={handleChange} placeholder="+243..." />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Twitter / X</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Twitter / X</label>
                   <Input name="social_twitter" value={formData.socialLinks.twitter} onChange={handleChange} placeholder="https://twitter.com/..." />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-[#6B3E1E]">Facebook / Instagram</label>
+                  <label className="text-xs font-bold uppercase text-[#063F3A]">Facebook / Instagram</label>
                   <Input name="social_facebook" value={formData.socialLinks.facebook} onChange={handleChange} placeholder="https://facebook.com/..." />
                 </div>
               </div>
@@ -463,7 +463,7 @@ export function MemberEntrepreneurProfile() {
               <Button 
                 type="submit" 
                 disabled={saving}
-                className="w-full sm:w-auto bg-[#E67E22] hover:bg-[#c96a1a] text-white px-8 py-6 rounded-xl font-bold"
+                className="w-full sm:w-auto bg-[#C8102E] hover:bg-[#A30D25] text-white px-8 py-6 rounded-xl font-bold"
               >
                 {saving ? (
                   <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Enregistrement...</>

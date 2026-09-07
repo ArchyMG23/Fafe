@@ -49,18 +49,18 @@ export function MemberEvents() {
   };
 
   if (loading) {
-    return <div className="flex justify-center p-8"><div className="animate-spin w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full"></div></div>;
+    return <div className="flex justify-center p-8"><div className="animate-spin w-8 h-8 border-4 border-[#00843D] border-t-transparent rounded-full"></div></div>;
   }
 
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold font-heading text-[#6B3E1E]">Mes événements</h2>
+          <h2 className="text-2xl font-bold font-heading text-[#063F3A]">Mes événements</h2>
           <p className="text-stone-500">Gérez vos inscriptions et téléchargez vos certificats</p>
         </div>
         <Link to="/evenements">
-          <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">Découvrir les événements</Button>
+          <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white">Découvrir les événements</Button>
         </Link>
       </div>
 
@@ -87,15 +87,15 @@ export function MemberEvents() {
                   <span className="px-2 py-1 bg-stone-100 text-stone-600 rounded-md text-xs font-bold">{reg.status}</span>
                   {reg.attended && <span className="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-bold">Présent(e)</span>}
                 </div>
-                <h3 className="text-lg font-bold text-[#6B3E1E] mb-2">{reg.eventData?.title || 'Événement'}</h3>
+                <h3 className="text-lg font-bold text-[#063F3A] mb-2">{reg.eventData?.title || 'Événement'}</h3>
                 
                 <div className="flex flex-col sm:flex-row gap-4 text-sm text-stone-500 mb-4">
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4 text-[#E67E22]" />
+                    <Calendar className="w-4 h-4 text-[#00843D]" />
                     {reg.eventData ? new Date(reg.eventData.startDate).toLocaleDateString('fr-FR') : 'Date inconnue'}
                   </div>
                   <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4 text-[#E67E22]" />
+                    <MapPin className="w-4 h-4 text-[#00843D]" />
                     {reg.eventData?.online ? 'En ligne' : reg.eventData?.city}
                   </div>
                 </div>

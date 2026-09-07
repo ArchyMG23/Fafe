@@ -69,7 +69,7 @@ export function CMSImageField({
               type="button"
               size="sm"
               onClick={() => setModalOpen(true)}
-              className="bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs h-8"
+              className="bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs h-8"
             >
               <FolderOpen className="w-3.5 h-3.5 mr-1.5" />
               Choisir dans la Médiathèque

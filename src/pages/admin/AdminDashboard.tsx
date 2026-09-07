@@ -69,7 +69,7 @@ export function AdminDashboard() {
   if (loading || !userProfile) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF9F6]">
-        <div className="w-12 h-12 border-4 border-[#E67E22] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-[#00843D] border-t-transparent rounded-full animate-spin mb-4"></div>
       </div>
     );
   }
@@ -78,8 +78,8 @@ export function AdminDashboard() {
     const isActive = location.pathname === path || (path !== '/admin' && location.pathname.startsWith(path));
     return `w-full justify-start mb-1 rounded-md px-3 py-2 text-sm transition-colors ${
       isActive 
-        ? 'bg-[#E67E22]/10 text-[#E67E22] font-bold' 
-        : 'text-[#6B3E1E] hover:bg-[#6B3E1E]/5'
+        ? 'bg-[#C8102E]/10 text-[#00843D] font-bold' 
+        : 'text-[#063F3A] hover:bg-[#00843D]/5'
     }`;
   };
 
@@ -142,7 +142,7 @@ export function AdminDashboard() {
         <Link to="/" className="flex items-center gap-2">
           <FafeLogo size="sm" showSubtitle={false} badge="Admin" />
         </Link>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-[#6B3E1E]">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-[#063F3A]">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
@@ -189,15 +189,15 @@ export function AdminDashboard() {
         
         <div className="p-4 border-t border-stone-200">
            <Link to="/admin/profil" className="flex items-center gap-3 mb-4 px-2 hover:bg-stone-50 p-2 rounded-md transition-colors">
-            <div className="w-10 h-10 rounded-full bg-[#6B3E1E] flex items-center justify-center font-bold text-white shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#00843D] flex items-center justify-center font-bold text-white shrink-0">
               {userProfile.firstName.charAt(0)}{userProfile.lastName.charAt(0)}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-[#6B3E1E] truncate">{userProfile.firstName} {userProfile.lastName}</p>
-              <p className="text-xs text-[#E67E22] font-bold truncate">{userProfile.role}</p>
+              <p className="text-sm font-bold text-[#063F3A] truncate">{userProfile.firstName} {userProfile.lastName}</p>
+              <p className="text-xs text-[#00843D] font-bold truncate">{userProfile.role}</p>
             </div>
           </Link>
-          <Button variant="outline" onClick={handleLogout} className="w-full text-[#6B3E1E] border-[#6B3E1E]/20 hover:bg-[#6B3E1E]/5">
+          <Button variant="outline" onClick={handleLogout} className="w-full text-[#063F3A] border-[#063F3A]/20 hover:bg-[#00843D]/5">
             <LogOut className="w-4 h-4 mr-2" />
             Déconnexion
           </Button>
@@ -221,9 +221,9 @@ export function AdminDashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="relative p-2 text-stone-400 hover:text-[#6B3E1E] transition-colors rounded-full hover:bg-stone-100">
+            <button className="relative p-2 text-stone-400 hover:text-[#063F3A] transition-colors rounded-full hover:bg-stone-100">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#E67E22] rounded-full border-2 border-white"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#C8102E] rounded-full border-2 border-white"></span>
             </button>
           </div>
         </header>

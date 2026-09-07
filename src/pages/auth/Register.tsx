@@ -128,13 +128,13 @@ export function Register() {
     <div className="bg-[#FAF9F6] min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl w-full space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">Rejoignez le réseau FAFE</h2>
-          <p className="mt-2 text-[#6B3E1E]/80">
+          <h2 className="text-3xl font-bold font-heading text-[#063F3A]">Rejoignez le réseau FAFE</h2>
+          <p className="mt-2 text-[#063F3A]/80">
             Connectez-vous à un réseau panafricain de femmes entrepreneures.
           </p>
         </div>
         
-        <Card className="border border-[#6B3E1E]/5 shadow-xl rounded-2xl bg-white">
+        <Card className="border border-[#063F3A]/5 shadow-xl rounded-2xl bg-white">
           <CardContent className="p-8">
 
 
@@ -147,39 +147,39 @@ export function Register() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Prénom *</label>
-                  <Input name="firstName" required value={formData.firstName} onChange={handleChange} className="focus:border-[#E67E22]" />
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">Prénom *</label>
+                  <Input name="firstName" required value={formData.firstName} onChange={handleChange} className="focus:border-[#00843D]" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Nom *</label>
-                  <Input name="lastName" required value={formData.lastName} onChange={handleChange} className="focus:border-[#E67E22]" />
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">Nom *</label>
+                  <Input name="lastName" required value={formData.lastName} onChange={handleChange} className="focus:border-[#00843D]" />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Adresse e-mail *</label>
-                <Input type="email" name="email" required value={formData.email} onChange={handleChange} className="focus:border-[#E67E22]" />
+                <label className="block text-sm font-medium text-[#063F3A] mb-1">Adresse e-mail *</label>
+                <Input type="email" name="email" required value={formData.email} onChange={handleChange} className="focus:border-[#00843D]" />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Téléphone *</label>
-                <Input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="focus:border-[#E67E22]" placeholder="+225 00 00 00 00" />
+                <label className="block text-sm font-medium text-[#063F3A] mb-1">Téléphone *</label>
+                <Input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="focus:border-[#00843D]" placeholder="+225 00 00 00 00" />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Pays *</label>
-                  <Input name="country" required value={formData.country} onChange={handleChange} className="focus:border-[#E67E22]" />
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">Pays *</label>
+                  <Input name="country" required value={formData.country} onChange={handleChange} className="focus:border-[#00843D]" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Ville *</label>
-                  <Input name="city" required value={formData.city} onChange={handleChange} className="focus:border-[#E67E22]" />
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">Ville *</label>
+                  <Input name="city" required value={formData.city} onChange={handleChange} className="focus:border-[#00843D]" />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Mot de passe *</label>
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">Mot de passe *</label>
                   <div className="relative">
                     <Input 
                       type={showPassword ? "text" : "password"} 
@@ -187,7 +187,7 @@ export function Register() {
                       required 
                       value={formData.password} 
                       onChange={handleChange} 
-                      className="focus:border-[#E67E22] pr-10" 
+                      className="focus:border-[#00843D] pr-10" 
                     />
                     <button 
                       type="button"
@@ -218,7 +218,7 @@ export function Register() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Confirmer le mot de passe *</label>
+                  <label className="block text-sm font-medium text-[#063F3A] mb-1">Confirmer le mot de passe *</label>
                   <div className="relative">
                     <Input 
                       type={showConfirmPassword ? "text" : "password"} 
@@ -226,7 +226,7 @@ export function Register() {
                       required 
                       value={formData.confirmPassword} 
                       onChange={handleChange} 
-                      className="focus:border-[#E67E22] pr-10" 
+                      className="focus:border-[#00843D] pr-10" 
                     />
                     <button 
                       type="button"
@@ -239,14 +239,14 @@ export function Register() {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 rounded-xl font-bold shadow-md" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 rounded-xl font-bold shadow-md" disabled={isLoading}>
                 {isLoading ? 'Création en cours...' : 'Créer mon compte'}
               </Button>
             </form>
             
-            <div className="mt-6 text-center text-sm text-[#6B3E1E]/70 border-t border-[#6B3E1E]/10 pt-6">
+            <div className="mt-6 text-center text-sm text-[#063F3A]/70 border-t border-[#063F3A]/10 pt-6">
               Déjà membre ?{' '}
-              <Link to="/hub/connexion" className="font-bold text-[#E67E22] hover:underline">
+              <Link to="/hub/connexion" className="font-bold text-[#00843D] hover:underline">
                 Se connecter
               </Link>
             </div>

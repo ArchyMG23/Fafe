@@ -147,7 +147,7 @@ export function AdminArticleEditor() {
     }
   };
 
-  if (loading) return <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#E67E22]" /></div>;
+  if (loading) return <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#00843D]" /></div>;
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
@@ -158,10 +158,10 @@ export function AdminArticleEditor() {
             <Button variant="outline" onClick={() => navigate('/admin/contenus/articles')} className="text-stone-600">
               <ArrowLeft className="w-4 h-4 mr-2" /> Retour
             </Button>
-            <Button onClick={() => setPreviewMode(!previewMode)} variant="outline" className="text-[#6B3E1E] border-[#6B3E1E]/20">
+            <Button onClick={() => setPreviewMode(!previewMode)} variant="outline" className="text-[#063F3A] border-[#063F3A]/20">
               <Eye className="w-4 h-4 mr-2" /> {previewMode ? 'Mode Édition' : 'Aperçu'}
             </Button>
-            <Button onClick={handleSave} disabled={saving} className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+            <Button onClick={handleSave} disabled={saving} className="bg-[#C8102E] hover:bg-[#A30D25] text-white">
               {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
               Enregistrer
             </Button>
@@ -173,8 +173,8 @@ export function AdminArticleEditor() {
         <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
           <div className="max-w-3xl mx-auto prose prose-stone prose-orange">
             {featuredImage && <FafeImage src={featuredImage} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8" />}
-            <h1 className="text-4xl font-bold font-heading text-[#6B3E1E] mb-4">{title || 'Titre de l\'article'}</h1>
-            <p className="text-xl text-stone-500 italic mb-8 border-l-4 border-[#E67E22] pl-4">{excerpt}</p>
+            <h1 className="text-4xl font-bold font-heading text-[#063F3A] mb-4">{title || 'Titre de l\'article'}</h1>
+            <p className="text-xl text-stone-500 italic mb-8 border-l-4 border-[#00843D] pl-4">{excerpt}</p>
             <ReactMarkdown>{content || '*Le contenu s\'affichera ici...*'}</ReactMarkdown>
           </div>
         </div>
@@ -193,7 +193,7 @@ export function AdminArticleEditor() {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="block text-sm font-bold text-stone-700">Contenu (Markdown) <span className="text-red-500">*</span></label>
-                  <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noreferrer" className="text-xs text-[#E67E22] hover:underline">Aide Markdown</a>
+                  <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noreferrer" className="text-xs text-[#00843D] hover:underline">Aide Markdown</a>
                 </div>
                 <Textarea 
                   value={content} 

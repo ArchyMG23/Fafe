@@ -73,13 +73,13 @@ export function ArticleDetail() {
     if (platform === 'linkedin') window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`, '_blank');
   };
 
-  if (loading) return <div className="min-h-[70vh] flex justify-center items-center"><Loader2 className="w-10 h-10 animate-spin text-[#E67E22]" /></div>;
+  if (loading) return <div className="min-h-[70vh] flex justify-center items-center"><Loader2 className="w-10 h-10 animate-spin text-[#00843D]" /></div>;
   
   if (!article) return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center bg-[#FAF9F6] p-4 text-center">
-      <h1 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">Article introuvable</h1>
+      <h1 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">Article introuvable</h1>
       <p className="text-stone-500 mb-8">Cet article n'existe pas ou n'est plus disponible.</p>
-      <Button onClick={() => navigate('/actualites')} className="bg-[#E67E22] text-white">Retour aux actualités</Button>
+      <Button onClick={() => navigate('/actualites')} className="bg-[#C8102E] text-white">Retour aux actualités</Button>
     </div>
   );
 
@@ -87,16 +87,16 @@ export function ArticleDetail() {
     <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-4xl">
         
-        <Link to="/actualites" className="inline-flex items-center text-sm font-bold text-stone-500 hover:text-[#E67E22] mb-8 transition-colors">
+        <Link to="/actualites" className="inline-flex items-center text-sm font-bold text-stone-500 hover:text-[#00843D] mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" /> Retour aux actualités
         </Link>
 
         {/* Header */}
         <header className="mb-12 text-center md:text-left">
-          <span className="inline-block px-3 py-1 bg-[#E67E22]/10 text-[#E67E22] text-xs font-bold uppercase tracking-wider rounded-full mb-4">
+          <span className="inline-block px-3 py-1 bg-[#C8102E]/10 text-[#00843D] text-xs font-bold uppercase tracking-wider rounded-full mb-4">
             {categoryName}
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-6 leading-tight">
             {article.title}
           </h1>
           <p className="text-xl text-stone-600 mb-8 italic">
@@ -143,7 +143,7 @@ export function ArticleDetail() {
         {/* Related */}
         {related.length > 0 && (
           <div>
-            <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-6">À découvrir également</h3>
+            <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-6">À découvrir également</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map(rel => (
                 <Link key={rel.id} to={`/actualites/${rel.slug}`} className="group bg-white rounded-xl overflow-hidden border border-stone-200 hover:shadow-lg transition-all">
@@ -151,7 +151,7 @@ export function ArticleDetail() {
                     {rel.featuredImage && <FafeImage src={rel.featuredImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />}
                   </div>
                   <div className="p-4">
-                    <h4 className="font-bold text-[#6B3E1E] mb-2 line-clamp-2 group-hover:text-[#E67E22]">{rel.title}</h4>
+                    <h4 className="font-bold text-[#063F3A] mb-2 line-clamp-2 group-hover:text-[#00843D]">{rel.title}</h4>
                     <p className="text-xs text-stone-500">{new Date(rel.publishedAt || rel.createdAt).toLocaleDateString('fr-FR')}</p>
                   </div>
                 </Link>

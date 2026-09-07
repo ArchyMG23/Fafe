@@ -109,7 +109,7 @@ export function AdminProjects() {
   const columns: Column<Project>[] = [
     {
       header: 'Titre',
-      accessor: (p) => <span className="font-bold text-[#6B3E1E] max-w-xs truncate">{p.title}</span>
+      accessor: (p) => <span className="font-bold text-[#063F3A] max-w-xs truncate">{p.title}</span>
     },
     {
       header: 'Périmètre',
@@ -143,7 +143,7 @@ export function AdminProjects() {
           variant="ghost" 
           size="sm" 
           onClick={(e) => { e.stopPropagation(); handleEdit(p); }} 
-          className="text-[#E67E22] hover:text-[#c96a1a] hover:bg-orange-50"
+          className="text-[#00843D] hover:text-[#c96a1a] hover:bg-orange-50"
         >
           <Edit className="w-4 h-4" />
         </Button>
@@ -157,18 +157,18 @@ export function AdminProjects() {
         title="Gestion des Projets"
         description="Gérez les projets sociaux et leur éligibilité aux dons."
         action={
-          <Button onClick={handleCreate} className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+          <Button onClick={handleCreate} className="bg-[#C8102E] hover:bg-[#A30D25] text-white">
             <Plus className="w-4 h-4 mr-2" /> Nouveau Projet
           </Button>
         }
       />
 
       {isFormOpen && (
-        <div className="bg-white p-6 rounded-xl border border-[#E67E22]/30 shadow-md mb-6 relative">
+        <div className="bg-white p-6 rounded-xl border border-[#00843D]/30 shadow-md mb-6 relative">
           <button onClick={() => setIsFormOpen(false)} className="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
             <XCircle className="w-6 h-6" />
           </button>
-          <h2 className="text-xl font-bold text-[#6B3E1E] mb-4">{editingId ? 'Modifier le projet' : 'Nouveau projet'}</h2>
+          <h2 className="text-xl font-bold text-[#063F3A] mb-4">{editingId ? 'Modifier le projet' : 'Nouveau projet'}</h2>
           <form onSubmit={handleSave} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -214,7 +214,7 @@ export function AdminProjects() {
 
             <div className="flex justify-end gap-2 pt-4 border-t border-stone-100">
               <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)}>Annuler</Button>
-              <Button type="submit" disabled={saving} className="bg-[#E67E22] text-white">
+              <Button type="submit" disabled={saving} className="bg-[#C8102E] text-white">
                 {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 Enregistrer
               </Button>

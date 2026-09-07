@@ -116,18 +116,18 @@ export function NewsAndEvents() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-16 pb-14 md:pt-24 md:pb-20 overflow-hidden bg-[#6B3E1E]">
+      <section className="relative pt-16 pb-14 md:pt-24 md:pb-20 overflow-hidden bg-white border-b border-stone-100">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[350px] h-[350px] bg-[#D4AF37] opacity-10 rounded-full blur-[80px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[300px] h-[300px] bg-[#E67E22] opacity-10 rounded-full blur-[70px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[300px] h-[300px] bg-[#C8102E] opacity-10 rounded-full blur-[70px] pointer-events-none" />
         
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
           <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-2 block">
             Éditorial & Agenda
           </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-white mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4 leading-tight">
             Actualités & Événements
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-stone-600 max-w-xl mx-auto mb-8 leading-relaxed">
             Suivez les initiatives du réseau FAFE et participez aux rencontres clés pour les entrepreneures panafricaines.
           </p>
           
@@ -135,19 +135,19 @@ export function NewsAndEvents() {
           <div className="inline-flex bg-white/10 p-1 rounded-full backdrop-blur-md border border-white/20">
             <button 
               onClick={() => setFilter('ALL')}
-              className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-[#E67E22] text-white shadow-md' : 'text-white/80 hover:text-white'}`}
+              className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-[#C8102E] text-white shadow-md' : 'text-stone-600 hover:text-[#063F3A]'}`}
             >
               Tout
             </button>
             <button 
               onClick={() => setFilter('NEWS')}
-              className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${filter === 'NEWS' ? 'bg-[#E67E22] text-white shadow-md' : 'text-white/80 hover:text-white'}`}
+              className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${filter === 'NEWS' ? 'bg-[#C8102E] text-white shadow-md' : 'text-stone-600 hover:text-[#063F3A]'}`}
             >
               Actualités
             </button>
             <button 
               onClick={() => setFilter('EVENTS')}
-              className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${filter === 'EVENTS' ? 'bg-[#E67E22] text-white shadow-md' : 'text-white/80 hover:text-white'}`}
+              className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${filter === 'EVENTS' ? 'bg-[#C8102E] text-white shadow-md' : 'text-stone-600 hover:text-[#063F3A]'}`}
             >
               Événements
             </button>
@@ -194,7 +194,7 @@ function NewsCard({ article }: { article: Article }) {
   return (
     <Link
       to={`/actualites/${article.slug}`}
-      className="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-[#E67E22]/30 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+      className="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-[#00843D]/30 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
     >
       <div className="relative h-48 overflow-hidden bg-stone-100">
         <FafeImage
@@ -204,14 +204,14 @@ function NewsCard({ article }: { article: Article }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-3 left-3">
-          <span className="px-2.5 py-0.5 bg-white/95 backdrop-blur-sm text-[#E67E22] text-[10px] font-bold uppercase tracking-wider rounded-full shadow-xs">
+          <span className="px-2.5 py-0.5 bg-white/95 backdrop-blur-sm text-[#00843D] text-[10px] font-bold uppercase tracking-wider rounded-full shadow-xs">
             Actualité
           </span>
         </div>
       </div>
       
       <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg font-bold font-heading text-[#6B3E1E] mb-2 group-hover:text-[#E67E22] transition-colors line-clamp-2">
+        <h3 className="text-lg font-bold font-heading text-[#063F3A] mb-2 group-hover:text-[#00843D] transition-colors line-clamp-2">
           {article.title}
         </h3>
         <p className="text-stone-600 text-xs sm:text-sm mb-4 line-clamp-2 flex-grow leading-relaxed">
@@ -223,7 +223,7 @@ function NewsCard({ article }: { article: Article }) {
             <Calendar className="w-3.5 h-3.5 mr-1 text-stone-400" />
             {new Date(article.publishedAt || article.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
           </div>
-          <span className="text-[#E67E22] text-xs font-bold inline-flex items-center group-hover:translate-x-1 transition-transform">
+          <span className="text-[#00843D] text-xs font-bold inline-flex items-center group-hover:translate-x-1 transition-transform">
             Lire <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </span>
         </div>
@@ -246,23 +246,23 @@ function EventCard({ event }: { event: FAFEEvent }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-3 left-3">
-          <span className="px-2.5 py-0.5 bg-[#D4AF37] text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-xs">
+          <span className="px-2.5 py-0.5 bg-[#D4AF37] text-[#063F3A] text-[10px] font-bold uppercase tracking-wider rounded-full shadow-xs">
             Événement
           </span>
         </div>
         
         <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-md overflow-hidden flex flex-col text-center min-w-[3rem]">
-          <div className="bg-[#6B3E1E] text-white text-[9px] font-bold uppercase py-0.5 px-2">
+          <div className="bg-[#00843D] text-white text-[9px] font-bold uppercase py-0.5 px-2">
             {format(new Date(event.startDate), 'MMM', { locale: fr })}
           </div>
-          <div className="text-base font-black text-[#6B3E1E] py-0.5 px-2">
+          <div className="text-base font-black text-[#063F3A] py-0.5 px-2">
             {format(new Date(event.startDate), 'dd')}
           </div>
         </div>
       </div>
       
       <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg font-bold font-heading text-[#6B3E1E] mb-2 group-hover:text-[#D4AF37] transition-colors line-clamp-2">
+        <h3 className="text-lg font-bold font-heading text-[#063F3A] mb-2 group-hover:text-[#D4AF37] transition-colors line-clamp-2">
           {event.title}
         </h3>
         <p className="text-stone-600 text-xs sm:text-sm mb-3 line-clamp-2 flex-grow leading-relaxed">
@@ -270,7 +270,7 @@ function EventCard({ event }: { event: FAFEEvent }) {
         </p>
         
         <div className="flex items-center text-xs text-stone-500 mb-4">
-          <MapPin className="w-3.5 h-3.5 mr-1 text-[#E67E22] shrink-0" />
+          <MapPin className="w-3.5 h-3.5 mr-1 text-[#00843D] shrink-0" />
           <span className="truncate">{event.online ? 'En ligne (Virtuel)' : (event.city || 'Afrique')}</span>
         </div>
         

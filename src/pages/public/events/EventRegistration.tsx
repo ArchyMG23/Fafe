@@ -111,7 +111,7 @@ export function EventRegistration() {
   };
 
   if (loading) {
-    return <div className="min-h-[60vh] flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full"></div></div>;
+    return <div className="min-h-[60vh] flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-[#00843D] border-t-transparent rounded-full"></div></div>;
   }
 
   if (!event) return <div className="text-center py-20">Événement introuvable</div>;
@@ -120,14 +120,14 @@ export function EventRegistration() {
     return (
       <div className="bg-[#FAF9F6] min-h-[80vh] flex items-center justify-center py-16">
         <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-stone-100 max-w-lg w-full text-center">
-          <div className="w-16 h-16 bg-[#E67E22]/10 text-[#E67E22] rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-[#C8102E]/10 text-[#00843D] rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">Vous êtes déjà inscrit</h2>
+          <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">Vous êtes déjà inscrit</h2>
           <p className="text-stone-600 mb-8">Vous avez déjà validé votre inscription pour l'événement <strong>{event.title}</strong>.</p>
           <div className="space-y-4">
             <Link to="/hub/dashboard/evenements">
-              <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white">Voir mes inscriptions</Button>
+              <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white">Voir mes inscriptions</Button>
             </Link>
             <Link to={`/evenements/${event.slug}`}>
               <Button variant="outline" className="w-full">Retour à l'événement</Button>
@@ -146,7 +146,7 @@ export function EventRegistration() {
       <div className="bg-[#FAF9F6] min-h-[80vh] flex items-center justify-center py-16">
         <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-stone-100 max-w-lg w-full text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">Inscriptions clôturées</h2>
+          <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">Inscriptions clôturées</h2>
           <p className="text-stone-600 mb-8">Les inscriptions pour <strong>{event.title}</strong> sont fermées.</p>
           <Link to={`/evenements/${event.slug}`}>
             <Button variant="outline" className="w-full">Retour à l'événement</Button>
@@ -159,12 +159,12 @@ export function EventRegistration() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-3xl">
-        <Link to={`/evenements/${event.slug}`} className="inline-flex items-center gap-2 text-stone-500 hover:text-[#E67E22] mb-8 font-medium transition-colors">
+        <Link to={`/evenements/${event.slug}`} className="inline-flex items-center gap-2 text-stone-500 hover:text-[#00843D] mb-8 font-medium transition-colors">
           <ArrowLeft className="w-4 h-4" /> Retour à l'événement
         </Link>
 
         <div className="bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden">
-          <div className="bg-[#6B3E1E] text-white p-8 md:p-10">
+          <div className="bg-[#00843D] text-white p-8 md:p-10">
             <div className="inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-bold tracking-wide uppercase mb-4">
               Formulaire d'inscription
             </div>
@@ -177,7 +177,7 @@ export function EventRegistration() {
 
           <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-6">
             {!currentUser && (
-               <div className="bg-[#E67E22]/10 border border-[#E67E22]/20 text-[#E67E22] p-4 rounded-xl text-sm flex gap-3">
+               <div className="bg-[#C8102E]/10 border border-[#00843D]/20 text-[#00843D] p-4 rounded-xl text-sm flex gap-3">
                  <AlertCircle className="w-5 h-5 shrink-0" />
                  <p>Vous n'êtes pas connecté. <Link to="/hub/connexion" className="font-bold underline">Connectez-vous</Link> pour pré-remplir ce formulaire et retrouver vos billets dans votre espace membre.</p>
                </div>
@@ -247,13 +247,13 @@ export function EventRegistration() {
             {event.price !== undefined && (
               <div className="bg-[#FAF9F6] p-6 rounded-xl border border-stone-200 flex items-center justify-between mt-8">
                 <span className="font-bold text-stone-800">Total à régler</span>
-                <span className="text-xl font-bold text-[#E67E22]">
+                <span className="text-xl font-bold text-[#00843D]">
                   {event.price === 0 ? 'Gratuit' : `${event.price} ${event.currency || 'FCFA'}`}
                 </span>
               </div>
             )}
 
-            <Button type="submit" disabled={submitting} className="w-full bg-[#6B3E1E] hover:bg-[#522d14] text-white py-6 font-bold text-lg mt-8 rounded-xl">
+            <Button type="submit" disabled={submitting} className="w-full bg-[#00843D] hover:bg-[#006830] text-white py-6 font-bold text-lg mt-8 rounded-xl">
               {submitting ? 'Traitement en cours...' : (event.price === 0 || event.price === undefined ? 'Confirmer l\'inscription' : 'Passer au paiement')}
             </Button>
             <p className="text-center text-xs text-stone-400 mt-4">

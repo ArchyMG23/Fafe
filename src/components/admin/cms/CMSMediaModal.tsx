@@ -138,17 +138,17 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 bg-stone-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#E67E22]/10 flex items-center justify-center text-[#E67E22]">
+            <div className="w-10 h-10 rounded-xl bg-[#C8102E]/10 flex items-center justify-center text-[#00843D]">
               <ImageIcon className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#6B3E1E]">Médiathèque FAFE</h2>
+              <h2 className="text-lg font-bold text-[#063F3A]">Médiathèque FAFE</h2>
               <p className="text-xs text-stone-500">Sélectionnez ou téléversez une image pour votre contenu</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-2 text-stone-400 hover:text-[#6B3E1E] rounded-lg hover:bg-stone-200/50 transition-colors"
+            className="p-2 text-stone-400 hover:text-[#063F3A] rounded-lg hover:bg-stone-200/50 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -161,7 +161,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
               onClick={() => setActiveTab('gallery')}
               className={`px-4 py-2.5 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
                 activeTab === 'gallery'
-                  ? 'border-[#E67E22] text-[#E67E22]'
+                  ? 'border-[#00843D] text-[#00843D]'
                   : 'border-transparent text-stone-500 hover:text-stone-700'
               }`}
             >
@@ -172,7 +172,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
               onClick={() => setActiveTab('upload')}
               className={`px-4 py-2.5 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
                 activeTab === 'upload'
-                  ? 'border-[#E67E22] text-[#E67E22]'
+                  ? 'border-[#00843D] text-[#00843D]'
                   : 'border-transparent text-stone-500 hover:text-stone-700'
               }`}
             >
@@ -183,7 +183,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
               onClick={() => setActiveTab('url')}
               className={`px-4 py-2.5 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
                 activeTab === 'url'
-                  ? 'border-[#E67E22] text-[#E67E22]'
+                  ? 'border-[#00843D] text-[#00843D]'
                   : 'border-transparent text-stone-500 hover:text-stone-700'
               }`}
             >
@@ -211,7 +211,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
           {activeTab === 'gallery' && (
             loading ? (
               <div className="flex flex-col items-center justify-center py-20 text-stone-400">
-                <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-2" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-2" />
                 <p className="text-sm">Chargement des médias...</p>
               </div>
             ) : filteredMedia.length === 0 ? (
@@ -221,7 +221,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                 <p className="text-xs text-stone-400 mt-1">Téléversez votre première image ou ajustez vos critères de recherche.</p>
                 <Button 
                   onClick={() => setActiveTab('upload')}
-                  className="mt-4 bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs"
+                  className="mt-4 bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs"
                 >
                   Téléverser une image
                 </Button>
@@ -236,7 +236,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                       onClick={() => setSelectedUrl(item.url)}
                       className={`group relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all ${
                         isSelected 
-                          ? 'border-[#E67E22] ring-2 ring-[#E67E22]/30 shadow-md scale-[1.02]' 
+                          ? 'border-[#00843D] ring-2 ring-[#E67E22]/30 shadow-md scale-[1.02]' 
                           : 'border-stone-200 hover:border-stone-400 bg-stone-50'
                       }`}
                     >
@@ -248,7 +248,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                           loading="lazy"
                         />
                         {isSelected && (
-                          <div className="absolute top-2 right-2 w-6 h-6 bg-[#E67E22] text-white rounded-full flex items-center justify-center shadow-lg">
+                          <div className="absolute top-2 right-2 w-6 h-6 bg-[#C8102E] text-white rounded-full flex items-center justify-center shadow-lg">
                             <Check className="w-3.5 h-3.5" />
                           </div>
                         )}
@@ -279,7 +279,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
 
           {activeTab === 'upload' && (
             <form onSubmit={handleUploadSubmit} className="max-w-lg mx-auto py-4 space-y-5">
-              <div className="border-2 border-dashed border-stone-300 hover:border-[#E67E22] rounded-2xl p-8 text-center bg-stone-50/50 hover:bg-orange-50/20 transition-colors">
+              <div className="border-2 border-dashed border-stone-300 hover:border-[#00843D] rounded-2xl p-8 text-center bg-stone-50/50 hover:bg-orange-50/20 transition-colors">
                 {uploadPreview ? (
                   <div className="space-y-4">
                     <FafeImage 
@@ -297,7 +297,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                   </div>
                 ) : (
                   <label className="cursor-pointer block">
-                    <div className="w-14 h-14 mx-auto rounded-2xl bg-[#E67E22]/10 flex items-center justify-center text-[#E67E22] mb-3">
+                    <div className="w-14 h-14 mx-auto rounded-2xl bg-[#C8102E]/10 flex items-center justify-center text-[#00843D] mb-3">
                       <Upload className="w-6 h-6" />
                     </div>
                     <p className="text-sm font-bold text-stone-700">Cliquez ou glissez une image ici</p>
@@ -328,7 +328,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                   <Button
                     type="submit"
                     disabled={uploading}
-                    className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white"
+                    className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white"
                   >
                     {uploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
                     Enregistrer et insérer cette image
@@ -376,7 +376,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
               )}
               <Button
                 type="submit"
-                className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white"
+                className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white"
               >
                 Valider et utiliser cette URL
               </Button>
@@ -388,7 +388,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
         <div className="flex items-center justify-between px-6 py-4 border-t border-stone-200 bg-stone-50">
           <div className="text-xs text-stone-500 truncate max-w-md">
             {selectedUrl ? (
-              <span className="flex items-center gap-1.5 text-[#E67E22] font-semibold">
+              <span className="flex items-center gap-1.5 text-[#00843D] font-semibold">
                 <Check className="w-3.5 h-3.5 shrink-0" />
                 Image prête à être insérée
               </span>
@@ -410,7 +410,7 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
                 onSelect(selectedUrl);
                 onClose();
               }}
-              className="bg-[#E67E22] hover:bg-[#c96a1a] text-white"
+              className="bg-[#C8102E] hover:bg-[#A30D25] text-white"
             >
               Insérer l'image sélectionnée
             </Button>

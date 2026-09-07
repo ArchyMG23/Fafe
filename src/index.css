@@ -3,6 +3,7 @@
 @theme {
   --color-fafe-orange: #E67E22;
   --color-fafe-brown: #6B3E1E;
+  --color-fafe-deep-green: #063F3A;
   --color-fafe-gold: #D4AF37;
   --color-fafe-ivory: #FAF9F6;
   --color-fafe-green: #00843D;
@@ -16,12 +17,13 @@
 @layer base {
   body {
     background-color: var(--color-fafe-ivory);
-    color: var(--color-fafe-brown);
+    color: var(--color-fafe-deep-green);
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    color: var(--color-fafe-brown);
+    color: var(--color-fafe-deep-green);
   }
 }

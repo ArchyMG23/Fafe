@@ -160,9 +160,9 @@ export function Donation() {
       <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 bg-orange-100 rounded-full mb-6">
-            <Heart className="w-8 h-8 text-[#E67E22]" />
+            <Heart className="w-8 h-8 text-[#00843D]" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-6">
             Soutenez l'entrepreneuriat féminin africain
           </h1>
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
@@ -178,18 +178,18 @@ export function Donation() {
                   <form onSubmit={handleProceedToSummary}>
                     {/* Type de don */}
                     <div className="mb-8">
-                      <label className="block text-sm font-semibold text-[#6B3E1E] mb-3">Type de don</label>
+                      <label className="block text-sm font-semibold text-[#063F3A] mb-3">Type de don</label>
                       <div className="grid grid-cols-2 gap-2 bg-stone-100 p-1 rounded-lg">
                         <button
                           type="button"
-                          className={`py-2 px-4 text-sm font-medium rounded-md transition-colors ${['MONTHLY', 'QUARTERLY', 'ANNUAL'].includes(frequency) ? 'text-stone-600 hover:text-stone-800' : 'bg-white text-[#6B3E1E] shadow-sm'}`}
+                          className={`py-2 px-4 text-sm font-medium rounded-md transition-colors ${['MONTHLY', 'QUARTERLY', 'ANNUAL'].includes(frequency) ? 'text-stone-600 hover:text-stone-800' : 'bg-white text-[#063F3A] shadow-sm'}`}
                           onClick={() => setFrequency('ONE_TIME')}
                         >
                           Don ponctuel
                         </button>
                         <button
                           type="button"
-                          className={`py-2 px-4 text-sm font-medium rounded-md transition-colors ${['MONTHLY', 'QUARTERLY', 'ANNUAL'].includes(frequency) ? 'bg-white text-[#6B3E1E] shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}
+                          className={`py-2 px-4 text-sm font-medium rounded-md transition-colors ${['MONTHLY', 'QUARTERLY', 'ANNUAL'].includes(frequency) ? 'bg-white text-[#063F3A] shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}
                           onClick={() => setFrequency('MONTHLY')}
                         >
                           Don récurrent
@@ -198,9 +198,9 @@ export function Donation() {
                       
                       {['MONTHLY', 'QUARTERLY', 'ANNUAL'].includes(frequency) && (
                         <div className="mt-3 flex gap-2">
-                          <button type="button" onClick={() => setFrequency('MONTHLY')} className={`flex-1 py-1.5 text-xs font-medium rounded-full border ${frequency === 'MONTHLY' ? 'border-[#E67E22] bg-orange-50 text-[#E67E22]' : 'border-stone-200 text-stone-500 hover:bg-stone-50'}`}>Mensuel</button>
-                          <button type="button" onClick={() => setFrequency('QUARTERLY')} className={`flex-1 py-1.5 text-xs font-medium rounded-full border ${frequency === 'QUARTERLY' ? 'border-[#E67E22] bg-orange-50 text-[#E67E22]' : 'border-stone-200 text-stone-500 hover:bg-stone-50'}`}>Trimestriel</button>
-                          <button type="button" onClick={() => setFrequency('ANNUAL')} className={`flex-1 py-1.5 text-xs font-medium rounded-full border ${frequency === 'ANNUAL' ? 'border-[#E67E22] bg-orange-50 text-[#E67E22]' : 'border-stone-200 text-stone-500 hover:bg-stone-50'}`}>Annuel</button>
+                          <button type="button" onClick={() => setFrequency('MONTHLY')} className={`flex-1 py-1.5 text-xs font-medium rounded-full border ${frequency === 'MONTHLY' ? 'border-[#00843D] bg-orange-50 text-[#00843D]' : 'border-stone-200 text-stone-500 hover:bg-stone-50'}`}>Mensuel</button>
+                          <button type="button" onClick={() => setFrequency('QUARTERLY')} className={`flex-1 py-1.5 text-xs font-medium rounded-full border ${frequency === 'QUARTERLY' ? 'border-[#00843D] bg-orange-50 text-[#00843D]' : 'border-stone-200 text-stone-500 hover:bg-stone-50'}`}>Trimestriel</button>
+                          <button type="button" onClick={() => setFrequency('ANNUAL')} className={`flex-1 py-1.5 text-xs font-medium rounded-full border ${frequency === 'ANNUAL' ? 'border-[#00843D] bg-orange-50 text-[#00843D]' : 'border-stone-200 text-stone-500 hover:bg-stone-50'}`}>Annuel</button>
                         </div>
                       )}
                     </div>
@@ -208,11 +208,11 @@ export function Donation() {
                     {/* Montant et Devise */}
                     <div className="mb-8">
                       <div className="flex justify-between items-end mb-3">
-                        <label className="block text-sm font-semibold text-[#6B3E1E]">Montant du don</label>
+                        <label className="block text-sm font-semibold text-[#063F3A]">Montant du don</label>
                         <select 
                           value={currency} 
                           onChange={(e) => setCurrency(e.target.value as any)}
-                          className="text-sm bg-stone-100 border-none rounded-md px-2 py-1 font-medium text-[#6B3E1E] focus:ring-0 cursor-pointer"
+                          className="text-sm bg-stone-100 border-none rounded-md px-2 py-1 font-medium text-[#063F3A] focus:ring-0 cursor-pointer"
                         >
                           {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
@@ -225,7 +225,7 @@ export function Donation() {
                             type="button"
                             className={`py-3 px-4 rounded-md border text-center font-medium transition-all ${
                               amount === val && !customAmount
-                                ? 'border-[#E67E22] bg-orange-50 text-[#E67E22] ring-1 ring-[#E67E22]'
+                                ? 'border-[#00843D] bg-orange-50 text-[#00843D] ring-1 ring-[#E67E22]'
                                 : 'border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50'
                             }`}
                             onClick={() => {
@@ -248,7 +248,7 @@ export function Donation() {
                             setCustomAmount(e.target.value);
                             setAmount('');
                           }}
-                          className={`pl-4 pr-16 h-12 text-lg ${customAmount ? 'border-[#E67E22] ring-1 ring-[#E67E22]' : ''}`}
+                          className={`pl-4 pr-16 h-12 text-lg ${customAmount ? 'border-[#00843D] ring-1 ring-[#E67E22]' : ''}`}
                         />
                         <div className="absolute right-4 top-3 text-stone-500 font-medium">{currency}</div>
                       </div>
@@ -256,7 +256,7 @@ export function Donation() {
 
                     {/* Projet soutenu */}
                     <div className="mb-8">
-                      <label className="block text-sm font-semibold text-[#6B3E1E] mb-3">Affectation de mon don</label>
+                      <label className="block text-sm font-semibold text-[#063F3A] mb-3">Affectation de mon don</label>
                       <select 
                         className="w-full h-11 px-3 rounded-md border border-stone-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#E67E22] focus:border-transparent"
                         value={projectId}
@@ -271,7 +271,7 @@ export function Donation() {
 
                     {/* Informations personnelles */}
                     <div className="space-y-4 mb-8">
-                      <label className="block text-sm font-semibold text-[#6B3E1E]">Informations personnelles</label>
+                      <label className="block text-sm font-semibold text-[#063F3A]">Informations personnelles</label>
                       
                       <div className="grid sm:grid-cols-2 gap-4">
                         <Input placeholder="Prénom" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
@@ -293,7 +293,7 @@ export function Donation() {
                           type="checkbox" 
                           checked={anonymous}
                           onChange={(e) => setAnonymous(e.target.checked)}
-                          className="rounded border-stone-300 text-[#E67E22] focus:ring-[#E67E22]" 
+                          className="rounded border-stone-300 text-[#00843D] focus:ring-[#E67E22]" 
                         />
                         <span className="text-sm text-stone-600">Faire ce don anonymement (le nom n'apparaîtra pas publiquement)</span>
                       </label>
@@ -303,7 +303,7 @@ export function Donation() {
                       type="submit" 
                       variant="gold" 
                       size="lg" 
-                      className="w-full text-lg h-14 shadow-md bg-[#E67E22] hover:bg-[#c96a1a] text-white border-0"
+                      className="w-full text-lg h-14 shadow-md bg-[#C8102E] hover:bg-[#A30D25] text-white border-0"
                       disabled={(!amount && !customAmount) || !firstName || !lastName || !email || !country}
                     >
                       Continuer <ArrowRight className="w-5 h-5 ml-2" />
@@ -314,8 +314,8 @@ export function Donation() {
                 {step === 'SUMMARY' && (
                   <div>
                     <div className="mb-6 flex items-center justify-between">
-                      <h3 className="text-xl font-bold font-heading text-[#6B3E1E]">Résumé de votre don</h3>
-                      <button onClick={() => setStep('FORM')} className="text-sm text-[#E67E22] hover:underline flex items-center">
+                      <h3 className="text-xl font-bold font-heading text-[#063F3A]">Résumé de votre don</h3>
+                      <button onClick={() => setStep('FORM')} className="text-sm text-[#00843D] hover:underline flex items-center">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Modifier
                       </button>
                     </div>
@@ -329,7 +329,7 @@ export function Donation() {
                       </div>
                       <div className="flex justify-between border-b border-stone-200 pb-3">
                         <span className="text-stone-500 text-sm">Montant</span>
-                        <span className="font-bold text-lg text-[#E67E22]">
+                        <span className="font-bold text-lg text-[#00843D]">
                           {getFinalAmount().toLocaleString('fr-FR')} {currency}
                         </span>
                       </div>
@@ -352,7 +352,7 @@ export function Donation() {
                     <Button 
                       onClick={handleConfirmDonation}
                       disabled={isProcessing}
-                      className="w-full text-lg h-14 shadow-md bg-[#6B3E1E] hover:bg-[#5a3318] text-white border-0"
+                      className="w-full text-lg h-14 shadow-md bg-[#00843D] hover:bg-[#006830] text-white border-0"
                     >
                       {isProcessing ? (
                         <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Traitement en cours...</>
@@ -372,7 +372,7 @@ export function Donation() {
           
           {/* Information sidebar */}
           <div className="md:col-span-2 space-y-6">
-            <Card className="bg-[#6B3E1E] text-white border-0 shadow-lg">
+            <Card className="bg-[#00843D] text-white border-0 shadow-lg">
               <CardContent className="p-8 flex flex-col h-full">
                 <div className="mb-8">
                   <h2 className="text-2xl font-heading italic mb-6 border-b border-white/20 pb-4 text-white">L'Impact de votre Don</h2>
@@ -413,8 +413,8 @@ export function Donation() {
               <Card className="bg-white border border-stone-200 shadow-sm rounded-2xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Building2 className="w-5 h-5 text-[#E67E22]" />
-                    <h3 className="font-bold font-heading text-sm text-[#6B3E1E]">Coordonnées Virement Bancaire</h3>
+                    <Building2 className="w-5 h-5 text-[#00843D]" />
+                    <h3 className="font-bold font-heading text-sm text-[#063F3A]">Coordonnées Virement Bancaire</h3>
                   </div>
                   <div className="space-y-2.5 text-xs text-stone-600 bg-stone-50 p-4 rounded-xl border border-stone-200">
                     {cmsData.bankDetails.bankName && (

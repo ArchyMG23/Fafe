@@ -111,7 +111,7 @@ export function AdminCMSMedia() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold font-heading text-[#6B3E1E]">
+          <h1 className="text-xl md:text-2xl font-bold font-heading text-[#063F3A]">
             Médiathèque Centrale FAFE
           </h1>
           <p className="text-xs text-stone-500 mt-1">
@@ -121,7 +121,7 @@ export function AdminCMSMedia() {
 
         <Button
           onClick={() => setShowUploadModal(true)}
-          className="bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs font-bold"
+          className="bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs font-bold"
         >
           <Upload className="w-4 h-4 mr-2" />
           Téléverser un média
@@ -147,7 +147,7 @@ export function AdminCMSMedia() {
             <button
               onClick={() => setFilterType('ALL')}
               className={`px-3 py-1 rounded-md font-bold transition-colors ${
-                filterType === 'ALL' ? 'bg-white text-[#E67E22] shadow-xs' : 'text-stone-500'
+                filterType === 'ALL' ? 'bg-white text-[#00843D] shadow-xs' : 'text-stone-500'
               }`}
             >
               Tous ({mediaList.length})
@@ -155,7 +155,7 @@ export function AdminCMSMedia() {
             <button
               onClick={() => setFilterType('IMAGE')}
               className={`px-3 py-1 rounded-md font-bold transition-colors ${
-                filterType === 'IMAGE' ? 'bg-white text-[#E67E22] shadow-xs' : 'text-stone-500'
+                filterType === 'IMAGE' ? 'bg-white text-[#00843D] shadow-xs' : 'text-stone-500'
               }`}
             >
               Images
@@ -167,7 +167,7 @@ export function AdminCMSMedia() {
       {/* Media Grid */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 text-stone-400">
-          <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-2" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-2" />
           <p className="text-sm">Chargement des médias...</p>
         </div>
       ) : filtered.length === 0 ? (
@@ -241,7 +241,7 @@ export function AdminCMSMedia() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-stone-200">
             <div className="px-6 py-4 border-b border-stone-200 bg-stone-50 flex items-center justify-between">
-              <h2 className="text-base font-bold text-[#6B3E1E]">Téléverser un nouveau média</h2>
+              <h2 className="text-base font-bold text-[#063F3A]">Téléverser un nouveau média</h2>
               <button onClick={() => setShowUploadModal(false)} className="text-stone-400 hover:text-stone-700">✕</button>
             </div>
 
@@ -260,7 +260,7 @@ export function AdminCMSMedia() {
                   </div>
                 ) : (
                   <label className="cursor-pointer block">
-                    <Upload className="w-8 h-8 text-[#E67E22] mx-auto mb-2" />
+                    <Upload className="w-8 h-8 text-[#00843D] mx-auto mb-2" />
                     <p className="text-xs font-bold text-stone-700">Cliquez pour sélectionner une image</p>
                     <p className="text-[10px] text-stone-400 mt-1">PNG, JPG, WebP jusqu'à 10 Mo</p>
                     <input type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
@@ -303,7 +303,7 @@ export function AdminCMSMedia() {
                 <Button
                   type="submit"
                   disabled={uploading || !uploadPreview}
-                  className="bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs font-bold"
+                  className="bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs font-bold"
                 >
                   {uploading ? 'Enregistrement...' : 'Enregistrer dans la médiathèque'}
                 </Button>

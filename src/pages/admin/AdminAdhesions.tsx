@@ -190,7 +190,7 @@ export function AdminAdhesions() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-heading text-[#6B3E1E]">Adhésions & Validations</h1>
+          <h1 className="text-2xl font-bold font-heading text-[#063F3A]">Adhésions & Validations</h1>
           <p className="text-sm text-stone-500 mt-1">
             Gérez les demandes d'adhésion au réseau FAFE et la synchronisation avec l'Annuaire Panafricain.
           </p>
@@ -199,7 +199,7 @@ export function AdminAdhesions() {
           variant="outline" 
           onClick={loadMemberships} 
           disabled={loading}
-          className="self-start sm:self-auto text-[#6B3E1E] border-stone-200 hover:bg-stone-50"
+          className="self-start sm:self-auto text-[#063F3A] border-stone-200 hover:bg-stone-50"
         >
           <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
           Actualiser
@@ -211,7 +211,7 @@ export function AdminAdhesions() {
         <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Total Adhésions</p>
-            <p className="text-2xl font-bold text-[#6B3E1E] mt-1">{memberships.length}</p>
+            <p className="text-2xl font-bold text-[#063F3A] mt-1">{memberships.length}</p>
           </div>
           <div className="w-10 h-10 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600 font-bold">
             {memberships.length}
@@ -258,7 +258,7 @@ export function AdminAdhesions() {
             placeholder="Rechercher par nom, email, réf ou n° FAFE..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-stone-200 focus:outline-none focus:border-[#E67E22] focus:ring-1 focus:ring-[#E67E22]"
+            className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-stone-200 focus:outline-none focus:border-[#00843D] focus:ring-1 focus:ring-[#E67E22]"
           />
         </div>
 
@@ -267,7 +267,7 @@ export function AdminAdhesions() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full md:w-auto text-sm px-3 py-2 rounded-lg border border-stone-200 bg-white focus:outline-none focus:border-[#E67E22]"
+            className="w-full md:w-auto text-sm px-3 py-2 rounded-lg border border-stone-200 bg-white focus:outline-none focus:border-[#00843D]"
           >
             <option value="ALL">Tous les statuts</option>
             <option value="PAYMENT_SUBMITTED">Paiement Soumis (À valider)</option>
@@ -283,7 +283,7 @@ export function AdminAdhesions() {
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-3" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-3" />
             <p className="text-stone-500 text-sm">Chargement des dossiers d'adhésion...</p>
           </div>
         ) : (
@@ -303,11 +303,11 @@ export function AdminAdhesions() {
                   <tr key={m.id} className="hover:bg-stone-50/80 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-[#E67E22]/10 text-[#E67E22] flex items-center justify-center font-bold text-sm shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-[#C8102E]/10 text-[#00843D] flex items-center justify-center font-bold text-sm shrink-0">
                           {m.user ? `${m.user.firstName?.charAt(0) || ''}${m.user.lastName?.charAt(0) || ''}` : 'U'}
                         </div>
                         <div>
-                          <p className="font-bold text-[#6B3E1E]">
+                          <p className="font-bold text-[#063F3A]">
                             {m.user ? `${m.user.firstName} ${m.user.lastName}` : 'Compte Inconnu'}
                           </p>
                           <p className="text-xs text-stone-500">{m.user?.email || '-'}</p>
@@ -320,7 +320,7 @@ export function AdminAdhesions() {
                     <td className="px-6 py-4">
                       {getStatusBadge(m.status)}
                       {m.membershipNumber && (
-                        <p className="text-xs font-mono font-bold text-[#6B3E1E] mt-1.5 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60 inline-block">
+                        <p className="text-xs font-mono font-bold text-[#063F3A] mt-1.5 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60 inline-block">
                           {m.membershipNumber}
                         </p>
                       )}
@@ -361,7 +361,7 @@ export function AdminAdhesions() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       {actionLoading === m.id ? (
-                        <Loader2 className="w-5 h-5 animate-spin text-[#E67E22] ml-auto" />
+                        <Loader2 className="w-5 h-5 animate-spin text-[#00843D] ml-auto" />
                       ) : (
                         <div className="flex justify-end items-center gap-2">
                           {m.status !== 'ACTIVE' && (
@@ -420,13 +420,13 @@ export function AdminAdhesions() {
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
             <div className="flex justify-between items-center mb-4 pb-2 border-b border-stone-100">
-              <h3 className="font-bold text-lg text-[#6B3E1E]">Justificatif de paiement</h3>
+              <h3 className="font-bold text-lg text-[#063F3A]">Justificatif de paiement</h3>
               <div className="flex items-center gap-2">
                 <a 
                   href={selectedProofUrl} 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="p-2 text-stone-500 hover:text-[#E67E22] rounded-lg hover:bg-stone-100"
+                  className="p-2 text-stone-500 hover:text-[#00843D] rounded-lg hover:bg-stone-100"
                   title="Ouvrir dans un nouvel onglet"
                 >
                   <ExternalLink className="w-5 h-5" />

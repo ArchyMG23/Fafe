@@ -7,11 +7,11 @@ export function AdminEvents() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold font-heading text-[#6B3E1E]">Événements</h1>
+          <h1 className="text-2xl font-bold font-heading text-[#063F3A]">Événements</h1>
           <p className="text-stone-500">Gérez vos événements, participants et présences.</p>
         </div>
         <Link to="/admin/evenements/nouveau">
-          <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+          <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white">
             <Plus className="w-4 h-4 mr-2" /> Créer un événement
           </Button>
         </Link>

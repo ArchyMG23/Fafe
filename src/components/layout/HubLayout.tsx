@@ -55,9 +55,9 @@ export function HubLayout() {
           <div className="w-full max-w-7xl mx-auto flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2">
               <FafeLogo size="sm" showSubtitle={false} />
-              <span className="text-xs bg-[#E67E22]/10 font-bold px-2 py-0.5 rounded text-[#E67E22] uppercase tracking-wider">Hub</span>
+              <span className="text-xs bg-[#C8102E]/10 font-bold px-2 py-0.5 rounded text-[#00843D] uppercase tracking-wider">Hub</span>
             </Link>
-            <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors">
+            <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#00843D] transition-colors">
               &larr; Retour au site FAFE
             </Link>
           </div>
@@ -84,7 +84,7 @@ export function HubLayout() {
         <div className="p-6 border-b border-stone-100 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <FafeLogo size="sm" showSubtitle={false} />
-            <span className="text-xs bg-[#E67E22]/10 font-bold px-2 py-0.5 rounded text-[#E67E22] uppercase tracking-wider">Hub</span>
+            <span className="text-xs bg-[#C8102E]/10 font-bold px-2 py-0.5 rounded text-[#00843D] uppercase tracking-wider">Hub</span>
           </Link>
           <button className="lg:hidden" onClick={() => setIsSidebarOpen(false)}>
             <X className="w-5 h-5 text-stone-500" />
@@ -92,11 +92,11 @@ export function HubLayout() {
         </div>
 
         <div className="p-4 flex items-center gap-3 border-b border-stone-100">
-          <div className="w-10 h-10 rounded-full bg-[#E67E22]/10 flex items-center justify-center text-[#E67E22] font-bold">
+          <div className="w-10 h-10 rounded-full bg-[#C8102E]/10 flex items-center justify-center text-[#00843D] font-bold">
             {profile?.firstName?.[0] || user.email?.[0]?.toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-[#6B3E1E] truncate">
+            <p className="text-sm font-bold text-[#063F3A] truncate">
               {profile?.firstName} {profile?.lastName}
             </p>
             <p className="text-xs text-stone-500 truncate">{user.email}</p>
@@ -113,11 +113,11 @@ export function HubLayout() {
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium ${
                   isActive 
-                    ? 'bg-[#E67E22]/10 text-[#E67E22]' 
-                    : 'text-stone-600 hover:bg-stone-50 hover:text-[#6B3E1E]'
+                    ? 'bg-[#C8102E]/10 text-[#00843D]' 
+                    : 'text-stone-600 hover:bg-stone-50 hover:text-[#063F3A]'
                 }`}
               >
-                <item.icon className={`w-5 h-5 ${isActive ? 'text-[#E67E22]' : 'text-stone-400'}`} />
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-[#00843D]' : 'text-stone-400'}`} />
                 {item.name}
               </Link>
             );
@@ -127,14 +127,14 @@ export function HubLayout() {
         <div className="p-4 border-t border-stone-100 space-y-1">
           <Link
             to="/hub/profil"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium text-stone-600 hover:bg-stone-50 hover:text-[#6B3E1E]"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium text-stone-600 hover:bg-stone-50 hover:text-[#063F3A]"
           >
             <UserCircle className="w-5 h-5 text-stone-400" />
             Mon Profil
           </Link>
           <Link
             to="/hub/adhesion"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium text-stone-600 hover:bg-stone-50 hover:text-[#6B3E1E]"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium text-stone-600 hover:bg-stone-50 hover:text-[#063F3A]"
           >
             <ShieldAlert className="w-5 h-5 text-stone-400" />
             Mon Adhésion
@@ -159,7 +159,7 @@ export function HubLayout() {
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex-1" />
-          <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors hidden sm:block">
+          <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#00843D] transition-colors hidden sm:block">
             &larr; Retour au site FAFE
           </Link>
         </header>

@@ -138,7 +138,7 @@ export function AdminMemberDetail() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-stone-500">
-        <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#E67E22]" />
+        <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#00843D]" />
         Chargement des informations du membre...
       </div>
     );
@@ -212,7 +212,7 @@ export function AdminMemberDetail() {
                 </div>
                 <div>
                   <dt className="text-xs font-bold uppercase text-stone-400">Numéro Membre FAFE</dt>
-                  <dd className="mt-1 font-mono font-bold text-[#6B3E1E]">
+                  <dd className="mt-1 font-mono font-bold text-[#063F3A]">
                     {member.membershipNumber || 'Aucun (en attente)'}
                   </dd>
                 </div>
@@ -332,11 +332,11 @@ export function AdminMemberDetail() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-bold text-stone-900">{entrepreneurProfile.company}</p>
-                    <p className="text-xs text-[#E67E22] font-bold uppercase">{entrepreneurProfile.sector}</p>
+                    <p className="text-xs text-[#00843D] font-bold uppercase">{entrepreneurProfile.sector}</p>
                     <p className="text-xs text-stone-500 mt-1">{entrepreneurProfile.position}</p>
                   </div>
                   <Link to={`/admin/entrepreneures/${entrepreneurProfile.id}`}>
-                    <Button variant="outline" size="sm" className="text-[#E67E22] border-[#E67E22]/30 hover:bg-orange-50">
+                    <Button variant="outline" size="sm" className="text-[#00843D] border-[#00843D]/30 hover:bg-orange-50">
                       Gérer la fiche annuaire <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
                     </Button>
                   </Link>
@@ -355,14 +355,14 @@ export function AdminMemberDetail() {
           <Card className="border-0 shadow-sm">
             <CardHeader className="border-b border-stone-100 bg-stone-50">
               <CardTitle className="text-stone-900 flex items-center gap-2 text-base">
-                <ShieldAlert className="w-5 h-5 text-[#E67E22]" /> Paramètres Système
+                <ShieldAlert className="w-5 h-5 text-[#00843D]" /> Paramètres Système
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div>
                 <label className="block text-xs font-bold uppercase text-stone-600 mb-2">Rôle système</label>
                 <select 
-                  className="w-full h-10 rounded-md border border-stone-200 bg-white px-3 text-sm focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full h-10 rounded-md border border-stone-200 bg-white px-3 text-sm focus:ring-[#E67E22] focus:border-[#00843D]"
                   value={role}
                   onChange={(e) => setRole(e.target.value as Role)}
                   disabled={id === currentUser?.id}
@@ -381,7 +381,7 @@ export function AdminMemberDetail() {
               <div>
                 <label className="block text-xs font-bold uppercase text-stone-600 mb-2">Statut du compte</label>
                 <select 
-                  className="w-full h-10 rounded-md border border-stone-200 bg-white px-3 text-sm focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full h-10 rounded-md border border-stone-200 bg-white px-3 text-sm focus:ring-[#E67E22] focus:border-[#00843D]"
                   value={status}
                   onChange={(e) => setStatus(e.target.value as UserStatus)}
                   disabled={id === currentUser?.id}
@@ -394,7 +394,7 @@ export function AdminMemberDetail() {
               </div>
 
               <Button 
-                className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white" 
+                className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white" 
                 onClick={handleUpdate}
                 disabled={saving || id === currentUser?.id}
               >

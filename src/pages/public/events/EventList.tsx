@@ -39,7 +39,7 @@ export function EventList() {
     <div className="bg-[#FAF9F6] min-h-screen pt-12 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-4">Événements</h1>
+          <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4">Événements</h1>
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
             Participez à nos forums, salons, webinaires et rencontres professionnelles.
           </p>
@@ -72,7 +72,7 @@ export function EventList() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center"><div className="animate-spin w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full"></div></div>
+          <div className="flex justify-center"><div className="animate-spin w-8 h-8 border-4 border-[#00843D] border-t-transparent rounded-full"></div></div>
         ) : filteredEvents.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-stone-100">
             <Calendar className="w-16 h-16 text-stone-300 mx-auto mb-4" />
@@ -88,24 +88,24 @@ export function EventList() {
                     {event.coverImage ? (
                       <FafeImage src={event.coverImage} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-[#E67E22]/10 text-[#E67E22]">
+                      <div className="w-full h-full flex items-center justify-center bg-[#C8102E]/10 text-[#00843D]">
                         <Calendar className="w-12 h-12" />
                       </div>
                     )}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#E67E22] shadow-sm">
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#00843D] shadow-sm">
                       {event.eventType}
                     </div>
                   </div>
                   <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2 group-hover:text-[#E67E22] transition-colors">{event.title}</h3>
+                    <h3 className="text-xl font-bold font-heading text-[#063F3A] mb-2 group-hover:text-[#00843D] transition-colors">{event.title}</h3>
                     <p className="text-stone-600 text-sm mb-4 line-clamp-2">{event.shortDescription}</p>
                     <div className="mt-auto space-y-2 text-sm text-stone-500">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-[#E67E22]" />
+                        <Calendar className="w-4 h-4 text-[#00843D]" />
                         <span>{new Date(event.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-[#E67E22]" />
+                        <MapPin className="w-4 h-4 text-[#00843D]" />
                         <span>{event.online ? 'En ligne' : `${event.city}, ${event.country}`}</span>
                       </div>
                     </div>

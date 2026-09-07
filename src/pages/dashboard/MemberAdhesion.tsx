@@ -199,7 +199,7 @@ export function MemberAdhesion() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-4" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-4" />
         <p className="text-stone-500">Chargement de votre dossier...</p>
       </div>
     );
@@ -208,7 +208,7 @@ export function MemberAdhesion() {
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl mx-auto">
       <div>
-        <h1 className="text-3xl font-bold font-heading text-[#6B3E1E]">Adhésion FAFE</h1>
+        <h1 className="text-3xl font-bold font-heading text-[#063F3A]">Adhésion FAFE</h1>
         <p className="text-stone-500 mt-2">Gérez votre statut de membre et accédez à tous les avantages du réseau.</p>
       </div>
       
@@ -223,7 +223,7 @@ export function MemberAdhesion() {
         <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-stone-200">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">Rejoignez le réseau Panafricain</h2>
+              <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">Rejoignez le réseau Panafricain</h2>
               <p className="text-stone-600 mb-6">
                 En devenant membre du FAFE, vous accédez à un écosystème exclusif d'entrepreneures, de formations, et d'opportunités d'affaires à travers tout le continent.
               </p>
@@ -254,17 +254,17 @@ export function MemberAdhesion() {
                   </Link>
                 </div>
               ) : (
-                <Button onClick={handleCreateRequest} className="w-full md:w-auto bg-[#E67E22] hover:bg-[#c96a1a] text-white px-8">
+                <Button onClick={handleCreateRequest} className="w-full md:w-auto bg-[#C8102E] hover:bg-[#A30D25] text-white px-8">
                   Soumettre ma demande d'adhésion
                 </Button>
               )}
             </div>
             
             <div className="bg-stone-50 p-6 rounded-xl border border-stone-200 text-center">
-              <div className="w-16 h-16 bg-[#E67E22]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-[#E67E22]" />
+              <div className="w-16 h-16 bg-[#C8102E]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-[#00843D]" />
               </div>
-              <h3 className="font-bold text-[#6B3E1E] mb-2">Processus d'adhésion</h3>
+              <h3 className="font-bold text-[#063F3A] mb-2">Processus d'adhésion</h3>
               <div className="space-y-4 text-sm text-stone-500 mt-6 text-left">
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold text-xs shrink-0">1</div>
@@ -292,7 +292,7 @@ export function MemberAdhesion() {
           {/* Status Column */}
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-              <h3 className="font-bold text-[#6B3E1E] mb-6 border-b border-stone-100 pb-2">Statut du dossier</h3>
+              <h3 className="font-bold text-[#063F3A] mb-6 border-b border-stone-100 pb-2">Statut du dossier</h3>
               
               {membership.status === 'PENDING' && (
                 <div className="flex flex-col items-center justify-center py-6 text-center text-stone-600">
@@ -351,7 +351,7 @@ export function MemberAdhesion() {
                 {membership.membershipNumber && (
                   <div className="flex justify-between">
                     <span>Numéro Membre</span>
-                    <span className="font-mono font-bold text-[#6B3E1E]">{membership.membershipNumber}</span>
+                    <span className="font-mono font-bold text-[#063F3A]">{membership.membershipNumber}</span>
                   </div>
                 )}
                 {membership.expiresAt && (
@@ -402,11 +402,11 @@ export function MemberAdhesion() {
 
                 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                  <h3 className="font-bold text-[#6B3E1E] mb-4">Paiement en ligne sécurisé</h3>
+                  <h3 className="font-bold text-[#063F3A] mb-4">Paiement en ligne sécurisé</h3>
                   <p className="text-sm text-stone-600 mb-4">
                     Réglez votre cotisation annuelle (50 000 FCFA) par carte bancaire ou Mobile Money via Flutterwave.
                   </p>
-                  <Button onClick={handleOnlinePayment} disabled={isUploading} className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+                  <Button onClick={handleOnlinePayment} disabled={isUploading} className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white">
                     {isUploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
                     Payer l'adhésion en ligne
                   </Button>
@@ -419,7 +419,7 @@ export function MemberAdhesion() {
                 </div>
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                  <h3 className="font-bold text-[#6B3E1E] mb-4">Transmettre la preuve de paiement bancaire</h3>
+                  <h3 className="font-bold text-[#063F3A] mb-4">Transmettre la preuve de paiement bancaire</h3>
                   <form onSubmit={handleSubmitPayment} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-1">Référence du virement (facultatif)</label>
@@ -435,7 +435,7 @@ export function MemberAdhesion() {
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-1">Justificatif de virement *</label>
                       <div 
-                        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${proofFile ? 'border-green-400 bg-green-50' : 'border-stone-300 hover:border-[#E67E22] bg-stone-50'}`}
+                        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${proofFile ? 'border-green-400 bg-green-50' : 'border-stone-300 hover:border-[#00843D] bg-stone-50'}`}
                         onClick={() => fileInputRef.current?.click()}
                       >
                         {proofFile ? (
@@ -464,7 +464,7 @@ export function MemberAdhesion() {
                     <Button 
                       type="submit" 
                       disabled={!proofFile || isUploading}
-                      className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white"
+                      className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white"
                     >
                       {isUploading ? (
                         <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Envoi en cours...</>
@@ -478,7 +478,7 @@ export function MemberAdhesion() {
             )}
 
             {membership.status === 'ACTIVE' && (
-              <div className="bg-gradient-to-br from-[#6B3E1E] to-[#4A2A14] p-8 rounded-2xl text-white shadow-xl relative overflow-hidden">
+              <div className="bg-gradient-to-br from-black/90 to-[#4A2A14] p-8 rounded-2xl text-white shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37] rounded-full mix-blend-overlay opacity-20 -mr-10 -mt-10"></div>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-8">
@@ -486,11 +486,11 @@ export function MemberAdhesion() {
                       <h3 className="text-xl font-bold font-heading mb-1">Carte Membre</h3>
                       <p className="text-[#D4AF37] text-sm font-bold tracking-widest uppercase">FAFE Network</p>
                     </div>
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#6B3E1E] font-bold text-xl overflow-hidden shadow-inner">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#063F3A] font-bold text-xl overflow-hidden shadow-inner">
                       {userProfile?.photoURL ? (
                          <FafeImage src={userProfile.photoURL} alt="Photo" className="w-full h-full object-cover" />
                       ) : (
-                         <span className="text-[#6B3E1E]">F</span>
+                         <span className="text-[#063F3A]">F</span>
                       )}
                     </div>
                   </div>
@@ -537,8 +537,8 @@ export function MemberAdhesion() {
             {/* Display message for other statuses where no action is needed */}
             {['PAYMENT_SUBMITTED', 'UNDER_REVIEW'].includes(membership.status) && (
               <div className="bg-stone-50 p-6 rounded-2xl border border-stone-200">
-                <h3 className="font-bold text-[#6B3E1E] mb-2 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-[#E67E22]" /> Prochaine étape
+                <h3 className="font-bold text-[#063F3A] mb-2 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-[#00843D]" /> Prochaine étape
                 </h3>
                 <p className="text-sm text-stone-600">
                   Aucune action de votre part n'est requise. Vous recevrez une notification par email dès que le statut de votre adhésion sera mis à jour par l'administration FAFE.

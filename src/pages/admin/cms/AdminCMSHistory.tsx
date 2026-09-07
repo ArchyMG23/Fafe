@@ -55,7 +55,7 @@ export function AdminCMSHistory() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold font-heading text-[#6B3E1E]">
+          <h1 className="text-xl md:text-2xl font-bold font-heading text-[#063F3A]">
             Historique & Audit des Modifications CMS
           </h1>
           <p className="text-xs text-stone-500 mt-1">
@@ -85,7 +85,7 @@ export function AdminCMSHistory() {
       {/* Logs Timeline */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 text-stone-400">
-          <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-2" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-2" />
           <p className="text-sm">Chargement du journal d'audit...</p>
         </div>
       ) : logs.length === 0 ? (
@@ -109,11 +109,11 @@ export function AdminCMSHistory() {
 
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="font-bold text-sm text-[#6B3E1E]">
+                      <span className="font-bold text-sm text-[#063F3A]">
                         {log.adminName || log.adminEmail || 'Administrateur'}
                       </span>
                       {getActionBadge(log.action)}
-                      <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-[#E67E22]/10 text-[#E67E22]">
+                      <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-[#C8102E]/10 text-[#00843D]">
                         Page : {log.page}
                       </span>
                     </div>

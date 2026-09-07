@@ -52,10 +52,10 @@ export function AdminContentDashboard() {
       <div className="flex items-start justify-between mb-4">
         <div className="p-3 bg-stone-100 rounded-lg text-stone-600">{icon}</div>
       </div>
-      <h3 className="text-3xl font-bold text-[#6B3E1E] mb-1">{value}</h3>
+      <h3 className="text-3xl font-bold text-[#063F3A] mb-1">{value}</h3>
       <p className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">{title}</p>
       <div className="mt-auto">
-        <Link to={link} className="text-sm font-bold text-[#E67E22] hover:text-[#c96a1a] flex items-center gap-1">
+        <Link to={link} className="text-sm font-bold text-[#00843D] hover:text-[#c96a1a] flex items-center gap-1">
           {linkText} <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
@@ -71,7 +71,7 @@ export function AdminContentDashboard() {
 
       {loading ? (
         <div className="flex justify-center p-12">
-          <div className="w-8 h-8 border-4 border-[#E67E22] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#00843D] border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -107,9 +107,9 @@ export function AdminContentDashboard() {
       )}
 
       <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
-        <h2 className="text-lg font-bold text-[#6B3E1E] mb-4">Accès Rapide</h2>
+        <h2 className="text-lg font-bold text-[#063F3A] mb-4">Accès Rapide</h2>
         <div className="flex flex-wrap gap-4">
-          <Link to="/admin/contenus/articles/nouveau" className="px-4 py-2 bg-[#E67E22] text-white rounded-md text-sm font-bold hover:bg-[#c96a1a] transition-colors">
+          <Link to="/admin/contenus/articles/nouveau" className="px-4 py-2 bg-[#C8102E] text-white rounded-md text-sm font-bold hover:bg-[#A30D25] transition-colors">
             Rédiger un article
           </Link>
           <Link to="/admin/contenus/categories" className="px-4 py-2 border border-stone-200 text-stone-700 rounded-md text-sm font-bold hover:bg-stone-50 transition-colors">

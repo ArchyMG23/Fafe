@@ -54,10 +54,10 @@ export function PublicEntrepreneurs() {
     <div className="bg-[#FAF9F6] min-h-screen">
       {/* Hero */}
       <section className="pt-24 pb-20 lg:pt-32 lg:pb-32 bg-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#E67E22] opacity-5 rounded-full blur-[100px] -mt-40 -mr-40" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C8102E] opacity-5 rounded-full blur-[100px] -mt-40 -mr-40" />
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-4xl">
           <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#6B3E1E] leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-[#063F3A] leading-tight mb-6">
               {language === 'fr' 
                 ? 'Les Visages de la Réussite Africaine' 
                 : 'The Faces of African Success'}
@@ -69,7 +69,7 @@ export function PublicEntrepreneurs() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/hub/annuaire">
-                <Button size="lg" className="bg-[#E67E22] hover:bg-[#c96a1a] text-white rounded-full px-8 py-6 font-bold shadow-lg">
+                <Button size="lg" className="bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-8 py-6 font-bold shadow-lg">
                   {language === 'fr' ? 'Accéder à l\'Annuaire Complet (Hub)' : 'Access the Full Directory (Hub)'}
                 </Button>
               </Link>
@@ -82,7 +82,7 @@ export function PublicEntrepreneurs() {
       <section className="py-24 bg-[#FAF9F6]">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="mb-16 text-center">
-            <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">
+            <h2 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">
               {language === 'fr' ? 'Entrepreneures à la une' : 'Featured Entrepreneurs'}
             </h2>
             <div className="w-20 h-1 bg-[#D4AF37] mx-auto rounded-full"></div>
@@ -115,7 +115,7 @@ export function PublicEntrepreneurs() {
                     <h3 className="text-2xl font-bold font-heading text-white mb-1">
                       {ent.firstName} {ent.lastName}
                     </h3>
-                    <p className="text-white/80 font-medium">
+                    <p className="text-stone-600 font-medium">
                       {ent.role}, {ent.company}
                     </p>
                   </div>
@@ -125,7 +125,7 @@ export function PublicEntrepreneurs() {
                     "{language === 'fr' ? ent.storyFR : ent.storyEN}"
                   </p>
                   <Link to="/hub/annuaire" className="mt-auto">
-                    <Button variant="outline" className="w-full border-stone-200 text-[#6B3E1E] hover:border-[#E67E22] hover:text-[#E67E22] group-hover:bg-[#E67E22] group-hover:text-white transition-all">
+                    <Button variant="outline" className="w-full border-stone-200 text-[#063F3A] hover:border-[#00843D] hover:text-[#00843D] group-hover:bg-[#C8102E] group-hover:text-white transition-all">
                       {language === 'fr' ? 'Découvrir son profil complet' : 'View full profile'}
                     </Button>
                   </Link>
@@ -137,26 +137,26 @@ export function PublicEntrepreneurs() {
       </section>
 
       {/* Stats/Impact */}
-      <section className="py-24 bg-[#6B3E1E] text-white text-center">
+      <section className="py-24 bg-[#FAF9F6] text-[#063F3A] text-center border-t border-stone-100">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
           <h2 className="text-3xl font-bold font-heading mb-12">
             {language === 'fr' ? 'Un réseau en constante croissance' : 'A constantly growing network'}
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-6 border border-white/10 rounded-2xl bg-white/5">
-              <Users className="w-10 h-10 text-[#E67E22] mx-auto mb-4" />
+            <div className="p-6 border border-stone-200 rounded-2xl bg-white shadow-sm">
+              <Users className="w-10 h-10 text-[#00843D] mx-auto mb-4" />
               <div className="text-4xl font-bold font-heading text-[#D4AF37] mb-2">+5 000</div>
-              <p className="text-white/80">{language === 'fr' ? 'Membres actifs' : 'Active members'}</p>
+              <p className="text-stone-600">{language === 'fr' ? 'Membres actifs' : 'Active members'}</p>
             </div>
-            <div className="p-6 border border-white/10 rounded-2xl bg-white/5">
-              <Globe className="w-10 h-10 text-[#E67E22] mx-auto mb-4" />
+            <div className="p-6 border border-stone-200 rounded-2xl bg-white shadow-sm">
+              <Globe className="w-10 h-10 text-[#00843D] mx-auto mb-4" />
               <div className="text-4xl font-bold font-heading text-[#D4AF37] mb-2">54</div>
-              <p className="text-white/80">{language === 'fr' ? 'Pays représentés' : 'Countries represented'}</p>
+              <p className="text-stone-600">{language === 'fr' ? 'Pays représentés' : 'Countries represented'}</p>
             </div>
-            <div className="p-6 border border-white/10 rounded-2xl bg-white/5">
-              <TrendingUp className="w-10 h-10 text-[#E67E22] mx-auto mb-4" />
+            <div className="p-6 border border-stone-200 rounded-2xl bg-white shadow-sm">
+              <TrendingUp className="w-10 h-10 text-[#00843D] mx-auto mb-4" />
               <div className="text-4xl font-bold font-heading text-[#D4AF37] mb-2">+120M</div>
-              <p className="text-white/80">{language === 'fr' ? 'Chiffre d\'affaires cumulé ($)' : 'Cumulative revenue ($)'}</p>
+              <p className="text-stone-600">{language === 'fr' ? 'Chiffre d\'affaires cumulé ($)' : 'Cumulative revenue ($)'}</p>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ export function PublicEntrepreneurs() {
       {/* CTA to Hub */}
       <section className="py-24 bg-white text-center">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-3xl">
-          <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-6">
+          <h2 className="text-3xl font-bold font-heading text-[#063F3A] mb-6">
             {language === 'fr' 
               ? 'Rejoignez le mouvement ou trouvez votre partenaire d\'affaires' 
               : 'Join the movement or find your business partner'}
@@ -177,12 +177,12 @@ export function PublicEntrepreneurs() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link to="/hub/annuaire">
-              <Button size="lg" className="bg-[#6B3E1E] hover:bg-[#522d14] text-white rounded-full px-8 py-6 font-bold shadow-md">
+              <Button size="lg" className="bg-[#00843D] hover:bg-[#006830] text-white rounded-full px-8 py-6 font-bold shadow-md">
                 {language === 'fr' ? 'Accéder à l\'Annuaire (FAFE Hub)' : 'Access the Directory (FAFE Hub)'}
               </Button>
             </Link>
             <Link to="/rejoindre">
-              <Button size="lg" variant="outline" className="border-stone-200 text-[#6B3E1E] hover:bg-stone-50 rounded-full px-8 py-6 font-bold">
+              <Button size="lg" variant="outline" className="border-stone-200 text-[#063F3A] hover:bg-stone-50 rounded-full px-8 py-6 font-bold">
                 {language === 'fr' ? 'Devenir membre' : 'Become a member'}
               </Button>
             </Link>

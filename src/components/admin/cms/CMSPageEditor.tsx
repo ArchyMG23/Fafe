@@ -145,7 +145,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
   if (loading || !draftData) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-stone-400">
-        <Loader2 className="w-10 h-10 animate-spin text-[#E67E22] mb-3" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#00843D] mb-3" />
         <p className="text-sm font-medium">Chargement des données du CMS...</p>
       </div>
     );
@@ -160,7 +160,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
         {/* Page Identity & Meta */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-xl md:text-2xl font-bold font-heading text-[#6B3E1E]">
+            <h1 className="text-xl md:text-2xl font-bold font-heading text-[#063F3A]">
               {pageTitle}
             </h1>
             <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
@@ -202,7 +202,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
               onClick={() => setActiveLang('fr')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeLang === 'fr' 
-                  ? 'bg-white text-[#E67E22] shadow-sm' 
+                  ? 'bg-white text-[#00843D] shadow-sm' 
                   : 'text-stone-500 hover:text-stone-800'
               }`}
             >
@@ -213,7 +213,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
               onClick={() => setActiveLang('en')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeLang === 'en' 
-                  ? 'bg-white text-[#E67E22] shadow-sm' 
+                  ? 'bg-white text-[#00843D] shadow-sm' 
                   : 'text-stone-500 hover:text-stone-800'
               }`}
             >
@@ -255,9 +255,9 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             variant="outline"
             size="sm"
             onClick={() => setPreviewOpen(true)}
-            className="text-[#6B3E1E] border-stone-300 hover:bg-stone-50 text-xs h-9"
+            className="text-[#063F3A] border-stone-300 hover:bg-stone-50 text-xs h-9"
           >
-            <Eye className="w-3.5 h-3.5 mr-1.5 text-[#E67E22]" />
+            <Eye className="w-3.5 h-3.5 mr-1.5 text-[#00843D]" />
             Prévisualiser
           </Button>
 
@@ -267,7 +267,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             size="sm"
             onClick={handlePublish}
             disabled={saving || publishing}
-            className="bg-[#E67E22] hover:bg-[#c96a1a] text-white text-xs font-bold h-9 shadow-md"
+            className="bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs font-bold h-9 shadow-md"
           >
             {publishing ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />}
             Publier sur le site

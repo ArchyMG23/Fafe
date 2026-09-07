@@ -17,15 +17,15 @@ export function EventRegistrationSuccess() {
           <CheckCircle2 className="w-10 h-10" />
         </div>
         
-        <h1 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">Inscription confirmée !</h1>
+        <h1 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">Inscription confirmée !</h1>
         
         <p className="text-stone-600 mb-8 text-lg">
-          Merci pour votre inscription à <br/><span className="font-bold text-[#E67E22]">{state.eventTitle}</span>
+          Merci pour votre inscription à <br/><span className="font-bold text-[#00843D]">{state.eventTitle}</span>
         </p>
         
         <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-stone-200 mb-8">
           <p className="text-sm text-stone-500 font-medium mb-1">Votre référence d'inscription</p>
-          <p className="text-2xl font-bold font-mono text-[#6B3E1E] tracking-wider">{state.reference}</p>
+          <p className="text-2xl font-bold font-mono text-[#063F3A] tracking-wider">{state.reference}</p>
         </div>
 
         <p className="text-sm text-stone-500 mb-8">
@@ -33,11 +33,11 @@ export function EventRegistrationSuccess() {
         </p>
 
         <div className="space-y-4">
-          <Button variant="outline" className="w-full flex items-center justify-center gap-2 border-[#E67E22] text-[#E67E22] hover:bg-[#E67E22]/5">
+          <Button variant="outline" className="w-full flex items-center justify-center gap-2 border-[#00843D] text-[#00843D] hover:bg-[#C8102E]/5">
             <Calendar className="w-4 h-4" /> Ajouter à mon agenda
           </Button>
           <Link to="/hub/dashboard/evenements" className="block">
-            <Button className="w-full bg-[#6B3E1E] hover:bg-[#522d14] text-white">
+            <Button className="w-full bg-[#00843D] hover:bg-[#006830] text-white">
               Voir mes billets
             </Button>
           </Link>

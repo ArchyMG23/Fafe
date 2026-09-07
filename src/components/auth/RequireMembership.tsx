@@ -19,7 +19,7 @@ export function RequireMembership({ children }: { children: React.ReactNode }) {
       title: 'Accès Réservé',
       description: 'Cette fonctionnalité est réservée aux membres FAFE. Pour accéder à l\'annuaire, au réseau et aux opportunités, veuillez valider votre adhésion.',
       buttonText: 'Devenir membre',
-      icon: <ShieldAlert className="w-10 h-10 text-[#E67E22]" />
+      icon: <ShieldAlert className="w-10 h-10 text-[#00843D]" />
     };
 
     if (status === 'AWAITING_PAYMENT') {
@@ -61,12 +61,12 @@ export function RequireMembership({ children }: { children: React.ReactNode }) {
 
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center border border-[#6B3E1E]/10">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center border border-[#063F3A]/10">
           <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
             {content.icon}
           </div>
           
-          <h2 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">
+          <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">
             {content.title}
           </h2>
           
@@ -76,7 +76,7 @@ export function RequireMembership({ children }: { children: React.ReactNode }) {
           
           <div className="flex flex-col gap-3">
             <Link to="/hub/adhesion">
-              <Button className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 rounded-xl font-bold">
+              <Button className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 rounded-xl font-bold">
                 {content.buttonText}
               </Button>
             </Link>

@@ -198,7 +198,7 @@ export function AdminEntrepreneurDetail() {
                   <Button
                     size="sm"
                     variant={profile.isFeatured ? 'default' : 'outline'}
-                    className={`text-xs px-2.5 py-1 h-7 ${profile.isFeatured ? 'bg-[#E67E22] text-white hover:bg-[#c96a1a]' : 'border-stone-300 text-stone-600'}`}
+                    className={`text-xs px-2.5 py-1 h-7 ${profile.isFeatured ? 'bg-[#C8102E] text-white hover:bg-[#A30D25]' : 'border-stone-300 text-stone-600'}`}
                     onClick={async () => {
                       if (!id || !profile) return;
                       setSaving(true);

@@ -16,10 +16,10 @@ export function MarketplaceCart() {
         <div className="w-24 h-24 bg-stone-200 rounded-full flex items-center justify-center mb-6">
           <ShoppingBag className="w-10 h-10 text-stone-400" />
         </div>
-        <h2 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">Votre panier est vide</h2>
+        <h2 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">Votre panier est vide</h2>
         <p className="text-stone-500 mb-8 max-w-md text-center">Découvrez nos produits exclusifs et soutenez l'entrepreneuriat féminin.</p>
         <Link to="/marketplace">
-          <Button className="bg-[#E67E22] hover:bg-[#c96a1a] text-white px-8 py-3 rounded-full shadow-md font-bold text-lg">
+          <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white px-8 py-3 rounded-full shadow-md font-bold text-lg">
             Visiter la boutique
           </Button>
         </Link>
@@ -31,8 +31,8 @@ export function MarketplaceCart() {
     <div className="min-h-screen bg-stone-50 py-12">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold font-heading text-[#6B3E1E]">Votre Panier</h1>
-          <Link to="/marketplace" className="hidden sm:inline-flex items-center text-sm font-medium text-stone-500 hover:text-[#E67E22] transition-colors">
+          <h1 className="text-3xl sm:text-4xl font-bold font-heading text-[#063F3A]">Votre Panier</h1>
+          <Link to="/marketplace" className="hidden sm:inline-flex items-center text-sm font-medium text-stone-500 hover:text-[#00843D] transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" /> Continuer vos achats
           </Link>
         </div>
@@ -55,9 +55,9 @@ export function MarketplaceCart() {
 
                 <div className="flex-grow flex flex-col">
                   <Link to={`/marketplace/produit/${item.productId}`}>
-                    <h3 className="text-lg font-bold text-stone-800 hover:text-[#E67E22] transition-colors mb-1 pr-8">{item.name}</h3>
+                    <h3 className="text-lg font-bold text-stone-800 hover:text-[#00843D] transition-colors mb-1 pr-8">{item.name}</h3>
                   </Link>
-                  <p className="font-bold text-[#6B3E1E] mb-4">{item.price.toLocaleString()} XAF <span className="text-xs text-stone-400 font-normal">/ unité</span></p>
+                  <p className="font-bold text-[#063F3A] mb-4">{item.price.toLocaleString()} XAF <span className="text-xs text-stone-400 font-normal">/ unité</span></p>
                   
                   <div className="flex items-center gap-6 mt-auto">
                     <div className="flex items-center bg-stone-50 border border-stone-200 rounded-lg overflow-hidden h-9">
@@ -114,13 +114,13 @@ export function MarketplaceCart() {
               <div className="border-t border-stone-100 pt-6 mb-8">
                 <div className="flex justify-between items-end">
                   <span className="font-bold text-stone-800">Total TTC</span>
-                  <span className="text-2xl font-bold text-[#E67E22]">{total.toLocaleString()} XAF</span>
+                  <span className="text-2xl font-bold text-[#00843D]">{total.toLocaleString()} XAF</span>
                 </div>
               </div>
 
               <Button 
                 onClick={() => navigate('/marketplace/commande')}
-                className="w-full bg-[#6B3E1E] hover:bg-[#532f17] text-white py-4 rounded-xl font-bold text-lg shadow-md flex items-center justify-center group"
+                className="w-full bg-[#00843D] hover:bg-[#006830] text-white py-4 rounded-xl font-bold text-lg shadow-md flex items-center justify-center group"
               >
                 Passer la commande
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

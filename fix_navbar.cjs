@@ -1,65 +1,32 @@
 const fs = require('fs');
-let content = fs.readFileSync('src/components/layout/Navbar.tsx', 'utf8');
+let code = fs.readFileSync('src/components/layout/Navbar.tsx', 'utf8');
 
-// Replace navLinks definition
-content = content.replace(
-  /const navLinks = \[\s+.*?\];/s,
-  `const navLinks = [
-    { name: 'Accueil', path: '/' },
-    { name: 'À propos', path: '/a-propos' },
-    { name: 'Nos actions', path: '/actions' },
-    { name: 'Entrepreneures', path: '/entrepreneures' },
-    { name: 'Actualités', path: '/actualites' },
-    { name: 'Événements', path: '/evenements' },
-  ];`
+// The header class currently uses standard sticky with white background.
+// We want it to be `fixed w-full z-50` and float gracefully.
+// Original: 
+// className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-stone-100' : 'bg-white border-b border-stone-100/70'}`}
+
+code = code.replace(
+  /className=\{`sticky top-0 z-50 w-full transition-all duration-300 \$\{[\s\S]*?\}`\}/,
+  `className={\`fixed top-0 z-50 w-full transition-all duration-500 \${isScrolled ? 'bg-[#063F3A]/85 backdrop-blur-md shadow-md border-b border-white/10 py-1' : 'bg-transparent py-3'}\`}`
 );
 
-// Remove activeDropdown and handlers
-content = content.replace(/const \[activeDropdown, setActiveDropdown\] = useState<string \| null>\(null\);\s*/, '');
-content = content.replace(/setActiveDropdown\(null\);\s*/g, '');
-content = content.replace(/const handleDropdownEnter.*?};\s*/s, '');
-content = content.replace(/const handleDropdownLeave.*?};\s*/s, '');
+// Switch logo to light mode ALWAYS if we are using transparent / deep green bg?
+// Actually if it's transparent, it's over the hero (which is an image). The hero text is light. So logo should be light.
+// If scrolled, the background is deep green (#063F3A). So logo should be light!
+code = code.replace(/<FafeLogo size="sm" showSubtitle=\{false\}/g, '<FafeLogo variant="light" size="sm" showSubtitle={false}');
+code = code.replace(/<FafeLogo size=\{isScrolled \? 'sm' : 'md'\}/g, '<FafeLogo variant="light" size={isScrolled ? "sm" : "md"}');
 
-// Clean up desktop nav map
-content = content.replace(
-  /\{navLinks\.map\(\(link\) => \(\s*<div\s*key=\{link\.path\}\s*className="relative h-full flex items-center".*?<\/div>\s*\)\)\}/s,
-  `{navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={\`flex items-center gap-1 text-sm font-semibold transition-all hover:text-[#E67E22] \${
-                isActive(link.path) ? 'text-[#E67E22] relative after:absolute after:-bottom-2 after:left-0 after:w-full after:h-0.5 after:bg-[#E67E22] after:rounded-full' : 'text-[#6B3E1E]'
-              }\`}
-            >
-              {link.name}
-            </Link>
-          ))}`
-);
+// Link colors in desktop nav need to be white instead of #063F3A
+// original: isActive(...) ? 'text-[#063F3A]' : 'text-stone-600 hover:text-[#063F3A]'
+code = code.replace(/isActive\((.*?)\) \? 'text-\[#063F3A\]' : 'text-stone-600 hover:text-\[#063F3A\]'/g, 'isActive($1) ? "text-white" : "text-white/70 hover:text-white"');
 
-// Clean up mobile nav map
-content = content.replace(
-  /\{navLinks\.map\(\(link\) => \(\s*<div key=\{link\.path\} className="flex flex-col">.*?<\/div>\s*\)\)\}/s,
-  `{navLinks.map((link) => (
-                <Link 
-                  key={link.path}
-                  to={link.path} 
-                  className={\`flex items-center justify-between p-3 rounded-lg text-lg font-medium transition-colors \${
-                    isActive(link.path) ? 'bg-orange-50 text-[#E67E22]' : 'text-[#6B3E1E] hover:bg-stone-50'
-                  }\`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}`
-);
+// We also need to fix the arrow icons and other dark elements
+// Search icon button: 
+// <Search className="w-5 h-5 text-stone-500 hover:text-[#063F3A] transition-colors" />
+code = code.replace(/text-stone-500 hover:text-\[#063F3A\]/g, 'text-white/80 hover:text-white');
+// Same for the mobile icons (ShoppingCart, Menu)
+code = code.replace(/text-\[#063F3A\] hover:text-\[#00843D\]/g, 'text-white hover:text-[#FCD116]');
+code = code.replace(/text-\[#063F3A\]/g, 'text-white');
 
-// Update header class to make it slightly smaller on scroll
-content = content.replace(
-  /className=\{"fixed w-full z-50 transition-all duration-300 \$\{[\s\S]*?\}"\}/,
-  `className={\`fixed w-full z-50 transition-all duration-300 \${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-2' : 'bg-white py-4'}\`}`
-);
-
-// We need to handle the case where it might be wrapped in standard quotes or template literals.
-// Let's just do a manual string replace for the header if regex is tricky.
-
-fs.writeFileSync('src/components/layout/Navbar.tsx', content);
+fs.writeFileSync('src/components/layout/Navbar.tsx', code);

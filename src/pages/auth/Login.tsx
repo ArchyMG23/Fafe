@@ -74,13 +74,13 @@ export function Login() {
     <div className="bg-[#FAF9F6] min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold font-heading text-[#6B3E1E]">Bon retour !</h2>
-          <p className="mt-2 text-[#6B3E1E]/80">
+          <h2 className="text-3xl font-bold font-heading text-[#063F3A]">Bon retour !</h2>
+          <p className="mt-2 text-[#063F3A]/80">
             Connectez-vous à votre espace membre.
           </p>
         </div>
         
-        <Card className="border border-[#6B3E1E]/5 shadow-xl rounded-2xl bg-white">
+        <Card className="border border-[#063F3A]/5 shadow-xl rounded-2xl bg-white">
           <CardContent className="p-8">
             <Button 
               type="button"
@@ -114,24 +114,24 @@ export function Login() {
               )}
               
               <div>
-                <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Adresse e-mail</label>
+                <label className="block text-sm font-medium text-[#063F3A] mb-1">Adresse e-mail</label>
                 <Input 
                   type="email" 
                   required 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
-                  className="focus:border-[#E67E22]" 
+                  className="focus:border-[#00843D]" 
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#6B3E1E] mb-1">Mot de passe</label>
+                <label className="block text-sm font-medium text-[#063F3A] mb-1">Mot de passe</label>
                 <Input 
                   type="password" 
                   required 
                   value={password} 
                   onChange={(e) => setPassword(e.target.value)} 
-                  className="focus:border-[#E67E22]" 
+                  className="focus:border-[#00843D]" 
                 />
               </div>
               
@@ -141,7 +141,7 @@ export function Login() {
                     id="remember-me"
                     name="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-[#E67E22] focus:ring-[#E67E22] border-stone-300 rounded"
+                    className="h-4 w-4 text-[#00843D] focus:ring-[#E67E22] border-stone-300 rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-stone-600">
                     Se souvenir de moi
@@ -149,20 +149,20 @@ export function Login() {
                 </div>
 
                 <div className="text-sm">
-                  <Link to="/hub/mot-de-passe-oublie" className="font-bold text-[#E67E22] hover:underline">
+                  <Link to="/hub/mot-de-passe-oublie" className="font-bold text-[#00843D] hover:underline">
                     Mot de passe oublié ?
                   </Link>
                 </div>
               </div>
               
-              <Button type="submit" className="w-full bg-[#E67E22] hover:bg-[#c96a1a] text-white py-6 rounded-xl font-bold shadow-md" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-[#C8102E] hover:bg-[#A30D25] text-white py-6 rounded-xl font-bold shadow-md" disabled={isLoading}>
                 {isLoading ? 'Connexion en cours...' : 'Se connecter'}
               </Button>
             </form>
             
-            <div className="mt-6 text-center text-sm text-[#6B3E1E]/70 border-t border-[#6B3E1E]/10 pt-6">
+            <div className="mt-6 text-center text-sm text-[#063F3A]/70 border-t border-[#063F3A]/10 pt-6">
               Pas encore membre ?{' '}
-              <Link to="/hub/inscription" className="font-bold text-[#E67E22] hover:underline">
+              <Link to="/hub/inscription" className="font-bold text-[#00843D] hover:underline">
                 S'inscrire
               </Link>
             </div>

@@ -48,11 +48,11 @@ export function AdminEntrepreneurs() {
             {profile.professionalPhoto ? (
               <FafeImage src={profile.professionalPhoto} alt="" className="w-full h-full object-cover" />
             ) : (
-              <span className="font-bold text-[#6B3E1E]">{profile.firstName.charAt(0)}</span>
+              <span className="font-bold text-[#063F3A]">{profile.firstName.charAt(0)}</span>
             )}
           </div>
           <div>
-            <p className="font-bold text-[#6B3E1E]">{profile.firstName} {profile.lastName}</p>
+            <p className="font-bold text-[#063F3A]">{profile.firstName} {profile.lastName}</p>
             <p className="text-xs text-stone-500 truncate max-w-[150px]">{profile.ownerId}</p>
           </div>
         </div>
@@ -63,7 +63,7 @@ export function AdminEntrepreneurs() {
       accessor: (profile) => (
         <div>
           <p className="font-medium text-stone-900">{profile.company}</p>
-          <p className="text-xs text-[#E67E22] font-bold uppercase tracking-wider">{profile.sector}</p>
+          <p className="text-xs text-[#00843D] font-bold uppercase tracking-wider">{profile.sector}</p>
         </div>
       )
     },
@@ -121,7 +121,7 @@ export function AdminEntrepreneurs() {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="text-[#E67E22] hover:text-[#c96a1a] hover:bg-orange-50"
+          className="text-[#00843D] hover:text-[#c96a1a] hover:bg-orange-50"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/admin/entrepreneures/${profile.id}`);

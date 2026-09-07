@@ -180,7 +180,7 @@ export function AdminMarketplaceProducts() {
               Générer Données Démo
             </Button>
           )}
-          <Button onClick={() => { setEditingProduct({ name: '', price: 0, stock: 0, status: 'DRAFT', currency: 'XAF', shortDescription: '', fullDescription: '' }); setIsEditing(true); }} className="bg-[#6B3E1E] text-white">
+          <Button onClick={() => { setEditingProduct({ name: '', price: 0, stock: 0, status: 'DRAFT', currency: 'XAF', shortDescription: '', fullDescription: '' }); setIsEditing(true); }} className="bg-[#00843D] text-white">
             <Plus className="w-4 h-4 mr-2" />
             Nouveau Produit
           </Button>
@@ -199,7 +199,7 @@ export function AdminMarketplaceProducts() {
                   required
                   value={editingProduct?.name || ''}
                   onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 />
               </div>
               <div>
@@ -208,7 +208,7 @@ export function AdminMarketplaceProducts() {
                   required
                   value={editingProduct?.categoryId || ''}
                   onChange={e => setEditingProduct({ ...editingProduct, categoryId: e.target.value })}
-                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 >
                   <option value="">Sélectionner...</option>
                   {categories.map(c => (
@@ -226,7 +226,7 @@ export function AdminMarketplaceProducts() {
                   required
                   value={editingProduct?.price || ''}
                   onChange={e => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })}
-                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 />
               </div>
               <div>
@@ -235,7 +235,7 @@ export function AdminMarketplaceProducts() {
                   type="number"
                   value={editingProduct?.promotionalPrice || ''}
                   onChange={e => setEditingProduct({ ...editingProduct, promotionalPrice: e.target.value ? Number(e.target.value) : undefined })}
-                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 />
               </div>
               <div>
@@ -245,7 +245,7 @@ export function AdminMarketplaceProducts() {
                   required
                   value={editingProduct?.stock || ''}
                   onChange={e => setEditingProduct({ ...editingProduct, stock: Number(e.target.value) })}
-                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 />
               </div>
             </div>
@@ -256,7 +256,7 @@ export function AdminMarketplaceProducts() {
                 <select
                   value={editingProduct?.status || 'DRAFT'}
                   onChange={e => setEditingProduct({ ...editingProduct, status: e.target.value as Product['status'] })}
-                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                  className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 >
                   <option value="DRAFT">Brouillon</option>
                   <option value="PUBLISHED">Publié</option>
@@ -271,7 +271,7 @@ export function AdminMarketplaceProducts() {
                     type="checkbox"
                     checked={editingProduct?.isFeatured || false}
                     onChange={e => setEditingProduct({ ...editingProduct, isFeatured: e.target.checked })}
-                    className="rounded border-stone-300 text-[#E67E22] focus:ring-[#E67E22]"
+                    className="rounded border-stone-300 text-[#00843D] focus:ring-[#E67E22]"
                   />
                   <span className="text-sm font-medium">Produit en vedette (Accueil)</span>
                 </label>
@@ -285,7 +285,7 @@ export function AdminMarketplaceProducts() {
                 required
                 value={editingProduct?.shortDescription || ''}
                 onChange={e => setEditingProduct({ ...editingProduct, shortDescription: e.target.value })}
-                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
               />
             </div>
 
@@ -295,14 +295,14 @@ export function AdminMarketplaceProducts() {
                 required
                 value={editingProduct?.fullDescription || ''}
                 onChange={e => setEditingProduct({ ...editingProduct, fullDescription: e.target.value })}
-                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#E67E22]"
+                className="w-full p-2 border border-stone-200 rounded-lg focus:ring-[#E67E22] focus:border-[#00843D]"
                 rows={4}
               />
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t border-stone-100">
               <Button variant="outline" type="button" onClick={() => setIsEditing(false)}>Annuler</Button>
-              <Button type="submit" disabled={loading} className="bg-[#E67E22] text-white">
+              <Button type="submit" disabled={loading} className="bg-[#C8102E] text-white">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Enregistrer'}
               </Button>
             </div>
@@ -331,7 +331,7 @@ export function AdminMarketplaceProducts() {
                 <td className="px-6 py-4 font-medium">
                   {prod.promotionalPrice ? (
                     <div>
-                      <span className="text-[#E67E22]">{prod.promotionalPrice} {prod.currency}</span>
+                      <span className="text-[#00843D]">{prod.promotionalPrice} {prod.currency}</span>
                       <span className="text-xs text-stone-400 line-through ml-1">{prod.price}</span>
                     </div>
                   ) : (
@@ -353,7 +353,7 @@ export function AdminMarketplaceProducts() {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => { setEditingProduct(prod); setIsEditing(true); }} className="p-2 text-stone-400 hover:text-[#6B3E1E] transition-colors rounded-lg hover:bg-stone-100">
+                    <button onClick={() => { setEditingProduct(prod); setIsEditing(true); }} className="p-2 text-stone-400 hover:text-[#063F3A] transition-colors rounded-lg hover:bg-stone-100">
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button onClick={() => handleDelete(prod.id)} className="p-2 text-stone-400 hover:text-red-500 transition-colors rounded-lg hover:bg-stone-100">

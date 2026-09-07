@@ -28,7 +28,7 @@ export function FafeOfficialEmblem({
         cy="250" 
         r="242" 
         fill={isLight ? '#FFFFFF' : '#FFFFFF'} 
-        stroke={isLight ? '#D4AF37' : '#6B3E1E'} 
+        stroke={isLight ? '#D4AF37' : '#063F3A'} 
         strokeWidth="4"
       />
 
@@ -64,14 +64,14 @@ export function FafeOfficialEmblem({
            C 188 300, 215 300, 250 290
            C 290 280, 310 250, 310 215" 
         fill="none" 
-        stroke="#6B3E1E" 
+        stroke={isLight ? "#FFFFFF" : "#063F3A"} 
         strokeWidth="4.5" 
         strokeLinecap="round" 
         strokeLinejoin="round" 
       />
 
       {/* African Woman Silhouette Profile with Headdress / Turban in Rich Warm Brown */}
-      <g fill="#6B3E1E">
+      <g fill={isLight ? "#FFFFFF" : "#063F3A"}>
         {/* Turban headdress */}
         <path 
           d="M 136 142 
@@ -136,7 +136,7 @@ export function FafeLogo({
           <div className="flex items-center gap-2">
             <span
               className={`font-heading font-extrabold tracking-tight leading-none ${
-                isLight ? 'text-white' : 'text-[#6B3E1E]'
+                isLight ? 'text-white' : 'text-[#063F3A]'
               } ${dim.text}`}
             >
               FAFE
@@ -152,7 +152,7 @@ export function FafeLogo({
                 )}
                 {badge && (
                   <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
-                    isLight ? 'bg-[#E67E22] text-white' : 'bg-[#E67E22]/10 text-[#E67E22]'
+                    isLight ? 'bg-[#C8102E] text-white' : 'bg-[#C8102E]/10 text-[#00843D]'
                   } uppercase tracking-wider`}>
                     {badge}
                   </span>
@@ -163,7 +163,7 @@ export function FafeLogo({
           {showSubtitle && (
             <span
               className={`uppercase font-bold tracking-[0.15em] mt-1 whitespace-nowrap ${
-                isLight ? 'text-[#D4AF37]' : 'text-[#6B3E1E]/70'
+                isLight ? 'text-[#D4AF37]' : 'text-[#063F3A]/70'
               } ${dim.sub}`}
             >
               Forum Africain des Femmes Entrepreneures

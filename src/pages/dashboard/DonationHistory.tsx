@@ -80,39 +80,39 @@ export function DonationHistory() {
   if (!userProfile) return null;
 
   return (
-    <Card className="border border-[#6B3E1E]/5 shadow-sm bg-white rounded-2xl h-full">
-      <CardHeader className="border-b border-[#6B3E1E]/5 px-8 py-6 flex flex-row items-center justify-between">
-        <CardTitle className="text-2xl font-bold font-heading text-[#6B3E1E] flex items-center gap-3">
-          <Heart className="w-6 h-6 text-[#E67E22]" />
+    <Card className="border border-[#063F3A]/5 shadow-sm bg-white rounded-2xl h-full">
+      <CardHeader className="border-b border-[#063F3A]/5 px-8 py-6 flex flex-row items-center justify-between">
+        <CardTitle className="text-2xl font-bold font-heading text-[#063F3A] flex items-center gap-3">
+          <Heart className="w-6 h-6 text-[#00843D]" />
           Mes dons
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 text-[#6B3E1E]/60">
-            <Loader2 className="w-8 h-8 animate-spin text-[#E67E22] mb-4" />
+          <div className="flex flex-col items-center justify-center py-20 text-[#063F3A]/60">
+            <Loader2 className="w-8 h-8 animate-spin text-[#00843D] mb-4" />
             Chargement de l'historique...
           </div>
         ) : donations.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-[#6B3E1E]">
-              <thead className="bg-[#FAF9F6] border-b border-[#6B3E1E]/10">
+            <table className="w-full text-left text-sm text-[#063F3A]">
+              <thead className="bg-[#FAF9F6] border-b border-[#063F3A]/10">
                 <tr>
-                  <th className="px-6 py-4 font-bold text-[#6B3E1E]/60 uppercase tracking-wider text-xs">Date</th>
-                  <th className="px-6 py-4 font-bold text-[#6B3E1E]/60 uppercase tracking-wider text-xs">Montant</th>
-                  <th className="px-6 py-4 font-bold text-[#6B3E1E]/60 uppercase tracking-wider text-xs">Projet</th>
-                  <th className="px-6 py-4 font-bold text-[#6B3E1E]/60 uppercase tracking-wider text-xs">Type</th>
-                  <th className="px-6 py-4 font-bold text-[#6B3E1E]/60 uppercase tracking-wider text-xs">Statut</th>
-                  <th className="px-6 py-4 font-bold text-[#6B3E1E]/60 uppercase tracking-wider text-xs">Réf. Transaction</th>
+                  <th className="px-6 py-4 font-bold text-[#063F3A]/60 uppercase tracking-wider text-xs">Date</th>
+                  <th className="px-6 py-4 font-bold text-[#063F3A]/60 uppercase tracking-wider text-xs">Montant</th>
+                  <th className="px-6 py-4 font-bold text-[#063F3A]/60 uppercase tracking-wider text-xs">Projet</th>
+                  <th className="px-6 py-4 font-bold text-[#063F3A]/60 uppercase tracking-wider text-xs">Type</th>
+                  <th className="px-6 py-4 font-bold text-[#063F3A]/60 uppercase tracking-wider text-xs">Statut</th>
+                  <th className="px-6 py-4 font-bold text-[#063F3A]/60 uppercase tracking-wider text-xs">Réf. Transaction</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#6B3E1E]/5">
+              <tbody className="divide-y divide-[#063F3A]/5">
                 {donations.map((donation) => (
                   <tr key={donation.id} className="hover:bg-stone-50/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       {new Date(donation.createdAt).toLocaleDateString('fr-FR')}
                     </td>
-                    <td className="px-6 py-4 font-bold text-[#6B3E1E]">
+                    <td className="px-6 py-4 font-bold text-[#063F3A]">
                       {donation.amount.toLocaleString('fr-FR')} {donation.currency}
                     </td>
                     <td className="px-6 py-4 font-medium max-w-[200px] truncate" title={projectsMap[donation.projectId]}>
@@ -128,7 +128,7 @@ export function DonationHistory() {
                         {getStatusLabel(donation.paymentStatus)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs font-mono text-[#6B3E1E]/40">
+                    <td className="px-6 py-4 text-xs font-mono text-[#063F3A]/40">
                       {donation.transactionReference || 'N/A'}
                     </td>
                   </tr>
@@ -141,8 +141,8 @@ export function DonationHistory() {
             <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mb-4">
               <FileText className="w-8 h-8 text-stone-400" />
             </div>
-            <h3 className="text-xl font-bold font-heading text-[#6B3E1E] mb-2">Aucun don enregistré</h3>
-            <p className="text-[#6B3E1E]/60 max-w-md">
+            <h3 className="text-xl font-bold font-heading text-[#063F3A] mb-2">Aucun don enregistré</h3>
+            <p className="text-[#063F3A]/60 max-w-md">
               Vous n'avez pas encore effectué de don sur la plateforme.
             </p>
           </div>

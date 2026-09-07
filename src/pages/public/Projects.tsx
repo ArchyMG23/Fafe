@@ -22,7 +22,7 @@ export function ProjectsList() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
-        <Loader2 className="w-12 h-12 border-4 border-[#E67E22]/20 border-t-[#E67E22] rounded-full animate-spin mb-4" />
+        <Loader2 className="w-12 h-12 border-4 border-[#00843D]/20 border-t-[#E67E22] rounded-full animate-spin mb-4" />
       </div>
     );
   }
@@ -30,7 +30,7 @@ export function ProjectsList() {
   return (
     <div className="min-h-screen bg-[#FAF9F6] py-32">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
-        <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#6B3E1E] mb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-12 text-center">
           Projets Sociaux
         </h1>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -44,7 +44,7 @@ export function ProjectsList() {
                 />
               </div>
               <CardContent className="p-8 flex flex-col flex-grow">
-                <h3 className="text-2xl font-bold font-heading text-[#6B3E1E] mb-4">
+                <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">
                   {project.title}
                 </h3>
                 <p className="text-stone-600 mb-8 line-clamp-3">
@@ -52,7 +52,7 @@ export function ProjectsList() {
                 </p>
                 <div className="mt-auto">
                   <Link to={`/projets-sociaux/${project.id}`}>
-                    <Button variant="outline" className="w-full border-[#6B3E1E]/20 text-[#6B3E1E] hover:bg-[#6B3E1E] hover:text-white rounded-full">
+                    <Button variant="outline" className="w-full border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D] hover:text-white rounded-full">
                       En savoir plus
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>

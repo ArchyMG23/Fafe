@@ -60,7 +60,7 @@ export function DonationSuccess() {
             <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            <h1 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">Merci pour votre soutien !</h1>
+            <h1 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">Merci pour votre soutien !</h1>
             <p className="text-lg text-stone-600 mb-8">
               Votre don de <strong className="text-stone-900">{donation.amount.toLocaleString('fr-FR')} {donation.currency}</strong> a bien été confirmé. Un reçu fiscal a été envoyé à {donation.donorEmail}.
             </p>
@@ -102,7 +102,7 @@ export function DonationSuccess() {
             <div className="w-20 h-20 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <Loader2 className="w-10 h-10 animate-spin" />
             </div>
-            <h1 className="text-3xl font-bold font-heading text-[#6B3E1E] mb-4">Paiement en cours de confirmation...</h1>
+            <h1 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">Paiement en cours de confirmation...</h1>
             <p className="text-lg text-stone-600 mb-8">
               Votre paiement est en cours de traitement par notre prestataire. Si vous avez fourni une adresse e-mail, vous recevrez une confirmation et votre reçu une fois la transaction validée.
             </p>
@@ -127,7 +127,7 @@ export function DonationSuccess() {
             </Button>
           </Link>
           <Link to="/entrepreneures">
-            <Button variant="gold" className="w-full sm:w-auto h-12 bg-[#E67E22] hover:bg-[#c96a1a] text-white">
+            <Button variant="gold" className="w-full sm:w-auto h-12 bg-[#C8102E] hover:bg-[#A30D25] text-white">
               Découvrir l'Annuaire <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
