@@ -514,22 +514,25 @@ export interface Product {
 
 export interface CartItem {
   productId: string;
-  quantity: number;
-  // Product details at the time of adding to cart to display them easily
+  slug: string;
   name: string;
   price: number;
+  quantity: number;
   image: string;
+  stock: number;
 }
 
-export type OrderStatus = 'PENDING_PAYMENT' | 'PAID' | 'CONFIRMED' | 'PREPARING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
-export type OrderPaymentStatus = 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED' | 'CANCELLED' | 'REFUNDED';
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'PREPARING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
+export type OrderPaymentStatus = 'UNPAID' | 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED' | 'CANCELLED' | 'REFUNDED';
 
 export interface OrderItem {
   productId: string;
+  slug?: string;
   name: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  image?: string;
 }
 
 export interface Order {

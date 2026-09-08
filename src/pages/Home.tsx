@@ -725,11 +725,11 @@ export function Home() {
           <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6 text-[#D4AF37]">
             <Heart className="w-7 h-7" />
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading mb-5 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading mb-5 leading-tight text-white">
             Votre soutien ouvre de{" "}
             <span className="text-[#D4AF37]">nouvelles opportunités.</span>
           </h2>
-          <p className="text-stone-600 text-base sm:text-lg mb-8 leading-relaxed max-w-xl mx-auto">
+          <p className="text-white/80 text-base sm:text-lg mb-8 leading-relaxed max-w-xl mx-auto">
             Chaque contribution participe au développement de l'entrepreneuriat
             féminin africain en finançant des formations et des projets d'avenir.
           </p>

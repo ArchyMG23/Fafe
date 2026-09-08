@@ -17,8 +17,8 @@ export async function fetchEntrepreneurs(limitCount?: number, featuredOnly = fal
     }
     const snap = await getDocs(entQuery);
     return snap.docs.map(d => ({ id: d.id, ...d.data() } as Entrepreneur));
-  } catch (error) {
-    console.error("Error fetching entrepreneurs:", error);
+  } catch (error: any) {
+    console.warn("Notice fetching entrepreneurs (using fallback defaults):", error?.message || error);
     return [];
   }
 }
@@ -31,8 +31,8 @@ export async function fetchProjects(limitCount?: number): Promise<Project[]> {
     }
     const snap = await getDocs(projQuery);
     return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
-  } catch (error) {
-    console.error("Error fetching projects:", error);
+  } catch (error: any) {
+    console.warn("Notice fetching projects (using fallback defaults):", error?.message || error);
     return [];
   }
 }
@@ -49,8 +49,8 @@ export async function fetchArticles(limitCount?: number): Promise<Article[]> {
     }
     const snap = await getDocs(artQuery);
     return snap.docs.map(d => ({ id: d.id, ...d.data() } as Article));
-  } catch (error) {
-    console.error("Error fetching articles:", error);
+  } catch (error: any) {
+    console.warn("Notice fetching articles (using fallback defaults):", error?.message || error);
     return [];
   }
 }
@@ -67,8 +67,8 @@ export async function fetchEvents(limitCount?: number): Promise<FAFEEvent[]> {
     }
     const snap = await getDocs(evtQuery);
     return snap.docs.map(d => ({ id: d.id, ...d.data() } as FAFEEvent));
-  } catch (error) {
-    console.error("Error fetching events:", error);
+  } catch (error: any) {
+    console.warn("Notice fetching events (using fallback defaults):", error?.message || error);
     return [];
   }
 }

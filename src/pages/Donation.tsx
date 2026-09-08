@@ -48,7 +48,7 @@ export function Donation() {
         const data = await getPublishedCMSContent('dons', defaultDonsCMS);
         setCmsData(data);
       } catch (err) {
-        console.error("Error fetching donation CMS data:", err);
+        console.warn("Notice fetching donation CMS data (using defaults):", err);
       }
     };
     fetchCMS();
@@ -66,7 +66,7 @@ export function Donation() {
         const projectsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
         setActiveProjects(projectsData);
       } catch (error) {
-        console.error("Error fetching projects", error);
+        console.warn("Notice fetching projects (using fallback defaults):", error);
       } finally {
         setLoadingProjects(false);
       }

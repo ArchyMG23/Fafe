@@ -19,14 +19,20 @@ export const useCartStore = create<CartState>()(
       
       addItem: (product, quantity) => {
         set((state) => {
+          const availableStock = Math.max(1, product.stock || 1);
           const existingItem = state.items.find((item) => item.productId === product.id);
           
           if (existingItem) {
             // Update quantity, ensuring it doesn't exceed stock
-            const newQuantity = Math.min(existingItem.quantity + quantity, product.stock);
+            const newQuantity = Math.min(existingItem.quantity + quantity, availableStock);
             return {
               items: state.items.map((item) =>
-                item.productId === product.id ? { ...item, quantity: newQuantity } : item
+                item.productId === product.id ? { 
+                  ...item, 
+                  quantity: newQuantity, 
+                  stock: availableStock,
+                  slug: product.slug || item.slug 
+                } : item
               ),
             };
           }
@@ -37,10 +43,12 @@ export const useCartStore = create<CartState>()(
               ...state.items,
               {
                 productId: product.id,
-                quantity: Math.min(quantity, product.stock),
+                slug: product.slug || product.id,
                 name: product.name,
-                price: product.promotionalPrice || product.price,
+                price: product.promotionalPrice && product.promotionalPrice < product.price ? product.promotionalPrice : product.price,
+                quantity: Math.min(quantity, availableStock),
                 image: product.images?.[0] || '',
+                stock: availableStock,
               },
             ],
           };
@@ -55,9 +63,12 @@ export const useCartStore = create<CartState>()(
       
       updateQuantity: (productId, quantity) => {
         set((state) => ({
-          items: state.items.map((item) =>
-            item.productId === productId ? { ...item, quantity: Math.max(1, quantity) } : item
-          ),
+          items: state.items.map((item) => {
+            if (item.productId !== productId) return item;
+            const maxStock = item.stock || 999;
+            const clamped = Math.min(Math.max(1, quantity), maxStock);
+            return { ...item, quantity: clamped };
+          }),
         }));
       },
       

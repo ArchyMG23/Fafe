@@ -3,22 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, ArrowRight, ShieldCheck } from 'lucide-react';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../lib/firebase';
+import { Loader2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '../../../store/auth';
-import { PaymentService } from '../../../services/payment';
 import { useCartStore } from '../../../store/cart';
 import { Button } from '../../../components/ui/Button';
+import { ordersService } from '../../../services/orders';
 
 const checkoutSchema = z.object({
-  firstName: z.string().min(2, 'Prénom requis'),
-  lastName: z.string().min(2, 'Nom requis'),
-  email: z.string().email('Email invalide'),
-  phone: z.string().min(8, 'Téléphone requis'),
-  country: z.string().min(2, 'Pays requis'),
-  city: z.string().min(2, 'Ville requise'),
-  address: z.string().min(5, 'Adresse requise'),
+  firstName: z.string().min(2, 'Le prénom est requis (au moins 2 caractères)'),
+  lastName: z.string().min(2, 'Le nom est requis (au moins 2 caractères)'),
+  email: z.string().email('Adresse e-mail valide requise'),
+  phone: z.string().min(8, 'Numéro de téléphone requis'),
+  country: z.string().min(2, 'Le pays est requis'),
+  city: z.string().min(2, 'La ville est requise'),
+  address: z.string().min(5, 'Adresse de livraison complète requise'),
+  paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'CASH_ON_DELIVERY'])
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -28,6 +27,7 @@ export function MarketplaceCheckout() {
   const { currentUser, userProfile } = useAuthStore();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   
   const total = getTotalPrice();
 
@@ -44,22 +44,20 @@ export function MarketplaceCheckout() {
       lastName: userProfile?.lastName || '',
       email: userProfile?.email || currentUser?.email || '',
       phone: userProfile?.phone || '',
-      country: userProfile?.country || '',
-      city: userProfile?.city || '',
+      country: userProfile?.country || 'Côte d\'Ivoire',
+      city: userProfile?.city || 'Abidjan',
+      address: '',
+      paymentMethod: 'MOBILE_MONEY'
     }
   });
-
-  const generateOrderNumber = () => {
-    return 'CMD-' + Date.now().toString().slice(-6) + Math.random().toString(36).substring(2, 5).toUpperCase();
-  };
 
   const processOrder = async (data: CheckoutFormData) => {
     try {
       setIsProcessing(true);
-      
-      const orderData = {
-        orderNumber: generateOrderNumber(),
-        customerId: currentUser?.uid || null,
+      setCheckoutError(null);
+
+      const createdOrder = await ordersService.createOrder({
+        customerId: currentUser?.uid,
         customerFirstName: data.firstName,
         customerLastName: data.lastName,
         customerEmail: data.email,
@@ -67,180 +65,267 @@ export function MarketplaceCheckout() {
         customerCountry: data.country,
         customerCity: data.city,
         customerAddress: data.address,
+        currency: 'XAF',
+        paymentMethod: data.paymentMethod,
         items: items.map(item => ({
           productId: item.productId,
+          slug: item.slug,
           name: item.name,
           quantity: item.quantity,
           unitPrice: item.price,
-          totalPrice: item.price * item.quantity
-        })),
-        totalAmount: total,
-        currency: 'XAF',
-        orderStatus: 'PENDING_PAYMENT',
-        paymentStatus: 'PENDING',
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      };
+          image: item.image
+        }))
+      });
 
-      // 1. Create order in DB
-      const orderRef = await addDoc(collection(db, 'orders'), orderData);
-      
-      // 2. Clear Cart
+      // Clear the user's cart
       clearCart();
 
-      // 3. Initiate Abstract Payment Flow
-      // Here we simulate the redirect to a payment aggregator and the callback
-      const paymentInit = await PaymentService.processPayment(
-        total,
-        'XAF',
-        'FLUTTERWAVE',
-        'ONE_TIME',
-        { name: `${data.firstName} ${data.lastName}`, email: data.email, phone: data.phone },
-        orderRef.id,
-        `${window.location.origin}/marketplace/confirmation/${orderRef.id}`
-      );
-
-      if (paymentInit.providerRedirectUrl) {
-        window.location.href = paymentInit.providerRedirectUrl;
-      } else {
-        navigate(`/marketplace/confirmation/${orderRef.id}?status=success`);
-      }
-    } catch (error) {
+      // Navigate to confirmation page
+      navigate(`/marketplace/confirmation/${createdOrder.id}?status=success`);
+    } catch (error: any) {
       console.error('Error processing order:', error);
+      setCheckoutError(error.message || 'Une erreur est survenue lors de la validation de votre commande.');
       setIsProcessing(false);
-      alert('Une erreur est survenue lors de la création de la commande.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 py-12">
+    <div className="min-h-screen bg-stone-50 py-10 sm:py-12">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
-        <h1 className="text-3xl font-bold font-heading text-[#063F3A] mb-8">Finaliser la commande</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#063F3A] mb-8">
+          Finaliser votre commande
+        </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {checkoutError && (
+          <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-bold text-sm">Impossible de valider la commande</h3>
+              <p className="text-sm mt-0.5">{checkoutError}</p>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Checkout Form */}
-          <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-stone-100">
-            <h2 className="text-xl font-bold text-stone-800 mb-6">Informations de livraison</h2>
+          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-stone-200/70">
+            <h2 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] mb-6">
+              Coordonnées et adresse de livraison
+            </h2>
             
             <form id="checkout-form" onSubmit={handleSubmit(processOrder)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Prénom</label>
+                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Prénom
+                  </label>
                   <input
                     {...register('firstName')}
-                    className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
+                    placeholder="ex: Aminata"
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Nom</label>
+                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Nom
+                  </label>
                   <input
                     {...register('lastName')}
-                    className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
+                    placeholder="ex: Diallo"
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Email</label>
+                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Adresse e-mail
+                  </label>
                   <input
                     type="email"
                     {...register('email')}
-                    className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
+                    placeholder="aminata@example.com"
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Téléphone</label>
+                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Téléphone (avec indicatif)
+                  </label>
                   <input
+                    type="tel"
                     {...register('phone')}
-                    className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
+                    placeholder="+225 07 00 00 00"
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Pays</label>
+                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Pays
+                  </label>
                   <input
                     {...register('country')}
-                    className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
+                    placeholder="Côte d'Ivoire, Sénégal, Cameroun..."
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">Ville</label>
+                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Ville
+                  </label>
                   <input
                     {...register('city')}
-                    className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors"
+                    placeholder="Abidjan, Dakar, Douala..."
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Adresse complète</label>
-                <textarea
+                <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                  Adresse de livraison précise
+                </label>
+                <input
                   {...register('address')}
-                  rows={3}
-                  className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#E67E22]/20 focus:border-[#00843D] transition-colors resize-none"
+                  placeholder="Quartier, rue, numéro de porte ou repère"
+                  className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                 />
                 {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>}
               </div>
-            </form>
-          </div>
 
-          {/* Order Summary & Payment */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
-              <h2 className="text-lg font-bold text-stone-800 mb-4">Résumé de la commande</h2>
-              <div className="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
-                {items.map(item => (
-                  <div key={item.productId} className="flex justify-between items-center text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-stone-500">{item.quantity}x</span>
-                      <span className="text-stone-700 truncate max-w-[150px] sm:max-w-[200px]">{item.name}</span>
+              <div className="pt-4 border-t border-stone-100">
+                <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-3">
+                  Mode de règlement
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <label className="flex items-center gap-3 p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                    <input
+                      type="radio"
+                      value="MOBILE_MONEY"
+                      {...register('paymentMethod')}
+                      defaultChecked
+                      className="text-[#00843D] focus:ring-[#00843D]"
+                    />
+                    <div>
+                      <span className="block text-xs font-bold text-stone-800">Mobile Money</span>
+                      <span className="block text-[11px] text-stone-500">Orange, MTN, Wave</span>
                     </div>
-                    <span className="font-medium text-stone-800">{(item.price * item.quantity).toLocaleString()} XAF</span>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="border-t border-stone-100 pt-4 mb-6">
-                <div className="flex justify-between items-end">
-                  <span className="font-bold text-stone-800 text-lg">Total à payer</span>
-                  <span className="text-2xl font-bold text-[#00843D]">{total.toLocaleString()} XAF</span>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                    <input
+                      type="radio"
+                      value="CARD"
+                      {...register('paymentMethod')}
+                      className="text-[#00843D] focus:ring-[#00843D]"
+                    />
+                    <div>
+                      <span className="block text-xs font-bold text-stone-800">Carte Bancaire</span>
+                      <span className="block text-[11px] text-stone-500">Visa, Mastercard</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                    <input
+                      type="radio"
+                      value="CASH_ON_DELIVERY"
+                      {...register('paymentMethod')}
+                      className="text-[#00843D] focus:ring-[#00843D]"
+                    />
+                    <div>
+                      <span className="block text-xs font-bold text-stone-800">À la réception</span>
+                      <span className="block text-[11px] text-stone-500">Paiement direct</span>
+                    </div>
+                  </label>
                 </div>
               </div>
 
-              <div className="bg-stone-50 rounded-xl p-4 flex items-start gap-3 border border-stone-100 mb-6">
-                <ShieldCheck className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-stone-500 leading-relaxed">
-                  Vos informations personnelles sont sécurisées. Vous allez être redirigé vers notre plateforme de paiement partenaire pour finaliser votre achat en toute sécurité.
-                </p>
-              </div>
-
-              <Button 
+              <Button
                 type="submit"
-                form="checkout-form"
                 disabled={isProcessing}
-                className="w-full bg-[#00843D] hover:bg-[#006830] text-white py-4 rounded-xl font-bold text-lg shadow-md flex items-center justify-center group"
+                className="w-full mt-6 bg-[#00843D] hover:bg-[#006830] text-white py-4 rounded-xl font-bold text-base shadow-sm flex items-center justify-center group"
               >
                 {isProcessing ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Initialisation du paiement...
+                    Enregistrement de la commande...
                   </>
                 ) : (
                   <>
-                    Procéder au paiement
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    Confirmer et finaliser ma commande
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </Button>
+            </form>
+          </div>
+
+          {/* Order Summary Sidebar */}
+          <div className="lg:col-span-5">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-stone-200/70 sticky top-24">
+              <h2 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] mb-5">
+                Articles commandés ({items.reduce((s, i) => s + i.quantity, 0)})
+              </h2>
+
+              <div className="divide-y divide-stone-100 max-h-80 overflow-y-auto pr-1 mb-6">
+                {items.map((item) => (
+                  <div key={item.productId} className="py-3 flex items-center gap-3">
+                    {item.image ? (
+                      <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover bg-stone-100 flex-shrink-0" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-lg bg-stone-100 flex-shrink-0 flex items-center justify-center text-stone-400 text-xs font-bold">
+                        FAFE
+                      </div>
+                    )}
+                    <div className="flex-grow min-w-0">
+                      <h4 className="font-semibold text-stone-800 text-sm truncate">{item.name}</h4>
+                      <p className="text-xs text-stone-500">Qté : {item.quantity}</p>
+                    </div>
+                    <span className="font-bold text-sm text-[#063F3A] flex-shrink-0">
+                      {(item.price * item.quantity).toLocaleString()} XAF
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-2.5 pt-4 border-t border-stone-100 text-sm">
+                <div className="flex justify-between text-stone-600">
+                  <span>Sous-total</span>
+                  <span className="font-semibold text-stone-800">{total.toLocaleString()} XAF</span>
+                </div>
+                <div className="flex justify-between text-stone-600">
+                  <span>Frais de livraison</span>
+                  <span className="text-emerald-700 font-semibold">Offerts</span>
+                </div>
+              </div>
+
+              <div className="border-t border-stone-100 mt-5 pt-4 mb-6">
+                <div className="flex justify-between items-baseline">
+                  <span className="font-bold text-stone-800">Montant total</span>
+                  <span className="text-2xl font-bold text-[#00843D]">{total.toLocaleString()} XAF</span>
+                </div>
+              </div>
+
+              <div className="bg-stone-50 rounded-2xl p-4 border border-stone-100 text-xs text-stone-600 space-y-2">
+                <div className="flex items-center gap-2 font-semibold text-stone-700">
+                  <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
+                  Achat garanti et suivi FAFE
+                </div>
+                <p>Vos informations sont traitées de manière confidentielle et votre commande sera confirmée immédiatement.</p>
+              </div>
             </div>
           </div>
         </div>

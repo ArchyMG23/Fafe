@@ -18,9 +18,9 @@ export const getPublishedEvents = async (pageLimit = 10, lastDoc?: any) => {
     let events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FAFEEvent));
     if (events.length === 0) events = [...DEMO_EVENTS] as unknown as FAFEEvent[];
     return { events, lastDoc: snapshot.docs[snapshot.docs.length - 1] };
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    throw error;
+  } catch (error: any) {
+    console.warn('Notice fetching events (using demo fallback):', error?.message || error);
+    return { events: [...DEMO_EVENTS] as unknown as FAFEEvent[], lastDoc: null };
   }
 };
 
@@ -34,9 +34,10 @@ export const getEventBySlug = async (slug: string) => {
       return null;
     }
     return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as FAFEEvent;
-  } catch (error) {
-    console.error('Error fetching event by slug:', error);
-    throw error;
+  } catch (error: any) {
+    console.warn('Notice fetching event by slug (using demo fallback):', error?.message || error);
+    const mock = DEMO_EVENTS.find(e => e.slug === slug);
+    return (mock as unknown as FAFEEvent) || null;
   }
 };
 
@@ -53,9 +54,9 @@ export const checkRegistrationExists = async (eventId: string, userId?: string, 
     
     const snapshot = await getDocs(q);
     return !snapshot.empty;
-  } catch (error) {
-    console.error('Error checking registration:', error);
-    return true; // fail safe
+  } catch (error: any) {
+    console.warn('Notice checking registration (offline fallback):', error?.message || error);
+    return false;
   }
 };
 

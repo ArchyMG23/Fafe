@@ -39,7 +39,7 @@ export function News() {
 
         setArticles(fetched);
       } catch (error) {
-        console.error("Error fetching news:", error);
+        console.warn("Notice fetching news (using fallback defaults):", error);
       } finally {
         setLoading(false);
       }

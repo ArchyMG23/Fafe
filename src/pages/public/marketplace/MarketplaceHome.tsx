@@ -1,93 +1,47 @@
-import { FafeImage } from '../../../components/ui/FafeImage';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Search, Filter, ArrowRight, Tag, Loader2, Star, ShoppingBag } from 'lucide-react';
-import { collection, query, where, getDocs, orderBy, limit, startAfter, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
-import { useMarketplaceStore } from '../../../store/marketplace';
-import { db } from '../../../lib/firebase';
+import { ShoppingCart, Search, Filter, Tag, Loader2, Star, ShoppingBag } from 'lucide-react';
+import { FafeImage } from '../../../components/ui/FafeImage';
 import { Product, MarketplaceCategory } from '../../../types';
 import { Button } from '../../../components/ui/Button';
 import { useCartStore } from '../../../store/cart';
+import { marketplaceService } from '../../../services/marketplace';
 
 export function MarketplaceHome() {
-  const { products, categories, lastDoc, hasMore, isLoaded, setCache, appendProducts } = useMarketplaceStore();
-  const [loading, setLoading] = useState(!isLoaded);
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<MarketplaceCategory[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const addItem = useCartStore(state => state.addItem);
 
-  const PRODUCTS_PER_PAGE = 12;
-
   useEffect(() => {
-    if (!isLoaded) {
-      fetchMarketplaceData();
-    }
-  }, [isLoaded]);
+    loadData();
+  }, []);
 
-  const fetchMarketplaceData = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-
-      // Fetch Categories
-      const categoriesRef = collection(db, 'marketplace_categories');
-      const categoriesQuery = query(categoriesRef, where('isActive', '==', true), orderBy('order', 'asc'));
-      const categoriesSnap = await getDocs(categoriesQuery);
-      
-      const cats = [];
-      categoriesSnap.forEach(doc => cats.push({ id: doc.id, ...doc.data() }));
-
-      // Fetch Initial Products
-      const productsRef = collection(db, 'products');
-      const productsQuery = query(
-        productsRef, 
-        where('status', 'in', ['PUBLISHED', 'OUT_OF_STOCK']), 
-        orderBy('createdAt', 'desc'),
-        limit(PRODUCTS_PER_PAGE)
-      );
-      const productsSnap = await getDocs(productsQuery);
-      
-      const prods = [];
-      productsSnap.forEach(doc => prods.push({ id: doc.id, ...doc.data() }));
-      
-      const lastVisible = productsSnap.docs[productsSnap.docs.length - 1] || null;
-      setCache(prods, cats, lastVisible, prods.length === PRODUCTS_PER_PAGE);
-    } catch (error) {
-      console.error('Error fetching marketplace data:', error);
+      const [prods, cats] = await Promise.all([
+        marketplaceService.getProducts(),
+        marketplaceService.getCategories()
+      ]);
+      setProducts(prods);
+      setCategories(cats);
+    } catch (err) {
+      console.warn('Could not load marketplace data:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadMoreProducts = async () => {
-    if (!lastDoc || loadingMore) return;
-    try {
-      setLoadingMore(true);
-      const productsRef = collection(db, 'products');
-      const productsQuery = query(
-        productsRef, 
-        where('status', 'in', ['PUBLISHED', 'OUT_OF_STOCK']), 
-        orderBy('createdAt', 'desc'),
-        startAfter(lastDoc),
-        limit(PRODUCTS_PER_PAGE)
-      );
-      
-      const productsSnap = await getDocs(productsQuery);
-      const prods = [];
-      productsSnap.forEach(doc => prods.push({ id: doc.id, ...doc.data() }));
-      
-      const lastVisible = productsSnap.docs[productsSnap.docs.length - 1] || null;
-      appendProducts(prods, lastVisible, prods.length === PRODUCTS_PER_PAGE);
-    } catch (error) {
-      console.error('Error loading more products:', error);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
+  const term = (searchTerm || '').trim().toLowerCase();
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          product.shortDescription.toLowerCase().includes(searchTerm.toLowerCase());
+    const name = (product.name || '').toLowerCase();
+    const shortDesc = (product.shortDescription || '').toLowerCase();
+    const fullDesc = (product.fullDescription || '').toLowerCase();
+    
+    const matchesSearch = !term || name.includes(term) || shortDesc.includes(term) || fullDesc.includes(term);
     const matchesCategory = selectedCategory ? product.categoryId === selectedCategory : true;
     return matchesSearch && matchesCategory;
   });
@@ -96,16 +50,16 @@ export function MarketplaceHome() {
 
   return (
     <div className="min-h-screen bg-stone-50 pb-20">
-      {/* Header */}
-      <div className="bg-[#00843D] text-white py-16">
+      {/* Header Banner */}
+      <div className="bg-[#00843D] text-white py-14 sm:py-16">
         <div className="w-full max-w-7xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-white/90 mb-6 tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-white/90 mb-6 tracking-widest uppercase">
             <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
-            FAFE Boutique
+            Boutique FAFE
           </div>
           <h1 className="text-3xl md:text-5xl font-bold font-heading mb-4">La Marketplace Panafricaine</h1>
-          <p className="text-white/80 max-w-2xl mx-auto mb-8 text-sm md:text-base">
-            Découvrez et soutenez l'excellence de l'entrepreneuriat féminin. Des produits authentiques, créés par des femmes inspirantes.
+          <p className="text-white/85 max-w-2xl mx-auto mb-8 text-sm md:text-base leading-relaxed">
+            Découvrez et soutenez l'excellence de l'entrepreneuriat féminin. Des créations authentiques et des savoir-faire d'Afrique.
           </p>
           
           <div className="max-w-xl mx-auto relative">
@@ -115,7 +69,7 @@ export function MarketplaceHome() {
               placeholder="Rechercher un produit, un savoir-faire..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-full text-stone-800 placeholder-stone-400 border-0 focus:ring-4 focus:ring-[#D4AF37]/50 shadow-xl transition-all outline-none"
+              className="w-full pl-12 pr-4 py-3.5 sm:py-4 rounded-full text-stone-800 placeholder-stone-400 bg-white border-0 focus:ring-4 focus:ring-[#D4AF37]/50 shadow-xl transition-all outline-none text-sm sm:text-base"
             />
           </div>
         </div>
@@ -135,7 +89,7 @@ export function MarketplaceHome() {
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className="bg-white rounded-2xl border border-stone-100 overflow-hidden h-[400px] animate-pulse flex flex-col">
+                  <div key={i} className="bg-white rounded-2xl border border-stone-100 overflow-hidden h-[380px] animate-pulse flex flex-col">
                     <div className="w-full aspect-square bg-stone-200"></div>
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="h-4 w-1/3 bg-stone-200 rounded mb-2"></div>
@@ -152,16 +106,18 @@ export function MarketplaceHome() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar / Filters */}
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200/70">
                 <h3 className="font-bold text-stone-800 mb-4 flex items-center gap-2">
                   <Filter className="w-4 h-4 text-[#00843D]" />
                   Catégories
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <button
                     onClick={() => setSelectedCategory(null)}
                     className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                      selectedCategory === null ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-600 hover:bg-stone-50'
+                      selectedCategory === null 
+                        ? 'bg-[#00843D] text-white shadow-sm' 
+                        : 'text-stone-600 hover:bg-stone-50'
                     }`}
                   >
                     Toutes les catégories
@@ -171,7 +127,9 @@ export function MarketplaceHome() {
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
                       className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                        selectedCategory === category.id ? 'bg-[#C8102E]/10 text-[#00843D]' : 'text-stone-600 hover:bg-stone-50'
+                        selectedCategory === category.id 
+                          ? 'bg-[#00843D] text-white shadow-sm' 
+                          : 'text-stone-600 hover:bg-stone-50'
                       }`}
                     >
                       {category.name}
@@ -184,12 +142,12 @@ export function MarketplaceHome() {
             {/* Product Grid */}
             <div className="lg:col-span-3">
               {featuredProducts.length > 0 && !searchTerm && !selectedCategory && (
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold font-heading text-[#063F3A] mb-6 flex items-center gap-2">
-                    <Star className="w-6 h-6 text-[#D4AF37]" />
-                    Produits en vedette
+                <div className="mb-10">
+                  <h2 className="text-xl sm:text-2xl font-bold font-heading text-[#063F3A] mb-5 flex items-center gap-2">
+                    <Star className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />
+                    Sélections en vedette
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
                     {featuredProducts.map(product => (
                       <ProductCard key={product.id} product={product} onAdd={() => addItem(product, 1)} />
                     ))}
@@ -198,20 +156,20 @@ export function MarketplaceHome() {
               )}
 
               <h2 className="text-xl font-bold font-heading text-stone-800 mb-6">
-                {searchTerm || selectedCategory ? 'Résultats de recherche' : 'Tous les produits'}
+                {searchTerm || selectedCategory ? 'Résultats du catalogue' : 'Tous les articles'}
                 <span className="text-sm font-normal text-stone-500 ml-3">({filteredProducts.length})</span>
               </h2>
 
               {filteredProducts.length === 0 ? (
-                <div className="bg-white rounded-2xl p-12 text-center border border-stone-100">
-                  <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-8 h-8 text-stone-300" />
+                <div className="bg-white rounded-2xl p-12 text-center border border-stone-200/80">
+                  <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400">
+                    <Search className="w-8 h-8" />
                   </div>
-                  <h3 className="font-bold text-stone-800 mb-2">Aucun produit trouvé</h3>
-                  <p className="text-sm text-stone-500">Essayez de modifier vos critères de recherche.</p>
+                  <h3 className="font-bold text-stone-800 mb-2">Aucun article trouvé</h3>
+                  <p className="text-sm text-stone-500">Essayez de modifier vos critères de recherche ou de catégorie.</p>
                   <Button 
                     variant="outline" 
-                    className="mt-6 border-stone-200 text-stone-600"
+                    className="mt-6 border-stone-300 text-stone-700"
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCategory(null);
@@ -227,23 +185,6 @@ export function MarketplaceHome() {
                   ))}
                 </div>
               )}
-              {filteredProducts.length > 0 && hasMore && !searchTerm && !selectedCategory && (
-                <div className="mt-8 flex justify-center">
-                  <Button 
-                    onClick={loadMoreProducts} 
-                    disabled={loadingMore}
-                    variant="outline"
-                    className="border-[#00843D] text-[#00843D] hover:bg-[#C8102E]/10 px-8"
-                  >
-                    {loadingMore ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Chargement...</>
-                    ) : (
-                      'Afficher plus de produits'
-                    )}
-                  </Button>
-                </div>
-              )}
-
             </div>
           </div>
         )}
@@ -252,35 +193,35 @@ export function MarketplaceHome() {
   );
 }
 
-function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }) {
-  const isOutOfStock = product.status === 'OUT_OF_STOCK' || product.stock <= 0;
-  const hasPromo = !!product.promotionalPrice && product.promotionalPrice < product.price;
+function ProductCard({ product, onAdd }: { product: Product; onAdd: () => void }) {
+  const stock = typeof product.stock === 'number' ? product.stock : 0;
+  const isOutOfStock = product.status === 'OUT_OF_STOCK' || stock <= 0;
+  const price = typeof product.price === 'number' ? product.price : 0;
+  const promoPrice = product.promotionalPrice;
+  const hasPromo = typeof promoPrice === 'number' && promoPrice > 0 && promoPrice < price;
+  const currency = product.currency || 'XAF';
+  const displayImage = product.images?.[0] || 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1000&q=80';
+  const productUrl = `/marketplace/produit/${product.slug || product.id}`;
 
   return (
-    <div className="group bg-white rounded-2xl border border-stone-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
-      <Link to={`/marketplace/produit/${product.slug}`} className="block relative aspect-square bg-stone-50 overflow-hidden">
-        {product.images && product.images[0] ? (
-          <FafeImage 
-            src={product.images[0]} 
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-stone-300">
-            <ShoppingBag className="w-12 h-12" />
-          </div>
-        )}
+    <div className="group bg-white rounded-2xl border border-stone-200/70 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+      <Link to={productUrl} className="block relative aspect-square bg-stone-50 overflow-hidden">
+        <FafeImage 
+          src={displayImage} 
+          alt={product.name || 'Produit'}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
         
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2 items-start">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
           {isOutOfStock ? (
-            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">
-              Rupture de stock
+            <span className="bg-stone-800 text-white text-[11px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm">
+              Rupture
             </span>
           ) : (
             hasPromo && (
-              <span className="bg-[#C8102E] text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm flex items-center gap-1">
+              <span className="bg-[#C8102E] text-white text-[11px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm flex items-center gap-1">
                 <Tag className="w-3 h-3" />
                 Promo
               </span>
@@ -290,22 +231,30 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
       </Link>
 
       <div className="p-5 flex-grow flex flex-col">
-        <Link to={`/marketplace/produit/${product.slug}`} className="block mb-2">
-          <h3 className="font-bold text-stone-800 line-clamp-1 group-hover:text-[#00843D] transition-colors">{product.name}</h3>
+        <Link to={productUrl} className="block mb-2">
+          <h3 className="font-bold text-stone-800 line-clamp-1 group-hover:text-[#00843D] transition-colors">
+            {product.name}
+          </h3>
         </Link>
-        <p className="text-sm text-stone-500 line-clamp-2 mb-4 flex-grow">
-          {product.shortDescription}
+        <p className="text-xs sm:text-sm text-stone-500 line-clamp-2 mb-4 flex-grow">
+          {product.shortDescription || product.fullDescription || ''}
         </p>
 
-        <div className="flex items-end justify-between mt-auto">
+        <div className="flex items-end justify-between mt-auto pt-2 border-t border-stone-100">
           <div>
             {hasPromo ? (
               <div className="flex flex-col">
-                <span className="text-xs text-stone-400 line-through">{product.price.toLocaleString()} {product.currency}</span>
-                <span className="font-bold text-lg text-[#063F3A]">{product.promotionalPrice?.toLocaleString()} {product.currency}</span>
+                <span className="text-xs text-stone-400 line-through">
+                  {price.toLocaleString()} {currency}
+                </span>
+                <span className="font-bold text-lg text-[#063F3A]">
+                  {promoPrice?.toLocaleString()} {currency}
+                </span>
               </div>
             ) : (
-              <span className="font-bold text-lg text-[#063F3A]">{product.price.toLocaleString()} {product.currency}</span>
+              <span className="font-bold text-lg text-[#063F3A]">
+                {price.toLocaleString()} {currency}
+              </span>
             )}
           </div>
 
@@ -318,9 +267,10 @@ function ProductCard({ product, onAdd }: { product: Product, onAdd: () => void }
             size="sm"
             className={`rounded-full w-10 h-10 p-0 flex items-center justify-center flex-shrink-0 shadow-sm ${
               isOutOfStock 
-                ? 'bg-stone-100 text-stone-400' 
-                : 'bg-[#00843D] text-white hover:bg-[#C8102E]'
+                ? 'bg-stone-100 text-stone-400 cursor-not-allowed' 
+                : 'bg-[#00843D] text-white hover:bg-[#006830]'
             }`}
+            title={isOutOfStock ? 'Indisponible' : 'Ajouter au panier'}
           >
             <ShoppingCart className="w-4 h-4" />
           </Button>

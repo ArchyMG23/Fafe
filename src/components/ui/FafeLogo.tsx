@@ -27,9 +27,9 @@ export function FafeOfficialEmblem({
         cx="250" 
         cy="250" 
         r="242" 
-        fill={isLight ? '#FFFFFF' : '#FFFFFF'} 
+        fill="#FFFFFF" 
         stroke={isLight ? '#D4AF37' : '#063F3A'} 
-        strokeWidth="4"
+        strokeWidth={isLight ? "6" : "5"}
       />
 
       {/* Top Pan-African / Cameroon Swirls / Crown Ribbons */}
@@ -64,14 +64,14 @@ export function FafeOfficialEmblem({
            C 188 300, 215 300, 250 290
            C 290 280, 310 250, 310 215" 
         fill="none" 
-        stroke={isLight ? "#FFFFFF" : "#063F3A"} 
+        stroke="#063F3A" 
         strokeWidth="4.5" 
         strokeLinecap="round" 
         strokeLinejoin="round" 
       />
 
-      {/* African Woman Silhouette Profile with Headdress / Turban in Rich Warm Brown */}
-      <g fill={isLight ? "#FFFFFF" : "#063F3A"}>
+      {/* African Woman Silhouette Profile with Headdress / Turban */}
+      <g fill="#063F3A">
         {/* Turban headdress */}
         <path 
           d="M 136 142 
@@ -81,8 +81,8 @@ export function FafeOfficialEmblem({
              C 188 235, 175 225, 162 205 
              C 152 188, 142 165, 136 142 Z" 
         />
-        <path d="M 160 148 C 185 130, 215 135, 235 155 C 220 165, 190 160, 160 148 Z" fill="#522E14" opacity="0.35" />
-        <path d="M 148 180 C 172 165, 200 170, 218 188 C 200 195, 175 192, 148 180 Z" fill="#522E14" opacity="0.35" />
+        <path d="M 160 148 C 185 130, 215 135, 235 155 C 220 165, 190 160, 160 148 Z" fill="#042D29" opacity="0.35" />
+        <path d="M 148 180 C 172 165, 200 170, 218 188 C 200 195, 175 192, 148 180 Z" fill="#042D29" opacity="0.35" />
 
         {/* Woman Profile (Forehead, Nose, Lips, Chin, Neck & Collarbone) */}
         <path 
@@ -162,7 +162,7 @@ export function FafeLogo({
           </div>
           {showSubtitle && (
             <span
-              className={`uppercase font-bold tracking-[0.15em] mt-1 whitespace-nowrap ${
+              className={`uppercase font-bold tracking-[0.12em] mt-0.5 max-w-[280px] sm:max-w-none break-words sm:whitespace-nowrap leading-tight ${
                 isLight ? 'text-[#D4AF37]' : 'text-[#063F3A]/70'
               } ${dim.sub}`}
             >

@@ -4,7 +4,7 @@ import {
   Users, LayoutDashboard, Briefcase, Heart, Settings, 
   LogOut, Globe2, FolderOpen, Menu, X, Bell, Search,
   FileText, ShieldAlert, GraduationCap, Calendar, ShoppingCart, 
-  Package, MessageSquare, MapPin, Trash2
+  Package, MessageSquare, MapPin, Trash2, Tag
 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 import { Button } from '../../components/ui/Button';
@@ -114,7 +114,7 @@ export function AdminDashboard() {
       items: [
         { path: "/admin/marketplace/commandes", icon: <ShoppingCart className="w-4 h-4 mr-3" />, label: "Ventes & Commandes" },
         { path: "/admin/marketplace/produits", icon: <Package className="w-4 h-4 mr-3" />, label: "Produits" },
-        { path: "/admin/marketplace/categories", icon: <MapPin className="w-4 h-4 mr-3" />, label: "Catégories" },
+        { path: "/admin/marketplace/categories", icon: <Tag className="w-4 h-4 mr-3" />, label: "Catégories" },
       ]
     },
     {

@@ -189,7 +189,7 @@ function PodcastGallery() {
             </div>
             <div className="flex items-center gap-3 self-end md:self-center">
               <span className="text-xs font-mono text-stone-500 bg-stone-100 px-2.5 py-1 rounded-full">{pod.duration}</span>
-              <button className="flex items-center gap-1.5 px-4 py-2 bg-[#00843D] hover:bg-[#522f16] text-white rounded-xl text-xs font-bold transition-colors">
+              <button className="flex items-center gap-1.5 px-4 py-2 bg-[#00843D] hover:bg-[#006830] text-white rounded-xl text-xs font-bold transition-colors">
                 <Play className="w-3.5 h-3.5" fill="white" /> Écouter
               </button>
             </div>

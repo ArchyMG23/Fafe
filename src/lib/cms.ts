@@ -412,11 +412,16 @@ export async function getPublishedCMSContent<T>(pageId: CMSPageId, fallback: T):
  */
 export const getCMSGlobal = async () => {
   try {
-    const globalDocRef = doc(db, 'cms', 'global');
-    const globalDocSnap = await getDoc(globalDocRef);
     let globalData: any = {};
-    if (globalDocSnap.exists()) {
-      globalData = globalDocSnap.data();
+    try {
+      const globalDocRef = doc(db, 'cms', 'global');
+      const globalDocSnap = await getDoc(globalDocRef);
+      if (globalDocSnap.exists()) {
+        globalData = globalDocSnap.data();
+      }
+    } catch (docErr: any) {
+      // Gracefully handle offline or network errors when fetching the global doc
+      console.warn('[CMS] Global document offline or unreachable, using defaults:', docErr?.message || docErr);
     }
 
     const [nousRecord, donsRecord] = await Promise.all([
@@ -428,8 +433,8 @@ export const getCMSGlobal = async () => {
       bankDetails: globalData.bankDetails || donsRecord.publishedContent?.bankDetails || defaultDonsCMS.bankDetails,
       heroSlides: globalData.heroSlides || defaultHeroSlides
     };
-  } catch (error) {
-    console.error("Error in getCMSGlobal:", error);
+  } catch (error: any) {
+    console.warn("[CMS] Notice in getCMSGlobal, using fallback defaults:", error?.message || error);
     return {
       about: defaultNousCMS,
       bankDetails: defaultDonsCMS.bankDetails,
