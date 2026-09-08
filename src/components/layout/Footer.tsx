@@ -34,8 +34,9 @@ export function Footer() {
           
           <div className="sm:col-span-2 md:col-span-4 lg:col-span-2">
             <Link to="/" className="inline-flex items-center mb-6 group">
-              <FafeLogo variant="light" size="md" className="sm:hidden group-hover:opacity-90 transition-opacity" />
-              <FafeLogo variant="light" size="lg" className="hidden sm:inline-flex group-hover:opacity-90 transition-opacity" />
+              <FafeLogo variant="light" size="sm" className="sm:hidden group-hover:opacity-90 transition-opacity" />
+              <FafeLogo variant="light" size="md" className="hidden sm:inline-flex lg:hidden group-hover:opacity-90 transition-opacity" />
+              <FafeLogo variant="light" size="lg" className="hidden lg:inline-flex group-hover:opacity-90 transition-opacity" />
             </Link>
             <p className="text-white/80 mb-6 max-w-sm text-sm leading-relaxed">
               Le premier réseau panafricain dédié à l'accompagnement, au financement et à la valorisation des femmes entrepreneures.
@@ -48,7 +49,7 @@ export function Footer() {
                   placeholder="Votre email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 w-full text-white text-sm placeholder:text-white/50 focus:outline-none focus:border-[#D4AF37]"
+                  className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 w-full min-w-0 text-white text-sm placeholder:text-white/50 focus:outline-none focus:border-[#D4AF37]"
                   required
                 />
                 <Button type="submit" disabled={status === 'loading'} className="bg-[#C8102E] hover:bg-[#A30D25] text-white shrink-0 font-bold text-sm px-5">

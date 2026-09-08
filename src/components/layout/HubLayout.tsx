@@ -150,20 +150,24 @@ export function HubLayout() {
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
+      <div className="flex-1 min-w-0 w-full lg:ml-64 flex flex-col min-h-screen">
         <header className="bg-white h-16 border-b border-stone-200 flex items-center justify-between px-4 sticky top-0 z-30">
-          <button 
-            className="lg:hidden p-2 text-stone-500 hover:bg-stone-50 rounded-lg"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <button 
+              className="p-2 -ml-2 text-stone-600 hover:bg-stone-50 rounded-lg"
+              onClick={() => setIsSidebarOpen(true)}
+              aria-label="Ouvrir le menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <FafeLogo size="sm" showSubtitle={false} badge="Hub" />
+          </div>
           <div className="flex-1" />
-          <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#00843D] transition-colors hidden sm:block">
-            &larr; Retour au site FAFE
+          <Link to="/" className="text-sm font-medium text-stone-500 hover:text-[#00843D] transition-colors text-xs sm:text-sm">
+            &larr; <span className="hidden xs:inline">Retour au site</span> FAFE
           </Link>
         </header>
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
+        <main className="flex-1 min-w-0 w-full p-4 md:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

@@ -57,9 +57,9 @@ import { MemberAdhesion } from "./pages/dashboard/MemberAdhesion";
 
 function PublicLayout() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAF9F6]">
+    <div className="flex flex-col min-h-screen bg-[#FAF9F6] w-full max-w-full">
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow w-full max-w-full min-w-0">
         <Outlet />
       </main>
       <Footer />

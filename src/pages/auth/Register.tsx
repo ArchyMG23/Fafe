@@ -135,8 +135,7 @@ export function Register() {
         </div>
         
         <Card className="border border-[#063F3A]/5 shadow-xl rounded-2xl bg-white">
-          <CardContent className="p-8">
-
+          <CardContent className="p-5 sm:p-8">
 
             <form onSubmit={handleRegister} className="space-y-6">
               {error && (
@@ -145,7 +144,7 @@ export function Register() {
                 </div>
               )}
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[#063F3A] mb-1">Prénom *</label>
                   <Input name="firstName" required value={formData.firstName} onChange={handleChange} className="focus:border-[#00843D]" />
@@ -166,7 +165,7 @@ export function Register() {
                 <Input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="focus:border-[#00843D]" placeholder="+225 00 00 00 00" />
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[#063F3A] mb-1">Pays *</label>
                   <Input name="country" required value={formData.country} onChange={handleChange} className="focus:border-[#00843D]" />

@@ -162,7 +162,7 @@ export function FafeLogo({
           </div>
           {showSubtitle && (
             <span
-              className={`uppercase font-bold tracking-[0.12em] mt-0.5 max-w-[280px] sm:max-w-none break-words sm:whitespace-nowrap leading-tight ${
+              className={`uppercase font-bold tracking-[0.12em] mt-0.5 max-w-[240px] sm:max-w-none break-words leading-tight ${
                 isLight ? 'text-[#D4AF37]' : 'text-[#063F3A]/70'
               } ${dim.sub}`}
             >

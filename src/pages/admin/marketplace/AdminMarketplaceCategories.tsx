@@ -209,7 +209,8 @@ export function AdminMarketplaceCategories() {
 
       {/* List */}
       <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-        <table className="w-full text-left text-sm text-stone-600">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-stone-600">
           <thead className="bg-stone-50 border-b border-stone-200 text-stone-800">
             <tr>
               <th className="px-6 py-4 font-bold">Catégorie</th>
@@ -264,6 +265,7 @@ export function AdminMarketplaceCategories() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

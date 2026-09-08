@@ -81,7 +81,7 @@ export function Login() {
         </div>
         
         <Card className="border border-[#063F3A]/5 shadow-xl rounded-2xl bg-white">
-          <CardContent className="p-8">
+          <CardContent className="p-5 sm:p-8">
             <Button 
               type="button"
               onClick={handleGoogleSignIn} 
