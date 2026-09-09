@@ -43,15 +43,28 @@ export function Donation() {
   const [projectId, setProjectId] = useState<string>('GENERAL');
 
   useEffect(() => {
+    let isMounted = true;
     const fetchCMS = async () => {
       try {
         const data = await getPublishedCMSContent('dons', defaultDonsCMS);
-        setCmsData(data);
+        if (isMounted) setCmsData(data);
       } catch (err) {
         console.warn("Notice fetching donation CMS data (using defaults):", err);
       }
     };
     fetchCMS();
+
+    const handleCMSUpdate = (e: any) => {
+      if (e.detail?.pageId === 'dons' && e.detail?.content && isMounted) {
+        setCmsData(e.detail.content);
+      }
+    };
+    window.addEventListener('fafe_cms_updated', handleCMSUpdate);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('fafe_cms_updated', handleCMSUpdate);
+    };
   }, []);
 
   useEffect(() => {

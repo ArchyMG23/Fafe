@@ -15,6 +15,14 @@ export function AdminMarketplaceOrders() {
 
   useEffect(() => {
     fetchOrders();
+
+    const handleUpdate = () => {
+      fetchOrders();
+    };
+    window.addEventListener('fafe_orders_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('fafe_orders_updated', handleUpdate);
+    };
   }, []);
 
   const fetchOrders = async () => {

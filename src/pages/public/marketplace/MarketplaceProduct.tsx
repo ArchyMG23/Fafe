@@ -22,6 +22,15 @@ export function MarketplaceProduct() {
     if (slug) {
       fetchProduct(slug);
     }
+
+    const handleUpdate = () => {
+      if (slug) fetchProduct(slug);
+    };
+
+    window.addEventListener('fafe_marketplace_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('fafe_marketplace_updated', handleUpdate);
+    };
   }, [slug]);
 
   const fetchProduct = async (productSlug: string) => {
@@ -163,8 +172,8 @@ export function MarketplaceProduct() {
                 <div className="flex items-center justify-between mb-5">
                   <span className="font-semibold text-stone-700 text-sm">Disponibilité :</span>
                   {isOutOfStock ? (
-                    <span className="text-stone-600 font-bold text-xs bg-stone-200 px-3 py-1 rounded-full uppercase">
-                      Indisponible
+                    <span className="text-[#C8102E] font-bold text-xs bg-red-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                      Rupture de stock
                     </span>
                   ) : (
                     <span className="text-emerald-700 font-bold text-xs bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1.5">
@@ -173,7 +182,19 @@ export function MarketplaceProduct() {
                   )}
                 </div>
 
-                {!isOutOfStock && (
+                {isOutOfStock ? (
+                  <div className="space-y-3">
+                    <Button 
+                      disabled 
+                      className="w-full bg-stone-200 text-stone-500 hover:bg-stone-200 cursor-not-allowed py-3.5 h-auto font-bold text-sm"
+                    >
+                      Rupture de stock
+                    </Button>
+                    <p className="text-xs text-stone-500 text-center">
+                      Cet article n'est actuellement plus disponible à la commande.
+                    </p>
+                  </div>
+                ) : (
                   <>
                     <div className="flex items-center gap-4 mb-6">
                       <span className="font-semibold text-stone-700 text-sm">Quantité :</span>

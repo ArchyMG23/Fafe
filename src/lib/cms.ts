@@ -13,84 +13,85 @@ export const defaultAccueilCMS = {
     shortText: { fr: "Le Fonds d'Appui aux Femmes Entrepreneures accompagne, finance et valorise les projets portés par des femmes à travers le continent.", en: "The Fund to Support Women Entrepreneurs supports, finances, and empowers women-led initiatives across the African continent." },
     buttonText: { fr: "Rejoindre le réseau", en: "Join the network" },
     buttonLink: "/rejoindre",
-    secondaryButtonText: { fr: "Faire un don", en: "Make a donation" },
-    secondaryButtonLink: "/dons",
+    secondaryButtonText: { fr: "Découvrir le FAFE", en: "Discover FAFE" },
+    secondaryButtonLink: "/nous",
     heroImage: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80"
   },
   stats: [
-    { value: "5 000+", label: { fr: "Femmes accompagnées", en: "Women empowered" }, icon: "Users" },
-    { value: "15+", label: { fr: "Pays africains représentés", en: "African countries represented" }, icon: "Globe" },
-    { value: "200+", label: { fr: "Projets et entreprises financés", en: "Projects and businesses financed" }, icon: "TrendingUp" },
-    { value: "85%", label: { fr: "Taux de pérennité des projets", en: "Project sustainability rate" }, icon: "Target" }
+    { value: "5 000+", label: { fr: "Femmes accompagnées", en: "Women empowered" }, icon: "Heart" },
+    { value: "15+", label: { fr: "Pays africains", en: "African countries" }, icon: "Globe" },
+    { value: "200+", label: { fr: "Projets financés", en: "Projects financed" }, icon: "Briefcase" },
+    { value: "85%", label: { fr: "Taux de réussite", en: "Success rate" }, icon: "TrendingUp" }
   ],
   missions: {
-    badge: { fr: "NOTRE VOCATION", en: "OUR VOCATION" },
+    badge: { fr: "Notre Vocation", en: "Our Vocation" },
     title: { fr: "Trois piliers pour la réussite de vos projets", en: "Three pillars for your project success" },
     subtitle: { fr: "Un dispositif intégré pour accompagner chaque étape de votre croissance entrepreneuriale.", en: "An integrated framework to support every stage of your entrepreneurial growth." },
     pillars: [
       {
-        title: { fr: "Financement sur mesure", en: "Tailored Financing" },
-        description: { fr: "Accès facilité à des micro-crédits, fonds d'amorçage et garanties bancaires adaptés.", en: "Facilitated access to micro-credits, seed funding and adapted bank guarantees." },
+        title: { fr: "Financement", en: "Financing" },
+        description: { fr: "Accès facilité aux fonds d'investissement, subventions et prêts à taux préférentiels pour développer votre activité.", en: "Facilitated access to investment funds, grants, and preferential loans to develop your business." },
         icon: "Banknote"
       },
       {
         title: { fr: "Formation & Mentorat", en: "Training & Mentorship" },
-        description: { fr: "Programmes d'accélération, masterclasses et mentorat par des pairs expérimentés.", en: "Acceleration programs, masterclasses, and mentorship by seasoned leaders." },
+        description: { fr: "Programmes de renforcement de capacités et accompagnement personnalisé par des experts et leaders du marché.", en: "Capacity building programs and personalized coaching by market leaders and experts." },
         icon: "GraduationCap"
       },
       {
-        title: { fr: "Réseau Panafricain", en: "Pan-African Network" },
-        description: { fr: "Mise en relation d'affaires, opportunités B2B et présence dans les forums économiques.", en: "Business matchmaking, B2B opportunities, and presence in high-level economic forums." },
+        title: { fr: "Réseautage", en: "Networking" },
+        description: { fr: "Intégration à un écosystème puissant pour trouver des partenaires, des clients et des opportunités d'affaires.", en: "Integration into a powerful ecosystem to find partners, clients and business opportunities." },
         icon: "Network"
       }
     ]
   },
   directory: {
-    badge: { fr: "ANNUAIRE OFFICIEL", en: "OFFICIAL DIRECTORY" },
-    title: { fr: "Découvrez les talents du réseau FAFE", en: "Discover the talents of the FAFE network" },
+    badge: { fr: "Annuaire Panafricain", en: "Pan-African Directory" },
+    title: { fr: "Découvrez les talents du réseau", en: "Discover the network's talents" },
     subtitle: { fr: "Des femmes entrepreneures d'exception qui transforment l'économie de leurs pays.", en: "Exceptional women entrepreneurs transforming their countries' economies." },
-    buttonText: { fr: "Consulter l'annuaire complet", en: "View full directory" },
+    buttonText: { fr: "Voir l'annuaire complet", en: "View full directory" },
     buttonLink: "/entrepreneures"
   },
   network: {
-    badge: { fr: "PRÉSENCE CONTINENTALE", en: "CONTINENTAL PRESENCE" },
-    title: { fr: "Un réseau panafricain uni et engagé", en: "A united and committed pan-African network" },
+    badge: { fr: "Présence Continentale", en: "Continental Presence" },
+    title: { fr: "Un réseau actif dans toute l'Afrique", en: "An active network across Africa" },
     description: { fr: "Le FAFE fédère des délégations nationales actives pour bâtir des ponts entre entrepreneures du continent et de la diaspora.", en: "FAFE unites active national delegations to build bridges between continental and diaspora entrepreneurs." },
-    linkText: { fr: "Découvrir nos délégations régionales →", en: "Discover our regional delegations →" }
+    linkText: { fr: "Explorer les membres par pays →", en: "Explore members by country →" },
+    countries: ["Sénégal", "Côte d'Ivoire", "Mali", "Cameroun", "RDC", "Maroc"]
   },
   projects: {
-    badge: { fr: "IMPACT & DÉVELOPPEMENT", en: "IMPACT & DEVELOPMENT" },
-    title: { fr: "Transformer l'entrepreneuriat en impact social durable", en: "Transforming entrepreneurship into lasting social impact" },
-    buttonText: { fr: "Découvrir tous les projets", en: "Discover all projects" },
+    badge: { fr: "Impact & Développement", en: "Impact & Development" },
+    title: { fr: "Transformer l'entrepreneuriat en impact", en: "Transforming entrepreneurship into impact" },
+    buttonText: { fr: "En savoir plus", en: "Learn more" },
     buttonLink: "/projets-sociaux"
   },
   events: {
-    badge: { fr: "AGENDA INSTITUTIONNEL", en: "INSTITUTIONAL AGENDA" },
-    title: { fr: "Nos prochains rendez-vous et sommets", en: "Our upcoming summits and forums" },
+    badge: { fr: "Agenda", en: "Agenda" },
+    title: { fr: "Nos prochains événements", en: "Our upcoming events" },
     buttonText: { fr: "Voir tout l'agenda", en: "View full agenda" },
     buttonLink: "/actualites"
   },
   news: {
-    badge: { fr: "ÉDITORIAL", en: "EDITORIAL" },
-    title: { fr: "Actualités, tribunes & inspirations", en: "News, viewpoints & inspiration" },
+    badge: { fr: "Éditorial", en: "Editorial" },
+    title: { fr: "Actualités & inspirations", en: "News & inspirations" },
     buttonText: { fr: "Toutes les actualités", en: "All news" },
     buttonLink: "/actualites"
   },
   donationCta: {
-    badge: { fr: "SOUTENEZ NOTRE ACTION", en: "SUPPORT OUR ACTION" },
-    title: { fr: "Votre soutien peut ouvrir de nouvelles opportunités", en: "Your support can unlock life-changing opportunities" },
-    description: { fr: "Chaque contribution participe directement au renforcement de capacités et au financement de projets féminins à fort impact social et économique.", en: "Every contribution directly supports capacity building and financing of high-impact women-led projects." },
-    buttonText: { fr: "Faire un don maintenant", en: "Make a donation now" },
+    badge: { fr: "Soutenez notre action", en: "Support our action" },
+    title: { fr: "Votre soutien ouvre de nouvelles opportunités.", en: "Your support opens new opportunities." },
+    description: { fr: "Chaque contribution participe au développement de l'entrepreneuriat féminin africain en finançant des formations et des projets d'avenir.", en: "Every contribution participates in the development of African women's entrepreneurship by financing training and future projects." },
+    buttonText: { fr: "Faire un don", en: "Make a donation" },
     buttonLink: "/dons"
   },
   partners: {
-    title: { fr: "Nos partenaires institutionnels et stratégiques", en: "Our institutional and strategic partners" },
+    title: { fr: "Partenaires institutionnels & stratégiques", en: "Institutional & strategic partners" },
     list: [
       { name: "ONU Femmes", logo: "" },
-      { name: "Banque Africaine de Développement", logo: "" },
-      { name: "Union Africaine", logo: "" },
-      { name: "Agence Française de Développement", logo: "" },
-      { name: "Organisation Internationale de la Francophonie", logo: "" }
+      { name: "BAD", logo: "" },
+      { name: "AFD", logo: "" },
+      { name: "Union Européenne", logo: "" },
+      { name: "OIF", logo: "" }
     ]
   },
   seo: {
@@ -330,6 +331,22 @@ export const defaultAboutData = defaultNousCMS;
 // =========================================================
 
 /**
+ * Universal helper to extract localized text according to active language (fr / en)
+ */
+export function getCMSLocalizedText(field: any, language: 'fr' | 'en' = 'fr', fallback = ''): string {
+  if (!field && field !== 0) return fallback;
+  if (typeof field === 'string') return field;
+  if (typeof field === 'number') return String(field);
+  if (typeof field === 'object') {
+    if (language === 'en') {
+      return field.en || field.fr || field.titleEN || field.titleFR || field.descriptionEN || field.descriptionFR || field.heroLabelEN || field.heroLabelFR || fallback;
+    }
+    return field.fr || field.en || field.titleFR || field.titleEN || field.descriptionFR || field.descriptionEN || field.heroLabelFR || field.heroLabelEN || fallback;
+  }
+  return fallback;
+}
+
+/**
  * Deep merge utility for CMS state to guarantee no missing fields
  */
 export function mergeWithDefaults<T>(defaults: T, current: any): T {
@@ -353,11 +370,27 @@ export function mergeWithDefaults<T>(defaults: T, current: any): T {
  */
 export async function getCMSPageRecord(pageId: CMSPageId): Promise<CMSPageRecord> {
   const fallback = CMS_PAGE_DEFAULTS[pageId] || {};
+  let cachedDraft: any = null;
+  let cachedPublished: any = null;
+
+  if (typeof window !== 'undefined') {
+    try {
+      const d = localStorage.getItem(`fafe_cms_draft_${pageId}`);
+      if (d) cachedDraft = JSON.parse(d);
+      const p = localStorage.getItem(`fafe_cms_published_${pageId}`);
+      if (p) cachedPublished = JSON.parse(p);
+    } catch {
+      // ignore
+    }
+  }
+
   try {
     const docRef = doc(db, 'cms_pages', pageId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
+      const pubContent = mergeWithDefaults(fallback, data.publishedContent || cachedPublished || fallback);
+      const draftContent = mergeWithDefaults(fallback, data.draftContent || cachedDraft || pubContent);
       return {
         pageId,
         status: data.status || 'PUBLISHED',
@@ -365,14 +398,17 @@ export async function getCMSPageRecord(pageId: CMSPageId): Promise<CMSPageRecord
         updatedBy: data.updatedBy || 'Système',
         publishedAt: data.publishedAt,
         publishedBy: data.publishedBy,
-        draftContent: mergeWithDefaults(fallback, data.draftContent || data.publishedContent || fallback),
-        publishedContent: mergeWithDefaults(fallback, data.publishedContent || fallback),
+        draftContent,
+        publishedContent: pubContent,
         version: data.version || 1
       };
     }
   } catch (err) {
-    console.warn(`[CMS] Using fallback for page ${pageId}:`, err);
+    console.warn(`[CMS] Using local cache/fallback for page ${pageId}:`, err);
   }
+
+  const initialPub = cachedPublished ? mergeWithDefaults(fallback, cachedPublished) : fallback;
+  const initialDraft = cachedDraft ? mergeWithDefaults(fallback, cachedDraft) : initialPub;
 
   return {
     pageId,
@@ -381,16 +417,29 @@ export async function getCMSPageRecord(pageId: CMSPageId): Promise<CMSPageRecord
     updatedBy: 'Système',
     publishedAt: Date.now(),
     publishedBy: 'Initialisation FAFE',
-    draftContent: fallback,
-    publishedContent: fallback,
+    draftContent: initialDraft,
+    publishedContent: initialPub,
     version: 1
   };
 }
 
 /**
  * Fetch published content directly for public client pages
+ * Single source of truth: Firestore cms_pages, backed by local fast-cache
  */
 export async function getPublishedCMSContent<T>(pageId: CMSPageId, fallback: T): Promise<T> {
+  let localData: any = null;
+  if (typeof window !== 'undefined') {
+    try {
+      const cached = localStorage.getItem(`fafe_cms_published_${pageId}`);
+      if (cached) {
+        localData = JSON.parse(cached);
+      }
+    } catch {
+      // ignore JSON parse error
+    }
+  }
+
   try {
     const docRef = doc(db, 'cms_pages', pageId);
     const docSnap = await getDoc(docRef);
@@ -398,11 +447,21 @@ export async function getPublishedCMSContent<T>(pageId: CMSPageId, fallback: T):
       const data = docSnap.data();
       const content = data.publishedContent || data.draftContent;
       if (content) {
-        return mergeWithDefaults(fallback, content);
+        const merged = mergeWithDefaults(fallback, content);
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem(`fafe_cms_published_${pageId}`, JSON.stringify(merged));
+          } catch {}
+        }
+        return merged;
       }
     }
   } catch (err) {
-    console.warn(`[CMS] Error fetching published content for ${pageId}, using defaults:`, err);
+    console.warn(`[CMS] Error fetching published content for ${pageId} from Firestore, using cache/defaults:`, err);
+  }
+
+  if (localData) {
+    return mergeWithDefaults(fallback, localData);
   }
   return fallback;
 }
@@ -420,18 +479,38 @@ export const getCMSGlobal = async () => {
         globalData = globalDocSnap.data();
       }
     } catch (docErr: any) {
-      // Gracefully handle offline or network errors when fetching the global doc
       console.warn('[CMS] Global document offline or unreachable, using defaults:', docErr?.message || docErr);
     }
 
-    const [nousRecord, donsRecord] = await Promise.all([
+    const [accueilRecord, nousRecord, donsRecord] = await Promise.all([
+      getCMSPageRecord('accueil'),
       getCMSPageRecord('nous'),
       getCMSPageRecord('dons')
     ]);
+
+    let heroSlides = defaultHeroSlides;
+    if (accueilRecord.publishedContent?.hero) {
+      const hero = accueilRecord.publishedContent.hero;
+      heroSlides = [
+        {
+          id: 'slide-1',
+          image: hero.heroImage || defaultHeroSlides[0].image,
+          title: hero.title,
+          shortText: hero.shortText,
+          buttonText: hero.buttonText,
+          link: hero.buttonLink || '/rejoindre',
+          order: 1,
+          status: 'ACTIVE'
+        }
+      ];
+    } else if (globalData.heroSlides && globalData.heroSlides.length > 0) {
+      heroSlides = globalData.heroSlides;
+    }
+
     return {
       about: nousRecord.publishedContent,
       bankDetails: globalData.bankDetails || donsRecord.publishedContent?.bankDetails || defaultDonsCMS.bankDetails,
-      heroSlides: globalData.heroSlides || defaultHeroSlides
+      heroSlides
     };
   } catch (error: any) {
     console.warn("[CMS] Notice in getCMSGlobal, using fallback defaults:", error?.message || error);
@@ -491,7 +570,7 @@ export async function saveCMSDraft(
   user: { id: string; name: string; email: string }
 ): Promise<void> {
   const currentRecord = await getCMSPageRecord(pageId);
-  const nextVersion = currentRecord.version + 1;
+  const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
   const payload: Partial<CMSPageRecord> = {
@@ -505,6 +584,15 @@ export async function saveCMSDraft(
   };
 
   await setDoc(docRef, payload, { merge: true });
+
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(`fafe_cms_draft_${pageId}`, JSON.stringify(draftContent));
+      window.dispatchEvent(new CustomEvent('fafe_cms_draft_updated', { detail: { pageId, content: draftContent } }));
+    } catch (e) {
+      console.warn("Storage sync draft notice:", e);
+    }
+  }
 
   await logCMSAudit({
     adminId: user.id,
@@ -524,7 +612,7 @@ export async function publishCMSPage(
   user: { id: string; name: string; email: string }
 ): Promise<void> {
   const currentRecord = await getCMSPageRecord(pageId);
-  const nextVersion = currentRecord.version + 1;
+  const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
   const payload: CMSPageRecord = {
@@ -541,11 +629,37 @@ export async function publishCMSPage(
 
   await setDoc(docRef, payload, { merge: true });
 
-  // Sync with legacy cms/global if it is nous or dons
-  if (pageId === 'nous') {
-    await setDoc(doc(db, 'cms', 'global'), { about: contentToPublish }, { merge: true });
-  } else if (pageId === 'dons' && contentToPublish.bankDetails) {
-    await setDoc(doc(db, 'cms', 'global'), { bankDetails: contentToPublish.bankDetails }, { merge: true });
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(`fafe_cms_published_${pageId}`, JSON.stringify(contentToPublish));
+      localStorage.setItem(`fafe_cms_draft_${pageId}`, JSON.stringify(contentToPublish));
+      window.dispatchEvent(new CustomEvent('fafe_cms_updated', { detail: { pageId, content: contentToPublish } }));
+    } catch (e) {
+      console.warn("Storage sync published notice:", e);
+    }
+  }
+
+  // Sync with legacy cms/global if it is nous, dons, or accueil
+  try {
+    if (pageId === 'nous') {
+      await setDoc(doc(db, 'cms', 'global'), { about: contentToPublish }, { merge: true });
+    } else if (pageId === 'dons' && contentToPublish.bankDetails) {
+      await setDoc(doc(db, 'cms', 'global'), { bankDetails: contentToPublish.bankDetails }, { merge: true });
+    } else if (pageId === 'accueil' && contentToPublish.hero) {
+      const slide = {
+        id: 'slide-1',
+        image: contentToPublish.hero.heroImage || defaultHeroSlides[0].image,
+        title: contentToPublish.hero.title,
+        shortText: contentToPublish.hero.shortText,
+        buttonText: contentToPublish.hero.buttonText,
+        link: contentToPublish.hero.buttonLink || '/rejoindre',
+        order: 1,
+        status: 'ACTIVE'
+      };
+      await setDoc(doc(db, 'cms', 'global'), { heroSlides: [slide] }, { merge: true });
+    }
+  } catch (syncErr) {
+    console.warn("Legacy global sync notice:", syncErr);
   }
 
   await logCMSAudit({

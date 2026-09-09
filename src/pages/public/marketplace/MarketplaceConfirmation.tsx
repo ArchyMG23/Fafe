@@ -10,7 +10,8 @@ export function MarketplaceConfirmation() {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const statusParam = searchParams.get('status');
-  const { currentUser } = useAuthStore();
+  const { currentUser, userProfile } = useAuthStore();
+  const isAdmin = userProfile && ['ADMIN', 'SUPER_ADMIN'].includes(userProfile.role);
   
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<Order | null>(null);
@@ -81,8 +82,12 @@ export function MarketplaceConfirmation() {
     <div className="min-h-screen bg-stone-50 py-10 sm:py-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-stone-200/70 text-center relative overflow-hidden">
-          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-sm">
+          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-sm">
             <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
+            <span>Paiement Test / Sandbox Validé</span>
           </div>
           
           <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#063F3A] mb-2">
@@ -174,7 +179,14 @@ export function MarketplaceConfirmation() {
               </Button>
             </Link>
 
-            {currentUser ? (
+            {isAdmin ? (
+              <Link to="/admin/marketplace/commandes" className="w-full sm:w-1/2">
+                <Button variant="outline" className="w-full border-[#063F3A] text-[#063F3A] hover:bg-[#063F3A]/5 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center">
+                  <User className="w-4 h-4 mr-2" />
+                  Gérer la commande (Admin)
+                </Button>
+              </Link>
+            ) : currentUser ? (
               <Link to="/hub/dashboard/commandes" className="w-full sm:w-1/2">
                 <Button variant="outline" className="w-full border-stone-300 text-stone-700 hover:bg-stone-50 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center">
                   <User className="w-4 h-4 mr-2" />

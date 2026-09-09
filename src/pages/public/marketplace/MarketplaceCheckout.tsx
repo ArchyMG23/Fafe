@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Loader2, ArrowRight, ShieldCheck, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '../../../store/auth';
 import { useCartStore } from '../../../store/cart';
 import { Button } from '../../../components/ui/Button';
@@ -17,7 +17,7 @@ const checkoutSchema = z.object({
   country: z.string().min(2, 'Le pays est requis'),
   city: z.string().min(2, 'La ville est requise'),
   address: z.string().min(5, 'Adresse de livraison complète requise'),
-  paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'CASH_ON_DELIVERY'])
+  paymentMethod: z.enum(['TEST_SANDBOX', 'MOBILE_MONEY', 'CARD', 'CASH_ON_DELIVERY'])
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -40,14 +40,14 @@ export function MarketplaceCheckout() {
   const { register, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      firstName: userProfile?.firstName || '',
-      lastName: userProfile?.lastName || '',
-      email: userProfile?.email || currentUser?.email || '',
-      phone: userProfile?.phone || '',
-      country: userProfile?.country || 'Côte d\'Ivoire',
+      firstName: userProfile?.firstName || 'Victor',
+      lastName: userProfile?.lastName || 'YOMBI',
+      email: userProfile?.email || currentUser?.email || 'yombivictor@gmail.com',
+      phone: userProfile?.phone || '+225 07 00 00 00 00',
+      country: userProfile?.country || "Côte d'Ivoire",
       city: userProfile?.city || 'Abidjan',
-      address: '',
-      paymentMethod: 'MOBILE_MONEY'
+      address: 'Plateau, Immeuble Symphonie, 4e étage',
+      paymentMethod: 'TEST_SANDBOX'
     }
   });
 
@@ -67,6 +67,7 @@ export function MarketplaceCheckout() {
         customerAddress: data.address,
         currency: 'XAF',
         paymentMethod: data.paymentMethod,
+        isTestOrder: true,
         items: items.map(item => ({
           productId: item.productId,
           slug: item.slug,
@@ -92,6 +93,28 @@ export function MarketplaceCheckout() {
   return (
     <div className="min-h-screen bg-stone-50 py-10 sm:py-12">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
+        {/* Sandbox Notice Banner */}
+        <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-[#00843D]/10 border border-[#00843D]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-[#00843D] text-white flex-shrink-0 mt-0.5">
+              <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-sm sm:text-base text-[#063F3A]">
+                  Environnement de Démonstration PCA &bull; Sandbox Test
+                </h3>
+                <span className="bg-[#D4AF37]/20 text-[#063F3A] font-bold text-[10px] uppercase px-2 py-0.5 rounded-full border border-[#D4AF37]/40">
+                  Mode Démo Sécurisé
+                </span>
+              </div>
+              <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                Cette transaction s'exécute en mode TEST/SANDBOX. Aucun débit réel ne sera effectué. La commande et la décrémentation du stock sont enregistrées en direct dans Firebase.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#063F3A] mb-8">
           Finaliser votre commande
         </h1>
@@ -117,11 +140,11 @@ export function MarketplaceCheckout() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Prénom
+                    Prénom *
                   </label>
                   <input
                     {...register('firstName')}
-                    placeholder="ex: Aminata"
+                    placeholder="Prénom"
                     className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
@@ -129,11 +152,11 @@ export function MarketplaceCheckout() {
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Nom
+                    Nom *
                   </label>
                   <input
                     {...register('lastName')}
-                    placeholder="ex: Diallo"
+                    placeholder="Nom"
                     className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
@@ -143,12 +166,12 @@ export function MarketplaceCheckout() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Adresse e-mail
+                    Adresse e-mail *
                   </label>
                   <input
                     type="email"
                     {...register('email')}
-                    placeholder="aminata@example.com"
+                    placeholder="nom@exemple.com"
                     className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
@@ -156,12 +179,12 @@ export function MarketplaceCheckout() {
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Téléphone (avec indicatif)
+                    Téléphone WhatsApp / Contact *
                   </label>
                   <input
                     type="tel"
                     {...register('phone')}
-                    placeholder="+225 07 00 00 00"
+                    placeholder="+225 07 00 00 00 00"
                     className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#00843D]/20 focus:border-[#00843D] text-sm text-stone-800 outline-none transition-colors"
                   />
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
@@ -171,7 +194,7 @@ export function MarketplaceCheckout() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Pays
+                    Pays *
                   </label>
                   <input
                     {...register('country')}
@@ -183,7 +206,7 @@ export function MarketplaceCheckout() {
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Ville
+                    Ville *
                   </label>
                   <input
                     {...register('city')}
@@ -196,7 +219,7 @@ export function MarketplaceCheckout() {
 
               <div>
                 <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
-                  Adresse de livraison précise
+                  Adresse de livraison complète *
                 </label>
                 <input
                   {...register('address')}
@@ -208,48 +231,72 @@ export function MarketplaceCheckout() {
 
               <div className="pt-4 border-t border-stone-100">
                 <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-3">
-                  Mode de règlement
+                  Mode de règlement (Mode Démonstration PCA)
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <label className="flex items-center gap-3 p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                <div className="space-y-2.5">
+                  <label className="flex items-center gap-3 p-3.5 border-2 border-[#00843D] bg-[#00843D]/5 rounded-xl cursor-pointer transition-colors">
                     <input
                       type="radio"
-                      value="MOBILE_MONEY"
+                      value="TEST_SANDBOX"
                       {...register('paymentMethod')}
                       defaultChecked
                       className="text-[#00843D] focus:ring-[#00843D]"
                     />
-                    <div>
-                      <span className="block text-xs font-bold text-stone-800">Mobile Money</span>
-                      <span className="block text-[11px] text-stone-500">Orange, MTN, Wave</span>
+                    <div className="flex-grow">
+                      <div className="flex items-center justify-between">
+                        <span className="block text-xs font-bold text-stone-900">
+                          Simulation Sandbox FAFE (Validation instantanée)
+                        </span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                          Recommandé PCA
+                        </span>
+                      </div>
+                      <span className="block text-[11px] text-stone-500">
+                        Idéal pour la présentation en direct devant la PCA : paiement test validé immédiatement, sans frais.
+                      </span>
                     </div>
                   </label>
 
-                  <label className="flex items-center gap-3 p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                    <input
-                      type="radio"
-                      value="CARD"
-                      {...register('paymentMethod')}
-                      className="text-[#00843D] focus:ring-[#00843D]"
-                    />
-                    <div>
-                      <span className="block text-xs font-bold text-stone-800">Carte Bancaire</span>
-                      <span className="block text-[11px] text-stone-500">Visa, Mastercard</span>
-                    </div>
-                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <label className="flex items-center gap-2.5 p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                      <input
+                        type="radio"
+                        value="MOBILE_MONEY"
+                        {...register('paymentMethod')}
+                        className="text-[#00843D] focus:ring-[#00843D]"
+                      />
+                      <div>
+                        <span className="block text-xs font-bold text-stone-800">Mobile Money Test</span>
+                        <span className="block text-[10px] text-stone-500">Orange / MTN / Wave</span>
+                      </div>
+                    </label>
 
-                  <label className="flex items-center gap-3 p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                    <input
-                      type="radio"
-                      value="CASH_ON_DELIVERY"
-                      {...register('paymentMethod')}
-                      className="text-[#00843D] focus:ring-[#00843D]"
-                    />
-                    <div>
-                      <span className="block text-xs font-bold text-stone-800">À la réception</span>
-                      <span className="block text-[11px] text-stone-500">Paiement direct</span>
-                    </div>
-                  </label>
+                    <label className="flex items-center gap-2.5 p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                      <input
+                        type="radio"
+                        value="CARD"
+                        {...register('paymentMethod')}
+                        className="text-[#00843D] focus:ring-[#00843D]"
+                      />
+                      <div>
+                        <span className="block text-xs font-bold text-stone-800">Carte Bancaire Test</span>
+                        <span className="block text-[10px] text-stone-500">3D Secure Sandbox</span>
+                      </div>
+                    </label>
+
+                    <label className="flex items-center gap-2.5 p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                      <input
+                        type="radio"
+                        value="CASH_ON_DELIVERY"
+                        {...register('paymentMethod')}
+                        className="text-[#00843D] focus:ring-[#00843D]"
+                      />
+                      <div>
+                        <span className="block text-xs font-bold text-stone-800">À la réception</span>
+                        <span className="block text-[10px] text-stone-500">Paiement direct test</span>
+                      </div>
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -261,11 +308,11 @@ export function MarketplaceCheckout() {
                 {isProcessing ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Enregistrement de la commande...
+                    Enregistrement dans Firebase & décrémentation du stock...
                   </>
                 ) : (
                   <>
-                    Confirmer et finaliser ma commande
+                    Valider l'Achat Test PCA
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -324,7 +371,7 @@ export function MarketplaceCheckout() {
                   <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
                   Achat garanti et suivi FAFE
                 </div>
-                <p>Vos informations sont traitées de manière confidentielle et votre commande sera confirmée immédiatement.</p>
+                <p>Vos informations sont traitées de manière confidentielle et votre commande est enregistrée directement dans Firebase.</p>
               </div>
             </div>
           </div>

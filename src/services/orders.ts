@@ -1,14 +1,29 @@
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc, query, orderBy } from 'firebase/firestore';
+import { 
+  collection, 
+  doc, 
+  setDoc, 
+  getDoc, 
+  getDocs, 
+  updateDoc, 
+  query, 
+  orderBy 
+} from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Order, OrderItem, OrderStatus, OrderPaymentStatus } from '../types';
 import { marketplaceService } from './marketplace';
 
-const LOCAL_ORDERS_KEY = 'fafe_orders_v1';
+const LOCAL_ORDERS_KEY = 'fafe_orders_cache_v2';
 
 export function generateOrderNumber(): string {
   const year = new Date().getFullYear();
   const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
   return `CMD-${year}-${randomSuffix}`;
+}
+
+function notifyOrdersUpdated() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('fafe_orders_updated'));
+  }
 }
 
 export interface CreateOrderInput {
@@ -30,22 +45,33 @@ export interface CreateOrderInput {
   }>;
   currency?: string;
   paymentMethod?: string;
+  isTestOrder?: boolean;
 }
 
 class OrdersService {
-  private getLocalOrders(): Order[] {
+  private ordersCache: Order[] | null = null;
+
+  private getCachedOrders(): Order[] {
+    if (this.ordersCache && this.ordersCache.length > 0) {
+      return this.ordersCache;
+    }
     try {
       const stored = localStorage.getItem(LOCAL_ORDERS_KEY);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          this.ordersCache = parsed;
+          return parsed;
+        }
       }
     } catch {
-      // Fallback
+      // Ignore
     }
     return [];
   }
 
-  private saveLocalOrders(orders: Order[]): void {
+  private setCachedOrders(orders: Order[]): void {
+    this.ordersCache = orders;
     try {
       localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify(orders));
     } catch {
@@ -53,7 +79,7 @@ class OrdersService {
     }
   }
 
-  // Create a new order with stock validation and immediate deduction
+  // Create a new order with stock validation and immediate Firestore write
   async createOrder(input: CreateOrderInput): Promise<Order> {
     if (!input.items || input.items.length === 0) {
       throw new Error('Le panier est vide. Veuillez sélectionner des articles.');
@@ -87,6 +113,8 @@ class OrdersService {
     const orderId = `ord-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
     const now = Date.now();
 
+    const isTest = input.isTestOrder !== false; // Default to test order mode in demo environment
+
     const newOrder: Order = {
       id: orderId,
       orderNumber,
@@ -102,29 +130,37 @@ class OrdersService {
       totalAmount,
       currency: input.currency || 'XAF',
       orderStatus: 'PENDING',
-      paymentStatus: 'UNPAID',
-      paymentMethod: input.paymentMethod || 'MOBILE_MONEY',
+      paymentStatus: 'PAID', // In sandbox / test mode it marks as confirmed
+      paymentMethod: input.paymentMethod || 'TEST_SANDBOX',
+      paidAt: now,
       createdAt: now,
       updatedAt: now
     };
 
-    // 3. Decrement stock for all purchased items
-    for (const item of input.items) {
-      await marketplaceService.updateStock(item.productId, -item.quantity);
-    }
-
-    // 4. Save to local repository
-    const localOrders = this.getLocalOrders();
-    localOrders.unshift(newOrder);
-    this.saveLocalOrders(localOrders);
-
-    // 5. Try syncing to Firestore
+    // 3. Write Order directly to Firestore
     try {
       const orderRef = doc(db, 'orders', orderId);
       await setDoc(orderRef, newOrder);
     } catch (err) {
-      console.warn('Could not sync order to Firestore, stored locally:', err);
+      console.warn('Could not write order directly to Firestore:', err);
     }
+
+    // 4. Decrement stock for all purchased items in Firestore
+    for (const item of input.items) {
+      try {
+        await marketplaceService.updateStock(item.productId, -item.quantity);
+      } catch (stockErr) {
+        console.warn(`Could not update stock for product ${item.productId}:`, stockErr);
+      }
+    }
+
+    // 5. Update local cache
+    const current = this.getCachedOrders();
+    current.unshift(newOrder);
+    this.setCachedOrders(current);
+
+    // 6. Notify
+    notifyOrdersUpdated();
 
     return newOrder;
   }
@@ -132,23 +168,25 @@ class OrdersService {
   // Get order by ID or orderNumber
   async getOrder(idOrNumber: string): Promise<Order | null> {
     const target = idOrNumber.trim();
-    // Try Firestore
+    
+    // Try Firestore by ID
     try {
       const docRef = doc(db, 'orders', target);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
-        return { id: snap.id, ...snap.data() } as Order;
+        const ord = { id: snap.id, ...snap.data() } as Order;
+        return ord;
       }
     } catch {
-      // Fallback
+      // Continue
     }
 
-    // Check local
-    const localOrders = this.getLocalOrders();
-    return localOrders.find(o => o.id === target || o.orderNumber === target) || null;
+    // Try finding in all orders
+    const all = await this.getAllOrders();
+    return all.find(o => o.id === target || o.orderNumber === target) || null;
   }
 
-  // Get all orders for administration
+  // Get all orders for administration from Firestore
   async getAllOrders(): Promise<Order[]> {
     try {
       const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
@@ -158,16 +196,15 @@ class OrdersService {
         snapshot.forEach(docSnap => {
           list.push({ id: docSnap.id, ...docSnap.data() } as Order);
         });
-        this.saveLocalOrders(list);
+        this.setCachedOrders(list);
         return list;
       }
-    } catch {
-      // Fallback
+    } catch (err) {
+      console.warn('Could not fetch orders from Firestore:', err);
     }
-    return this.getLocalOrders();
+    return this.getCachedOrders();
   }
 
-  // Alias for getAllOrders
   async getOrders(): Promise<Order[]> {
     return this.getAllOrders();
   }
@@ -183,40 +220,29 @@ class OrdersService {
     });
   }
 
-  // Update order status
+  // Update order status in Firestore
   async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
-    const localOrders = this.getLocalOrders();
-    const order = localOrders.find(o => o.id === orderId || o.orderNumber === orderId);
-    if (order) {
-      order.orderStatus = status;
-      order.updatedAt = Date.now();
-      this.saveLocalOrders(localOrders);
-    }
-
     try {
       const docRef = doc(db, 'orders', orderId);
       await updateDoc(docRef, { orderStatus: status, updatedAt: Date.now() });
-    } catch {
-      // Ignored
+    } catch (err) {
+      console.warn('Firestore update order status error:', err);
     }
+
+    // Update local cache
+    const current = this.getCachedOrders();
+    const target = current.find(o => o.id === orderId || o.orderNumber === orderId);
+    if (target) {
+      target.orderStatus = status;
+      target.updatedAt = Date.now();
+      this.setCachedOrders(current);
+    }
+
+    notifyOrdersUpdated();
   }
 
-  // Update payment status (e.g. after customer confirms)
+  // Update payment status
   async updatePaymentStatus(orderId: string, status: OrderPaymentStatus): Promise<void> {
-    const localOrders = this.getLocalOrders();
-    const order = localOrders.find(o => o.id === orderId || o.orderNumber === orderId);
-    if (order) {
-      order.paymentStatus = status;
-      if (status === 'PAID') {
-        order.paidAt = Date.now();
-        if (order.orderStatus === 'PENDING') {
-          order.orderStatus = 'CONFIRMED';
-        }
-      }
-      order.updatedAt = Date.now();
-      this.saveLocalOrders(localOrders);
-    }
-
     try {
       const docRef = doc(db, 'orders', orderId);
       await updateDoc(docRef, {
@@ -224,37 +250,62 @@ class OrdersService {
         paidAt: status === 'PAID' ? Date.now() : undefined,
         updatedAt: Date.now()
       });
-    } catch {
-      // Ignored
+    } catch (err) {
+      console.warn('Firestore update payment status error:', err);
     }
+
+    const current = this.getCachedOrders();
+    const target = current.find(o => o.id === orderId || o.orderNumber === orderId);
+    if (target) {
+      target.paymentStatus = status;
+      if (status === 'PAID') {
+        target.paidAt = Date.now();
+        if (target.orderStatus === 'PENDING') {
+          target.orderStatus = 'CONFIRMED';
+        }
+      }
+      target.updatedAt = Date.now();
+      this.setCachedOrders(current);
+    }
+
+    notifyOrdersUpdated();
   }
 
   // Cancel order and restore product stock
   async cancelOrder(orderId: string): Promise<void> {
-    const localOrders = this.getLocalOrders();
-    const order = localOrders.find(o => o.id === orderId || o.orderNumber === orderId);
-    if (!order) return;
+    const order = await this.getOrder(orderId);
+    if (!order || order.orderStatus === 'CANCELLED') return;
 
-    if (order.orderStatus === 'CANCELLED') return;
-
-    // Restore stock
+    // 1. Restore stock in Firestore
     for (const item of order.items) {
-      await marketplaceService.updateStock(item.productId, item.quantity);
+      try {
+        await marketplaceService.updateStock(item.productId, item.quantity);
+      } catch (err) {
+        console.warn('Could not restore stock:', err);
+      }
     }
 
-    order.orderStatus = 'CANCELLED';
-    order.updatedAt = Date.now();
-    this.saveLocalOrders(localOrders);
-
+    // 2. Update order in Firestore
     try {
       const docRef = doc(db, 'orders', orderId);
       await updateDoc(docRef, {
         orderStatus: 'CANCELLED',
         updatedAt: Date.now()
       });
-    } catch {
-      // Ignored
+    } catch (err) {
+      console.warn('Firestore cancel order error:', err);
     }
+
+    // 3. Update cache
+    const current = this.getCachedOrders();
+    const target = current.find(o => o.id === orderId || o.orderNumber === orderId);
+    if (target) {
+      target.orderStatus = 'CANCELLED';
+      target.updatedAt = Date.now();
+      this.setCachedOrders(current);
+    }
+
+    notifyOrdersUpdated();
   }
 }
 

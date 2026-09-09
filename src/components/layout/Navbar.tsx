@@ -203,9 +203,9 @@ export function Navbar() {
           </Link>
           
           <Link
-            to="/marketplace"
-            aria-label="Marketplace FAFE"
-            title="Marketplace"
+            to={cartItemsCount > 0 ? "/marketplace/panier" : "/marketplace"}
+            aria-label={cartItemsCount > 0 ? "Panier FAFE" : "Marketplace FAFE"}
+            title={cartItemsCount > 0 ? "Voir mon panier" : "Marketplace"}
             className="text-white/80 hover:text-white transition-colors p-1.5 xl:p-2 rounded-full hover:bg-white/10 relative"
           >
             <ShoppingCart className="w-4.5 h-4.5 xl:w-5 xl:h-5" />
@@ -249,8 +249,9 @@ export function Navbar() {
         {/* Mobile Header Actions (Compact, Thumb-friendly) */}
         <div className="flex items-center gap-1 sm:gap-2 lg:hidden">
           <Link
-            to="/marketplace/panier"
-            aria-label="Marketplace"
+            to={cartItemsCount > 0 ? "/marketplace/panier" : "/marketplace"}
+            aria-label={cartItemsCount > 0 ? "Panier Marketplace" : "Marketplace FAFE"}
+            title={cartItemsCount > 0 ? "Panier" : "Marketplace"}
             className="p-2.5 text-white hover:text-[#FCD116] rounded-full hover:bg-white/10 active:scale-95 transition-transform relative"
           >
             <ShoppingCart className="w-5 h-5" />
@@ -299,9 +300,10 @@ export function Navbar() {
               </button>
 
               <Link
-                to="/marketplace/panier"
+                to={cartItemsCount > 0 ? "/marketplace/panier" : "/marketplace"}
                 onClick={() => setIsOpen(false)}
-                aria-label="Panier Marketplace"
+                aria-label={cartItemsCount > 0 ? "Panier Marketplace" : "Marketplace FAFE"}
+                title={cartItemsCount > 0 ? "Panier" : "Marketplace"}
                 className="p-2 text-white hover:text-[#FCD116] rounded-full hover:bg-white/10 relative transition-colors"
               >
                 <ShoppingCart className="w-5 h-5" />

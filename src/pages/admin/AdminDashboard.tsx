@@ -4,7 +4,7 @@ import {
   Users, LayoutDashboard, Briefcase, Heart, Settings, 
   LogOut, Globe2, FolderOpen, Menu, X, Bell, Search,
   FileText, ShieldAlert, GraduationCap, Calendar, ShoppingCart, 
-  Package, MessageSquare, MapPin, Trash2, Tag
+  Package, MessageSquare, MapPin, Trash2, Tag, Boxes
 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 import { Button } from '../../components/ui/Button';
@@ -37,6 +37,7 @@ import { AdminEventParticipants } from './events/AdminEventParticipants';
 import { AdminEventCheckIn } from './events/AdminEventCheckIn';
 
 import { AdminMarketplaceProducts } from './marketplace/AdminMarketplaceProducts';
+import { AdminMarketplaceStock } from './marketplace/AdminMarketplaceStock';
 import { AdminMarketplaceOrders } from './marketplace/AdminMarketplaceOrders';
 import { AdminMarketplaceCategories } from './marketplace/AdminMarketplaceCategories';
 
@@ -114,6 +115,7 @@ export function AdminDashboard() {
       items: [
         { path: "/admin/marketplace/commandes", icon: <ShoppingCart className="w-4 h-4 mr-3" />, label: "Ventes & Commandes" },
         { path: "/admin/marketplace/produits", icon: <Package className="w-4 h-4 mr-3" />, label: "Produits" },
+        { path: "/admin/marketplace/stock", icon: <Boxes className="w-4 h-4 mr-3" />, label: "Gestion des Stocks" },
         { path: "/admin/marketplace/categories", icon: <Tag className="w-4 h-4 mr-3" />, label: "Catégories" },
       ]
     },
@@ -253,6 +255,8 @@ export function AdminDashboard() {
 
             {/* Marketplace Admin Routes */}
             <Route path="/marketplace/produits" element={<AdminMarketplaceProducts />} />
+            <Route path="/marketplace/stock" element={<AdminMarketplaceStock />} />
+            <Route path="/marketplace/stocks" element={<AdminMarketplaceStock />} />
             <Route path="/marketplace/commandes" element={<AdminMarketplaceOrders />} />
             <Route path="/marketplace/categories" element={<AdminMarketplaceCategories />} />
 

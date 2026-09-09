@@ -17,6 +17,15 @@ export function MarketplaceHome() {
 
   useEffect(() => {
     loadData();
+
+    const handleUpdate = () => {
+      loadData();
+    };
+
+    window.addEventListener('fafe_marketplace_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('fafe_marketplace_updated', handleUpdate);
+    };
   }, []);
 
   const loadData = async () => {
@@ -37,11 +46,16 @@ export function MarketplaceHome() {
 
   const term = (searchTerm || '').trim().toLowerCase();
   const filteredProducts = products.filter(product => {
+    // Only display published or out of stock items (never DRAFT or ARCHIVED)
+    if (product.status === 'DRAFT' || product.status === 'ARCHIVED') {
+      return false;
+    }
     const name = (product.name || '').toLowerCase();
     const shortDesc = (product.shortDescription || '').toLowerCase();
     const fullDesc = (product.fullDescription || '').toLowerCase();
+    const sku = (product.sku || '').toLowerCase();
     
-    const matchesSearch = !term || name.includes(term) || shortDesc.includes(term) || fullDesc.includes(term);
+    const matchesSearch = !term || name.includes(term) || shortDesc.includes(term) || fullDesc.includes(term) || sku.includes(term);
     const matchesCategory = selectedCategory ? product.categoryId === selectedCategory : true;
     return matchesSearch && matchesCategory;
   });
@@ -216,8 +230,8 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: () => void }
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
           {isOutOfStock ? (
-            <span className="bg-stone-800 text-white text-[11px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm">
-              Rupture
+            <span className="bg-[#C8102E] text-white text-[11px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm">
+              Rupture de stock
             </span>
           ) : (
             hasPromo && (

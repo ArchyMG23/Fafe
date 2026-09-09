@@ -5,7 +5,7 @@ import { Button } from "../components/ui/Button";
 import { Card, CardContent } from "../components/ui/Card";
 import { Entrepreneur, Article, Project } from "../types";
 import { useLanguageStore } from "../store/language";
-import { getCMSGlobal, defaultHeroSlides } from "../lib/cms";
+import { getCMSGlobal, defaultHeroSlides, getPublishedCMSContent, defaultAccueilCMS, getCMSLocalizedText } from "../lib/cms";
 import { fetchEntrepreneurs, fetchProjects, fetchArticles, fetchEvents } from "../lib/dataFetching";
 import {
   ArrowRight,
@@ -27,7 +27,7 @@ import {
   DEMO_PROJECTS,
 } from "../lib/mockData";
 
-function DynamicHeroSection() {
+function DynamicHeroSection({ hero }: { hero?: any }) {
   // Initialize immediately with solid default data so the Hero is NEVER null
   const [heroText, setHeroText] = useState<any>(defaultHeroSlides[0]);
   const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>(DEMO_ENTREPRENEURS);
@@ -39,10 +39,12 @@ function DynamicHeroSection() {
     let isMounted = true;
     const loadBackgroundData = async () => {
       try {
-        // 1. Fetch CMS text asynchronously
-        const data = await getCMSGlobal();
-        if (isMounted && data && data.heroSlides && data.heroSlides.length > 0) {
-          setHeroText(data.heroSlides[0]);
+        // 1. Fetch CMS text asynchronously if hero prop not provided
+        if (!hero) {
+          const data = await getCMSGlobal();
+          if (isMounted && data && data.heroSlides && data.heroSlides.length > 0) {
+            setHeroText(data.heroSlides[0]);
+          }
         }
 
         // 2. Fetch fresh entrepreneurs asynchronously
@@ -61,7 +63,7 @@ function DynamicHeroSection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [hero]);
 
   // Handle visibility pause to avoid tab lag
   useEffect(() => {
@@ -83,6 +85,15 @@ function DynamicHeroSection() {
 
   const currentEnt = entrepreneurs[currentIndex] || DEMO_ENTREPRENEURS[0];
 
+  const activeHero = hero || heroText;
+  const badgeText = getCMSLocalizedText(activeHero.badge, language, language === "fr" ? "Réseau Panafricain" : "Pan-African Network");
+  const titleText = getCMSLocalizedText(activeHero.title, language, tl(heroText.title));
+  const shortText = getCMSLocalizedText(activeHero.shortText, language, tl(heroText.shortText));
+  const button1Text = getCMSLocalizedText(activeHero.buttonText, language, tl(heroText.buttonText) || "Rejoindre le réseau");
+  const button1Link = activeHero.buttonLink || heroText.link || "/rejoindre";
+  const button2Text = getCMSLocalizedText(activeHero.secondaryButtonText, language, "Découvrir le FAFE");
+  const button2Link = activeHero.secondaryButtonLink || "/nous";
+
   return (
     <section
       className="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-36 lg:pb-24 overflow-hidden bg-[#FAF9F6]"
@@ -102,34 +113,34 @@ function DynamicHeroSection() {
           <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#00843D]/20 text-[#00843D] text-xs md:text-sm font-bold tracking-wide uppercase mb-6 shadow-sm">
               <Globe2 className="w-4 h-4 text-[#00843D]" />
-              {language === "fr" ? "Réseau Panafricain" : "Pan-African Network"}
+              {badgeText}
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold font-heading text-[#063F3A] leading-[1.15] mb-5 tracking-tight">
-              {tl(heroText.title)}
+              {titleText}
             </h1>
 
             <p className="text-base sm:text-lg text-stone-600 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
-              {tl(heroText.shortText)}
+              {shortText}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
-              <Link to={heroText.link || "/rejoindre"} className="w-full sm:w-auto">
+              <Link to={button1Link} className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   className="w-full sm:w-auto bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-8 py-5 font-bold text-base shadow-lg shadow-[#C8102E]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  {tl(heroText.buttonText) || "Rejoindre le réseau"}
+                  {button1Text}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <Link to="/nous" className="w-full sm:w-auto">
+              <Link to={button2Link} className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
                   className="w-full sm:w-auto border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-6 py-5 font-semibold text-base"
                 >
-                  Découvrir le FAFE
+                  {button2Text}
                 </Button>
               </Link>
             </div>
@@ -387,6 +398,18 @@ function DynamicEvents() {
 }
 
 export function Home() {
+  const { language } = useLanguageStore();
+  const [cmsData, setCmsData] = useState<any>(() => {
+    try {
+      const cached = localStorage.getItem("fafe_cms_published_accueil") || localStorage.getItem("fafe_cms_draft_accueil");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.content) return parsed.content;
+      }
+    } catch (e) {}
+    return defaultAccueilCMS;
+  });
+
   const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>(DEMO_ENTREPRENEURS.slice(0, 4));
   const [projects, setProjects] = useState<Project[]>(DEMO_PROJECTS.slice(0, 2));
   
@@ -404,58 +427,98 @@ export function Home() {
       }
     };
     fetchHomeData();
+
+    const fetchCMS = async () => {
+      try {
+        const data = await getPublishedCMSContent("accueil", defaultAccueilCMS);
+        if (isMounted && data) {
+          setCmsData(data);
+        }
+      } catch (err) {
+        console.warn("Home CMS sync:", err);
+      }
+    };
+    fetchCMS();
+
+    const handleCMSUpdate = (e: any) => {
+      if (e.detail?.pageId === "accueil" && e.detail?.content && isMounted) {
+        setCmsData(e.detail.content);
+      }
+    };
+    window.addEventListener("fafe_cms_updated", handleCMSUpdate);
+
     return () => {
       isMounted = false;
+      window.removeEventListener("fafe_cms_updated", handleCMSUpdate);
     };
   }, []);
 
-  const stats = [
-    {
-      end: 5000,
-      suffix: "+",
-      label: "Femmes accompagnées",
-      icon: <Heart className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
-    },
-    {
-      end: 15,
-      suffix: "+",
-      label: "Pays africains",
-      icon: <Globe2 className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
-    },
-    {
-      end: 200,
-      suffix: "+",
-      label: "Projets financés",
-      icon: <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
-    },
-    {
-      end: 85,
-      suffix: "%",
-      label: "Taux de réussite",
-      icon: <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />,
-    },
-  ];
+  const statsList = Array.isArray(cmsData.stats) && cmsData.stats.length > 0 ? cmsData.stats : defaultAccueilCMS.stats;
+  const getStatIcon = (iconName?: string) => {
+    switch (iconName) {
+      case "Globe": return <Globe2 className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />;
+      case "Briefcase": return <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />;
+      case "TrendingUp": return <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />;
+      case "Heart":
+      default: return <Heart className="w-5 h-5 md:w-6 md:h-6 text-[#00843D]" />;
+    }
+  };
 
-  const partners = ["ONU Femmes", "BAD", "AFD", "Union Européenne", "OIF"];
-  const countries = [
-    "Sénégal",
-    "Côte d'Ivoire",
-    "Mali",
-    "Cameroun",
-    "RDC",
-    "Maroc",
-  ];
+  const stats = statsList.map((st: any) => {
+    const rawVal = String(st.value || "");
+    const numeric = parseInt(rawVal.replace(/[^0-9]/g, "")) || 0;
+    const suffix = rawVal.replace(/[0-9\s]/g, "") || "+";
+    return {
+      end: numeric,
+      suffix,
+      label: getCMSLocalizedText(st.label, language, "Statistique"),
+      icon: getStatIcon(st.icon),
+    };
+  });
+
+  const rawPartners = Array.isArray(cmsData.partners?.list) && cmsData.partners.list.length > 0
+    ? cmsData.partners.list
+    : ["ONU Femmes", "BAD", "AFD", "Union Européenne", "OIF"];
+  const partners = rawPartners.map((p: any) => typeof p === "string" ? p : p.name);
+
+  const countries = Array.isArray(cmsData.network?.countries) && cmsData.network.countries.length > 0
+    ? cmsData.network.countries
+    : ["Sénégal", "Côte d'Ivoire", "Mali", "Cameroun", "RDC", "Maroc"];
+
+  const missionPillars = Array.isArray(cmsData.missions?.pillars) && cmsData.missions.pillars.length > 0
+    ? cmsData.missions.pillars.map((p: any) => ({
+        title: getCMSLocalizedText(p.title, language),
+        desc: getCMSLocalizedText(p.description, language),
+        icon: p.icon === "Banknote" ? "💰" : p.icon === "GraduationCap" ? "🎓" : "🤝",
+      }))
+    : [
+        {
+          title: "Financement",
+          desc: "Accès facilité aux fonds d'investissement, subventions et prêts à taux préférentiels pour développer votre activité.",
+          icon: "💰",
+        },
+        {
+          title: "Formation & Mentorat",
+          desc: "Programmes de renforcement de capacités et accompagnement personnalisé par des experts et leaders du marché.",
+          icon: "🎓",
+        },
+        {
+          title: "Réseautage",
+          desc: "Intégration à un écosystème puissant pour trouver des partenaires, des clients et des opportunités d'affaires.",
+          icon: "🤝",
+        },
+      ];
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. HERO SECTION (Instant Render) */}
-      <DynamicHeroSection />
+      <DynamicHeroSection hero={cmsData.hero} />
 
       {/* 2. STATISTICS SECTION (Animated Counters & Compact Responsive Spacing) */}
       <section className="py-8 md:py-12 bg-white border-y border-[#063F3A]/5">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            {stats.map((stat, index) => (
+            {stats.map((stat: any, index: number) => (
               <div key={index} className="text-center p-3 sm:p-4 rounded-2xl bg-stone-50/60 md:bg-transparent border md:border-0 border-stone-100 group hover:bg-stone-50 transition-colors">
                 <div className="w-12 h-12 md:w-14 md:h-14 mx-auto bg-white md:bg-[#FAF9F6] rounded-xl md:rounded-2xl flex items-center justify-center mb-2.5 md:mb-3 shadow-xs group-hover:scale-105 transition-transform duration-300">
                   {stat.icon}
@@ -477,31 +540,15 @@ export function Home() {
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
             <span className="inline-flex items-center gap-1 text-xs font-bold tracking-widest text-[#00843D] uppercase mb-2">
-              <Sparkles className="w-3 h-3" /> Notre Vocation
+              <Sparkles className="w-3 h-3" /> {getCMSLocalizedText(cmsData.missions?.badge, language, "Notre Vocation")}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A] leading-tight">
-              Trois piliers pour la réussite de vos projets
+              {getCMSLocalizedText(cmsData.missions?.title, language, "Trois piliers pour la réussite de vos projets")}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              {
-                title: "Financement",
-                desc: "Accès facilité aux fonds d'investissement, subventions et prêts à taux préférentiels pour développer votre activité.",
-                icon: "💰",
-              },
-              {
-                title: "Formation & Mentorat",
-                desc: "Programmes de renforcement de capacités et accompagnement personnalisé par des experts et leaders du marché.",
-                icon: "🎓",
-              },
-              {
-                title: "Réseautage",
-                desc: "Intégration à un écosystème puissant pour trouver des partenaires, des clients et des opportunités d'affaires.",
-                icon: "🤝",
-              },
-            ].map((mission, idx) => (
+            {missionPillars.map((mission: any, idx: number) => (
               <Card
                 key={idx}
                 className="bg-white border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden group"
@@ -529,18 +576,18 @@ export function Home() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
               <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">
-                Annuaire Panafricain
+                {getCMSLocalizedText(cmsData.directory?.badge, language, "Annuaire Panafricain")}
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
-                Découvrez les talents du réseau
+                {getCMSLocalizedText(cmsData.directory?.title, language, "Découvrez les talents du réseau")}
               </h2>
             </div>
-            <Link to="/entrepreneures">
+            <Link to={cmsData.directory?.buttonLink || "/entrepreneures"}>
               <Button
                 variant="outline"
                 className="group border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold"
               >
-                Voir l'annuaire complet
+                {getCMSLocalizedText(cmsData.directory?.buttonText, language, "Voir l'annuaire complet")}
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -559,7 +606,7 @@ export function Home() {
                     />
                     <div className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-[#063F3A] uppercase tracking-wider">
-                        <MapPin className="w-3 h-3 text-[#00843D]" /> {ent.country}
+                        <MapPin className="w-3.5 h-3.5 text-[#00843D]" /> {ent.country}
                       </span>
                     </div>
                   </div>
@@ -585,14 +632,14 @@ export function Home() {
       <section className="py-12 md:py-20 bg-[#FAF9F6] text-[#063F3A] relative overflow-hidden">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
           <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-2 block">
-            Présence Continentale
+            {getCMSLocalizedText(cmsData.network?.badge, language, "Présence Continentale")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading mb-8">
-            Un réseau actif dans toute l'Afrique
+            {getCMSLocalizedText(cmsData.network?.title, language, "Un réseau actif dans toute l'Afrique")}
           </h2>
 
           <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3.5 max-w-4xl mx-auto mb-8">
-            {countries.map((country) => (
+            {countries.map((country: string) => (
               <span
                 key={country}
                 className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-stone-200 bg-white text-stone-700 shadow-sm text-xs sm:text-sm font-semibold flex items-center gap-2 backdrop-blur-xs"
@@ -603,9 +650,9 @@ export function Home() {
             ))}
           </div>
 
-          <Link to="/entrepreneures">
+          <Link to={cmsData.network?.link || "/entrepreneures"}>
             <Button className="bg-[#C8102E] hover:bg-[#A30D25] text-white rounded-full px-6 py-2.5 text-xs sm:text-sm font-bold shadow-md">
-              Explorer les membres par pays →
+              {getCMSLocalizedText(cmsData.network?.linkText, language, "Explorer les membres par pays →")}
             </Button>
           </Link>
         </div>
@@ -616,10 +663,10 @@ export function Home() {
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
             <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">
-              Impact & Développement
+              {getCMSLocalizedText(cmsData.projects?.badge, language, "Impact & Développement")}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
-              Transformer l'entrepreneuriat en impact
+              {getCMSLocalizedText(cmsData.projects?.title, language, "Transformer l'entrepreneuriat en impact")}
             </h2>
           </div>
 
@@ -654,12 +701,12 @@ export function Home() {
                     <p className="text-xs sm:text-sm text-stone-600 mb-5 leading-relaxed line-clamp-3">
                       {project.description}
                     </p>
-                    <Link to="/projets-sociaux" className="mt-auto">
+                    <Link to={cmsData.projects?.buttonLink || "/projets-sociaux"} className="mt-auto">
                       <Button
                         variant="outline"
                         className="border-[#D4AF37]/50 text-[#063F3A] hover:bg-[#D4AF37] hover:text-white transition-all rounded-full px-5 py-2 text-xs font-bold w-full sm:w-auto"
                       >
-                        En savoir plus
+                        {getCMSLocalizedText(cmsData.projects?.buttonText, language, "En savoir plus")}
                       </Button>
                     </Link>
                   </CardContent>
@@ -675,12 +722,16 @@ export function Home() {
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
-              <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">Agenda</span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">Nos prochains événements</h2>
+              <span className="text-xs font-bold tracking-widest text-[#00843D] uppercase mb-1 block">
+                {getCMSLocalizedText(cmsData.events?.badge, language, "Agenda")}
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
+                {getCMSLocalizedText(cmsData.events?.title, language, "Nos prochains événements")}
+              </h2>
             </div>
-            <Link to="/actualites">
+            <Link to={cmsData.events?.buttonLink || "/actualites"}>
               <Button variant="outline" className="group border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold">
-                Voir tout l'agenda
+                {getCMSLocalizedText(cmsData.events?.buttonText, language, "Voir tout l'agenda")}
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -695,18 +746,18 @@ export function Home() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-12 gap-4">
             <div className="max-w-2xl">
               <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-1 block">
-                Éditorial
+                {getCMSLocalizedText(cmsData.news?.badge, language, "Éditorial")}
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-[#063F3A]">
-                Actualités & inspirations
+                {getCMSLocalizedText(cmsData.news?.title, language, "Actualités & inspirations")}
               </h2>
             </div>
-            <Link to="/actualites">
+            <Link to={cmsData.news?.buttonLink || "/actualites"}>
               <Button
                 variant="outline"
                 className="group border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D]/5 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold"
               >
-                Toutes les actualités
+                {getCMSLocalizedText(cmsData.news?.buttonText, language, "Toutes les actualités")}
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -726,19 +777,21 @@ export function Home() {
             <Heart className="w-7 h-7" />
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading mb-5 leading-tight text-white">
-            Votre soutien ouvre de{" "}
-            <span className="text-[#D4AF37]">nouvelles opportunités.</span>
+            {getCMSLocalizedText(cmsData.donationCta?.title, language, "Votre soutien ouvre de nouvelles opportunités.")}
           </h2>
           <p className="text-white/80 text-base sm:text-lg mb-8 leading-relaxed max-w-xl mx-auto">
-            Chaque contribution participe au développement de l'entrepreneuriat
-            féminin africain en finançant des formations et des projets d'avenir.
+            {getCMSLocalizedText(
+              cmsData.donationCta?.description,
+              language,
+              "Chaque contribution participe au développement de l'entrepreneuriat féminin africain en finançant des formations et des projets d'avenir."
+            )}
           </p>
-          <Link to="/dons">
+          <Link to={cmsData.donationCta?.buttonLink || "/dons"}>
             <Button
               size="lg"
               className="bg-[#C8102E] hover:bg-[#A30D25] text-white shadow-xl px-10 py-5 rounded-full font-bold text-base hover:scale-105 transition-transform duration-300"
             >
-              Faire un don
+              {getCMSLocalizedText(cmsData.donationCta?.buttonText, language, "Faire un don")}
             </Button>
           </Link>
         </div>
@@ -748,10 +801,10 @@ export function Home() {
       <section className="py-12 md:py-16 bg-white border-t border-stone-100">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 text-center">
           <span className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-8 block">
-            Partenaires institutionnels & stratégiques
+            {getCMSLocalizedText(cmsData.partners?.title, language, "Partenaires institutionnels & stratégiques")}
           </span>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
-            {partners.map((p) => (
+            {partners.map((p: string) => (
               <span
                 key={p}
                 className="font-heading font-bold text-lg md:text-xl text-[#063F3A] hover:text-[#00843D] transition-colors"

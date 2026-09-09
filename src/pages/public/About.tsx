@@ -46,8 +46,17 @@ export function About() {
       }
     };
     fetchCMS();
+
+    const handleCMSUpdate = (e: any) => {
+      if (e.detail?.pageId === 'nous' && e.detail?.content && isMounted) {
+        setCmsData(e.detail.content);
+      }
+    };
+    window.addEventListener('fafe_cms_updated', handleCMSUpdate);
+
     return () => {
       isMounted = false;
+      window.removeEventListener('fafe_cms_updated', handleCMSUpdate);
     };
   }, []);
 
