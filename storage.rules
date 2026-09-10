@@ -1,0 +1,69 @@
+rules_version = '2';
+
+// Règles de sécurité Cloud Storage pour FAFE Platform
+// Architecture : 
+// - Médias publics (logos, branding, images CMS, marketplace) : Lecture publique (allow read: if true)
+// - Écriture médias administratifs : Strictement réservée au rôle SUPER_ADMIN (ou email administrateur certifié)
+// - Dossiers membres : Strictement isolés à l'utilisateur propriétaire ou SUPER_ADMIN
+// - Aucune règle blanket "allow read, write: if true;"
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Vérifie si l'utilisateur est authentifié avec Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Vérifie si l'utilisateur possède les privilèges SUPER_ADMIN
+    // Utilise à la fois l'email administrateur certifié et la vérification croisée Firestore
+    function isSuperAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email == 'yombivictor@gmail.com' ||
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'SUPER_ADMIN'
+      );
+    }
+
+    // Médias de branding (Logo, Logo alternatif, Favicon)
+    // Lecture publique pour affichage sur le site public
+    // Écriture réservée strictement au SUPER_ADMIN
+    match /branding/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // Médias CMS (Articles, Bannières, Galeries, Documents de page)
+    // Lecture publique pour les visiteurs
+    // Écriture réservée au SUPER_ADMIN
+    match /cms/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // Images des produits de la Marketplace
+    // Lecture publique pour le catalogue
+    // Écriture réservée au SUPER_ADMIN
+    match /marketplace/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // Fichiers et justificatifs d'adhésion des membres
+    // Lecture : Membre concerné ou SUPER_ADMIN
+    // Écriture : Membre concerné (upload de son justificatif)
+    match /members/{userId}/{allPaths=**} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isSuperAdmin());
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Fichiers de test système et diagnostics
+    match /system/{allPaths=**} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // Règle par défaut : Tout autre chemin est strictement interdit
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

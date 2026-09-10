@@ -12,7 +12,9 @@ import {
   saveBrandingSettings, 
   deleteBrandingAsset, 
   getCacheBustedUrl,
-  fileToOptimizedDataUri
+  fileToOptimizedDataUri,
+  runStorageDiagnosticTest,
+  StorageDiagnosticResult
 } from '../../../services/branding';
 import { FafeLogo, FafeOfficialEmblem } from '../../../components/ui/FafeLogo';
 import { LogoDisplayMode } from '../../../types';
@@ -58,6 +60,38 @@ export function AdminCMSBranding() {
 
   // Preview background toggle
   const [logoPreviewBg, setLogoPreviewBg] = useState<'light' | 'dark'>('dark');
+
+  // Diagnostic state (Section 8)
+  const [diagnosticRunning, setDiagnosticRunning] = useState(false);
+  const [diagnosticResult, setDiagnosticResult] = useState<StorageDiagnosticResult | null>(null);
+
+  const handleRunDiagnostic = async () => {
+    setDiagnosticRunning(true);
+    setDiagnosticResult(null);
+    try {
+      const res = await runStorageDiagnosticTest();
+      setDiagnosticResult(res);
+    } catch (err: any) {
+      setDiagnosticResult({
+        success: false,
+        durationMs: 0,
+        bucket: 'INCONNU',
+        projectId: 'fafe-platform',
+        authStatus: {
+          authenticated: !!currentUser,
+          uid: currentUser?.uid || null,
+          email: currentUser?.email || null,
+          role: userProfile?.role || 'INCONNU'
+        },
+        stepReached: 'EXCEPTION_IMPREVUE',
+        error: err?.message || String(err),
+        errorCode: 'UNEXPECTED',
+        advice: 'Une erreur imprévue est survenue.'
+      });
+    } finally {
+      setDiagnosticRunning(false);
+    }
+  };
 
   const getAdminEmail = () => {
     return userProfile?.email || currentUser?.email || 'yombivictor@gmail.com';
@@ -322,6 +356,24 @@ export function AdminCMSBranding() {
 
           <div className="flex items-center gap-2 shrink-0">
             <button
+              onClick={handleRunDiagnostic}
+              disabled={diagnosticRunning || isSaving}
+              title="Exécuter le test de diagnostic Storage indépendant"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-colors disabled:opacity-50"
+            >
+              {diagnosticRunning ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-700" />
+                  <span>Diagnostic en cours...</span>
+                </>
+              ) : (
+                <>
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Test Firebase Storage</span>
+                </>
+              )}
+            </button>
+            <button
               onClick={() => fetchBranding()}
               title="Actualiser les données"
               className="p-2.5 text-stone-500 hover:text-[#00843D] hover:bg-stone-50 rounded-xl border border-stone-200 transition-colors"
@@ -341,36 +393,118 @@ export function AdminCMSBranding() {
           </div>
         </div>
 
+        {/* Storage Diagnostic Card (Section 8) */}
+        {diagnosticResult && (
+          <div className={`mt-4 p-4 rounded-xl border text-xs ${
+            diagnosticResult.success 
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-900' 
+              : 'bg-amber-50/70 border-amber-300 text-stone-900'
+          }`}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-2.5">
+                {diagnosticResult.success ? (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                ) : (
+                  <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                )}
+                <div>
+                  <p className="font-bold text-sm">
+                    {diagnosticResult.success 
+                      ? '✓ Test Storage Minimal Réussi (100% Fonctionnel)' 
+                      : '⚠️ Diagnostic Firebase Storage : Problème d\'Infrastructure Détecté'}
+                  </p>
+                  <p className="mt-1 text-stone-600">
+                    Durée du test : <span className="font-mono font-medium">{diagnosticResult.durationMs}ms</span> • 
+                    Projet : <span className="font-mono font-medium">{diagnosticResult.projectId}</span> • 
+                    Bucket testé : <span className="font-mono font-medium font-bold text-stone-800">{diagnosticResult.bucket}</span>
+                  </p>
+                  <div className="mt-2 text-stone-600 space-y-1">
+                    <p>
+                      • Authentification : <span className="font-semibold">{diagnosticResult.authStatus.authenticated ? 'Connecté (UID: ' + diagnosticResult.authStatus.uid + ')' : 'Non connecté'}</span>
+                    </p>
+                    <p>
+                      • Rôle administrateur : <span className="font-semibold">{diagnosticResult.authStatus.role}</span>
+                    </p>
+                    {diagnosticResult.downloadUrl && (
+                      <p className="truncate max-w-xl text-[11px] text-emerald-800">
+                        • URL publique obtenue : <span className="font-mono">{diagnosticResult.downloadUrl}</span>
+                      </p>
+                    )}
+                    {diagnosticResult.error && (
+                      <div className="mt-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-800 font-mono text-[11px]">
+                        <strong>Erreur SDK :</strong> {diagnosticResult.error} ({diagnosticResult.errorCode})
+                      </div>
+                    )}
+                    {diagnosticResult.advice && (
+                      <div className="mt-2 p-2.5 bg-white border border-amber-200 rounded-lg text-stone-800 text-xs leading-relaxed">
+                        <strong className="text-amber-800">Action requise :</strong> {diagnosticResult.advice}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button 
+                onClick={() => setDiagnosticResult(null)} 
+                className="text-stone-400 hover:text-stone-700"
+                title="Fermer le diagnostic"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Dynamic Alerts */}
         {errorMsg && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="font-bold">Erreur de mise à jour</p>
-              <p className="mt-0.5 leading-relaxed">{errorMsg}</p>
+              <p className="font-bold text-sm">Échec du téléversement vers Firebase Storage</p>
+              <p className="mt-1 leading-relaxed text-red-900">{errorMsg}</p>
+              
+              <div className="mt-3 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleRunDiagnostic}
+                  disabled={diagnosticRunning}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-red-50 text-red-800 border border-red-300 font-bold rounded-lg transition-colors text-xs"
+                >
+                  <ShieldAlert className="w-3.5 h-3.5 text-red-600" />
+                  <span>Lancer le diagnostic Storage complet</span>
+                </button>
+              </div>
+
               {fallbackOption && (
-                <div className="mt-3 pt-3 border-t border-red-200/70 flex flex-wrap items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={handleDirectFirestoreSave}
-                    disabled={isSaving}
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#00843D] hover:bg-[#007033] text-white font-bold rounded-lg transition-colors shadow-xs text-xs disabled:opacity-50"
-                  >
-                    {isSaving ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Enregistrement en cours...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-3.5 h-3.5" />
-                        <span>Enregistrer l'image directement dans Firebase Firestore</span>
-                      </>
-                    )}
-                  </button>
-                  <span className="text-stone-600 text-[11px]">
-                    (Persistance garantie dans Firestore sans dépendre de Firebase Storage)
-                  </span>
+                <div className="mt-4 pt-3 border-t border-red-200/80">
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-stone-800">
+                    <p className="font-bold text-amber-900 flex items-center gap-1.5">
+                      <span>⚠️ Dépannage temporaire d'urgence (Section 11)</span>
+                    </p>
+                    <p className="mt-1 text-[11px] text-stone-600 leading-relaxed">
+                      L'architecture définitive FAFE exige <strong>IMAGE → STORAGE → URL → FIRESTORE</strong>. 
+                      Tant que le bucket Cloud Storage n'est pas activé dans la console Firebase, vous pouvez utiliser ce secours temporaire pour afficher immédiatement le logo sur le site sans bloquer votre activité.
+                    </p>
+                    <div className="mt-2.5 flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={handleDirectFirestoreSave}
+                        disabled={isSaving}
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#00843D] hover:bg-[#007033] text-white font-bold rounded-lg transition-colors shadow-xs text-xs disabled:opacity-50"
+                      >
+                        {isSaving ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Enregistrement en cours...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-3.5 h-3.5" />
+                            <span>Enregistrer temporairement dans Firestore</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { db, storage } from '../lib/firebase';
+import { db, storage, auth } from '../lib/firebase';
 import { SiteBrandingSettings } from '../types';
 import { cleanFirestoreData } from '../lib/cms';
 
@@ -208,6 +208,126 @@ export async function fileToOptimizedDataUri(
   });
 }
 
+export interface StorageDiagnosticResult {
+  success: boolean;
+  durationMs: number;
+  bucket: string;
+  projectId: string;
+  authStatus: {
+    authenticated: boolean;
+    uid: string | null;
+    email: string | null;
+    role: string;
+  };
+  stepReached: string;
+  downloadUrl?: string;
+  error?: string;
+  errorCode?: string;
+  advice?: string;
+}
+
+/**
+ * Section 8 : Test Storage Indépendant Minimal Contrôlé
+ * SUPER_ADMIN -> upload d'un petit fichier de test -> confirmation upload -> getDownloadURL -> suppression
+ */
+export async function runStorageDiagnosticTest(): Promise<StorageDiagnosticResult> {
+  const startTime = Date.now();
+  const currentUser = auth.currentUser;
+  const configuredBucket = storage.app.options.storageBucket || 'NON_DEFINI';
+  const projectId = storage.app.options.projectId || 'fafe-platform';
+
+  let role = 'NON_AUTHENTIFIE';
+  if (currentUser) {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      role = userDoc.exists() ? (userDoc.data()?.role || 'MEMBER') : 'DOCUMENT_UTILISATEUR_NON_TROUVE';
+    } catch (e: any) {
+      role = `ERREUR_FIRESTORE: ${e?.message || e}`;
+    }
+  }
+
+  const authInfo = {
+    authenticated: !!currentUser,
+    uid: currentUser?.uid || null,
+    email: currentUser?.email || null,
+    role
+  };
+
+  const testPath = `system/diagnostic_${Date.now()}.txt`;
+  console.log('[DIAGNOSTIC-STORAGE] Démarrage du test contrôlé minimal');
+  console.log('[DIAGNOSTIC-STORAGE] Authentifié :', authInfo.authenticated ? 'OUI' : 'NON', 'UID:', authInfo.uid);
+  console.log('[DIAGNOSTIC-STORAGE] Rôle :', authInfo.role);
+  console.log('[DIAGNOSTIC-STORAGE] Bucket configuré :', configuredBucket);
+  console.log('[DIAGNOSTIC-STORAGE] Chemin Storage :', testPath);
+
+  const testBlob = new Blob(['FAFE_DIAGNOSTIC_PING_STORAGE'], { type: 'text/plain' });
+  const testRef = ref(storage, testPath);
+
+  try {
+    // 1. Upload
+    console.log('[DIAGNOSTIC-STORAGE] Étape 1/3 : Upload vers Firebase Storage...');
+    await withTimeout(
+      uploadBytes(testRef, testBlob, { contentType: 'text/plain' }),
+      10000,
+      'Upload test minimal'
+    );
+    console.log('[DIAGNOSTIC-STORAGE] Étape 1/3 : Confirmation upload OK');
+
+    // 2. getDownloadURL
+    console.log('[DIAGNOSTIC-STORAGE] Étape 2/3 : Lecture getDownloadURL...');
+    const url = await withTimeout(
+      getDownloadURL(testRef),
+      6000,
+      'Récupération downloadURL'
+    );
+    console.log('[DIAGNOSTIC-STORAGE] Étape 2/3 : getDownloadURL OK ->', url);
+
+    // 3. Suppression
+    console.log('[DIAGNOSTIC-STORAGE] Étape 3/3 : Suppression du fichier test...');
+    try {
+      await deleteObject(testRef);
+      console.log('[DIAGNOSTIC-STORAGE] Étape 3/3 : Suppression OK');
+    } catch (cleanupErr) {
+      console.warn('[DIAGNOSTIC-STORAGE] Nettoyage non bloquant :', cleanupErr);
+    }
+
+    return {
+      success: true,
+      durationMs: Date.now() - startTime,
+      bucket: configuredBucket,
+      projectId,
+      authStatus: authInfo,
+      stepReached: 'COMPLET_REUSSI',
+      downloadUrl: url
+    };
+  } catch (err: any) {
+    const duration = Date.now() - startTime;
+    console.error('[DIAGNOSTIC-STORAGE] ÉCHEC DU TEST MINIMAL :', err);
+
+    let advice = 'Vérifiez la connexion réseau et la configuration du projet.';
+    const isRetryLimit = err?.code === 'storage/retry-limit-exceeded' || err?.message?.includes('retry-limit-exceeded');
+    const isUnknown = err?.code === 'storage/unknown';
+
+    if (isRetryLimit || isUnknown) {
+      advice = `Le bucket "${configuredBucket}" est inaccessible ou inexistant (HTTP 404). Cloud Storage doit être activé dans la console Firebase (menu "Build > Storage > Commencer"). Si le bucket a un nom différent (ex: fafe-platform.appspot.com), mettez à jour la variable VITE_FIREBASE_STORAGE_BUCKET.`;
+    } else if (err?.code === 'storage/unauthorized') {
+      advice = 'Accès refusé par les règles de sécurité Firebase Storage. Vérifiez que votre compte possède le rôle SUPER_ADMIN.';
+    }
+
+    return {
+      success: false,
+      durationMs: duration,
+      bucket: configuredBucket,
+      projectId,
+      authStatus: authInfo,
+      stepReached: 'ECHEC_UPLOAD',
+      error: err?.message || String(err),
+      errorCode: err?.code || 'UNKNOWN',
+      advice
+    };
+  }
+}
+
 /**
  * Uploads an image asset to Firebase Storage in /branding/ with strict timeout & diagnostic logs
  */
@@ -219,6 +339,29 @@ export async function uploadBrandingAsset(
   const timestamp = Date.now();
   const path = `${BRANDING_STORAGE_FOLDER}/${assetType}_${timestamp}_${safeName}`;
   const storageRef = ref(storage, path);
+  const configuredBucket = storage.app.options.storageBucket || 'NON_DEFINI';
+
+  // Section 7 : Vérification et traçabilité de l'authentification au moment exact de l'upload
+  const currentUser = auth.currentUser;
+  const isAuthenticated = !!currentUser;
+  const uid = currentUser?.uid || 'NON_CONNECTE';
+
+  let roleInFirestore = 'NON_AUTHENTIFIE';
+  if (currentUser) {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      roleInFirestore = userDoc.exists() ? (userDoc.data()?.role || 'MEMBER') : 'DOCUMENT_NON_TROUVE';
+    } catch {
+      roleInFirestore = 'ERREUR_LECTURE_FIRESTORE';
+    }
+  }
+
+  // Logs temporaires stricts (sans token ni donnée sensible)
+  console.log(`[CMS-AUTH] Utilisateur authentifié : ${isAuthenticated ? 'OUI' : 'NON'}`);
+  console.log(`[CMS-AUTH] UID utilisateur : ${uid}`);
+  console.log(`[CMS-AUTH] Rôle Firestore détecté : ${roleInFirestore}`);
+  console.log(`[CMS-AUTH] Chemin Storage ciblé : ${path}`);
+  console.log(`[CMS-AUTH] Bucket configuré : ${configuredBucket}`);
 
   const metadata = {
     contentType: file.type || (file.name.endsWith('.svg') ? 'image/svg+xml' : 'image/png'),
@@ -235,10 +378,14 @@ export async function uploadBrandingAsset(
       12000,
       'Upload Storage'
     );
-    console.log('[CMS] Upload Storage terminé');
+    console.log('[CMS] Upload Storage terminé avec succès');
   } catch (err: any) {
     console.error(`[CMS] ERREUR — Upload Storage: ${err?.message || err}`);
-    throw new Error(`Échec de l'upload vers Firebase Storage (${err?.message || 'délai dépassé ou bucket inaccessible'}). Vérifiez la configuration du bucket dans la console Firebase.`);
+    let explanation = `Échec de l'upload vers Firebase Storage (${err?.message || 'délai dépassé ou bucket inaccessible'}).`;
+    if (err?.code === 'storage/retry-limit-exceeded' || err?.message?.includes('retry-limit-exceeded')) {
+      explanation = `Le bucket "${configuredBucket}" est introuvable ou Cloud Storage n'est pas encore activé dans votre projet Firebase "fafe-platform" (HTTP 404). Veuillez activer Cloud Storage dans la console Firebase (Build > Storage > Commencer) ou vérifier le nom exact du bucket.`;
+    }
+    throw new Error(explanation);
   }
 
   console.log("[CMS] Récupération de l'URL...");
@@ -248,7 +395,7 @@ export async function uploadBrandingAsset(
       6000,
       'Récupération URL Storage'
     );
-    console.log(`[CMS] URL récupérée: ${downloadURL}`);
+    console.log(`[CMS] URL publique récupérée: ${downloadURL}`);
     return downloadURL;
   } catch (err: any) {
     console.error(`[CMS] ERREUR — Récupération URL: ${err?.message || err}`);
