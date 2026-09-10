@@ -25,7 +25,18 @@ export function Donation() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeProjects, setActiveProjects] = useState<Project[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
-  const [cmsData, setCmsData] = useState<any>(defaultDonsCMS);
+  const [cmsData, setCmsData] = useState<any>(() => {
+    try {
+      const cached = localStorage.getItem("fafe_cms_published_dons") || localStorage.getItem("fafe_cms_draft_dons");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && typeof parsed === 'object') {
+          return parsed.content || parsed;
+        }
+      }
+    } catch (e) {}
+    return defaultDonsCMS;
+  });
 
   // Form State
   const [frequency, setFrequency] = useState<'ONE_TIME' | 'MONTHLY' | 'QUARTERLY' | 'ANNUAL'>('ONE_TIME');

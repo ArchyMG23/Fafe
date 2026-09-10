@@ -9,6 +9,7 @@ import { useAuthStore } from '../../../store/auth';
 import { CMSPageEditor } from '../../../components/admin/cms/CMSPageEditor';
 import { AdminCMSMedia } from './AdminCMSMedia';
 import { AdminCMSHistory } from './AdminCMSHistory';
+import { AdminCMSBranding } from './AdminCMSBranding';
 
 interface PageMeta {
   id: CMSPageId;
@@ -172,6 +173,30 @@ export function AdminCMSMain() {
             </nav>
           </div>
 
+          {/* Section: Identité & Marque */}
+          <div className="bg-white rounded-2xl border border-stone-200 p-4 shadow-xs">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-400 px-3 mb-3">
+              Identité & Marque
+            </h2>
+
+            <nav className="space-y-1">
+              <button
+                onClick={() => handleSelectTab('branding')}
+                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
+                  activeTab === 'branding' 
+                    ? 'bg-[#00843D]/10 text-[#00843D] border border-[#00843D]/30 shadow-xs' 
+                    : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'branding' ? 'text-[#00843D]' : 'text-stone-400'}`} />
+                  <span>Identité du site</span>
+                </div>
+                {activeTab === 'branding' && <ChevronRight className="w-4 h-4 shrink-0 text-[#00843D]" />}
+              </button>
+            </nav>
+          </div>
+
           {/* Section: Outils & Médiathèque */}
           <div className="bg-white rounded-2xl border border-stone-200 p-4 shadow-xs">
             <h2 className="text-xs font-bold uppercase tracking-wider text-stone-400 px-3 mb-3">
@@ -218,7 +243,7 @@ export function AdminCMSMain() {
               Principe Fondamental
             </p>
             <p>
-              Le design et le code sont verrouillés. Toutes vos modifications de texte et d'images sont appliquées fidèlement au modèle visuel.
+              Le design et le code sont verrouillés. Toutes vos modifications de texte, logos et médias sont appliquées fidèlement au modèle visuel.
             </p>
           </div>
 
@@ -226,7 +251,9 @@ export function AdminCMSMain() {
 
         {/* Right Workspace: Editor or Tool */}
         <div className="lg:col-span-9">
-          {activeTab === 'media' ? (
+          {activeTab === 'branding' ? (
+            <AdminCMSBranding />
+          ) : activeTab === 'media' ? (
             <AdminCMSMedia />
           ) : activeTab === 'history' ? (
             <AdminCMSHistory />

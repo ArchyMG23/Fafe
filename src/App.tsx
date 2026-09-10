@@ -19,6 +19,7 @@ import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { RequireMembership } from './components/auth/RequireMembership';
 import { initAuth } from './store/auth';
+import { useBrandingStore } from './store/branding';
 
 // Public CMS Pages
 import { News } from './pages/public/News';
@@ -70,6 +71,10 @@ function PublicLayout() {
 function App() {
   useEffect(() => {
     initAuth();
+    const unsubBranding = useBrandingStore.getState().initBrandingListener();
+    return () => {
+      if (unsubBranding) unsubBranding();
+    };
   }, []);
 
   return (

@@ -110,9 +110,6 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
 
   const handlePublish = async () => {
     if (!userProfile) return;
-    if (!confirm(`Êtes-vous sûr de vouloir publier les modifications pour la page "${pageTitle}" ? Le contenu sera immédiatement visible sur le site public.`)) {
-      return;
-    }
     setPublishing(true);
     setFeedback(null);
     try {
@@ -122,12 +119,15 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
         email: userProfile.email
       });
       setHasUnsavedChanges(false);
-      setFeedback({ type: 'success', message: `La page "${pageTitle}" a été publiée avec succès sur le site public.` });
+      setFeedback({ 
+        type: 'success', 
+        message: `La page "${pageTitle}" a été enregistrée et publiée avec succès dans Firebase. Le site public est immédiatement à jour.` 
+      });
       const updatedRecord = await getCMSPageRecord(pageId);
       setRecord(updatedRecord);
     } catch (err) {
       console.error("Publish error:", err);
-      setFeedback({ type: 'error', message: "Erreur lors de la publication de la page." });
+      setFeedback({ type: 'error', message: "Erreur lors de la publication de la page dans Firebase." });
     } finally {
       setPublishing(false);
     }
@@ -135,11 +135,9 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
 
   const handleResetToPublished = () => {
     if (!record) return;
-    if (confirm("Voulez-vous annuler toutes vos modifications non publiées et rétablir la dernière version publiée ?")) {
-      setDraftData(record.publishedContent);
-      setHasUnsavedChanges(false);
-      setFeedback({ type: 'success', message: "Les modifications ont été réinitialisées." });
-    }
+    setDraftData(record.publishedContent);
+    setHasUnsavedChanges(false);
+    setFeedback({ type: 'success', message: "Les modifications ont été réinitialisées à la version publiée." });
   };
 
   if (loading || !draftData) {
@@ -244,9 +242,10 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             onClick={handleSaveDraft}
             disabled={saving || publishing}
             className="text-stone-700 border-stone-300 hover:bg-stone-50 text-xs h-9"
+            title="Enregistrer vos modifications dans Firebase en tant que brouillon"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : <Save className="w-3.5 h-3.5 mr-1.5 text-stone-500" />}
-            Enregistrer le brouillon
+            Enregistrer brouillon
           </Button>
 
           {/* Preview */}
@@ -261,16 +260,17 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             Prévisualiser
           </Button>
 
-          {/* Publish */}
+          {/* Publish / Enregistrer et Mettre en ligne */}
           <Button
             type="button"
             size="sm"
             onClick={handlePublish}
             disabled={saving || publishing}
-            className="bg-[#C8102E] hover:bg-[#A30D25] text-white text-xs font-bold h-9 shadow-md"
+            className="bg-[#00843D] hover:bg-[#006A31] text-white text-xs font-bold h-9 shadow-md px-4"
+            title="Enregistrer immédiatement dans Firebase et mettre à jour le site public"
           >
             {publishing ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />}
-            Publier sur le site
+            Enregistrer & Mettre en ligne
           </Button>
         </div>
       </div>

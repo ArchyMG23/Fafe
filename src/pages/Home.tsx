@@ -404,7 +404,9 @@ export function Home() {
       const cached = localStorage.getItem("fafe_cms_published_accueil") || localStorage.getItem("fafe_cms_draft_accueil");
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed?.content) return parsed.content;
+        if (parsed && typeof parsed === 'object') {
+          return parsed.content || parsed;
+        }
       }
     } catch (e) {}
     return defaultAccueilCMS;

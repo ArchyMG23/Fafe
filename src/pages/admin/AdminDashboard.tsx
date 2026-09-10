@@ -4,7 +4,7 @@ import {
   Users, LayoutDashboard, Briefcase, Heart, Settings, 
   LogOut, Globe2, FolderOpen, Menu, X, Bell, Search,
   FileText, ShieldAlert, GraduationCap, Calendar, ShoppingCart, 
-  Package, MessageSquare, MapPin, Trash2, Tag, Boxes
+  Package, MessageSquare, MapPin, Trash2, Tag, Boxes, Sparkles
 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 import { Button } from '../../components/ui/Button';
@@ -95,6 +95,7 @@ export function AdminDashboard() {
       title: "Site Institutionnel",
       items: [
         { path: "/admin/cms", icon: <LayoutDashboard className="w-4 h-4 mr-3" />, label: "FAFE CMS (Pages & Médias)" },
+        { path: "/admin/cms?tab=branding", icon: <Sparkles className="w-4 h-4 mr-3 text-[#00843D]" />, label: "Identité du site (Logo & Icône)" },
         { path: "/admin/contenus", icon: <FileText className="w-4 h-4 mr-3" />, label: "Articles & Actualités" },
         { path: "/admin/evenements", icon: <Calendar className="w-4 h-4 mr-3" />, label: "Événements" },
         { path: "/admin/projets", icon: <FolderOpen className="w-4 h-4 mr-3" />, label: "Projets" },

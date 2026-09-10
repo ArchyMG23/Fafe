@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useBrandingStore } from '../../store/branding';
+import { getCacheBustedUrl } from '../../services/branding';
 
 interface FafeLogoProps {
   variant?: 'light' | 'dark' | 'symbol-only';
@@ -11,11 +13,31 @@ interface FafeLogoProps {
 
 export function FafeOfficialEmblem({ 
   className = 'w-10 h-10',
-  isLight = false 
+  isLight = false,
+  useCustomIfAvailable = true
 }: { 
   className?: string; 
   isLight?: boolean;
+  useCustomIfAvailable?: boolean;
 }) {
+  const { branding } = useBrandingStore();
+  const [imageError, setImageError] = useState(false);
+
+  // If a custom favicon/emblem exists and hasn't errored
+  const customEmblemUrl = branding?.faviconUrl || (branding?.displayMode === 'emblem_with_text' ? branding?.logoUrl : undefined);
+
+  if (useCustomIfAvailable && customEmblemUrl && !imageError) {
+    const src = getCacheBustedUrl(customEmblemUrl, branding.updatedAt);
+    return (
+      <img
+        src={src}
+        alt="Emblème FAFE"
+        className={`${className} object-contain select-none shrink-0`}
+        onError={() => setImageError(true)}
+      />
+    );
+  }
+
   return (
     <svg 
       viewBox="0 0 500 500" 
@@ -111,24 +133,76 @@ export function FafeLogo({
   chapter = 'Cameroon',
   badge,
 }: FafeLogoProps) {
+  const { branding } = useBrandingStore();
+  const [customLogoError, setCustomLogoError] = useState(false);
+
   // Dimensions for emblem and text pairing
   const sizeDimensions = {
-    sm: { symbol: 'w-10 h-10', text: 'text-xl', sub: 'text-[7px]', gap: 'gap-2.5' },
-    md: { symbol: 'w-14 h-14', text: 'text-3xl', sub: 'text-[9px]', gap: 'gap-3' },
-    lg: { symbol: 'w-16 h-16', text: 'text-4xl', sub: 'text-xs', gap: 'gap-4' },
-    xl: { symbol: 'w-24 h-24', text: 'text-5xl', sub: 'text-sm', gap: 'gap-5' },
+    sm: { symbol: 'w-10 h-10', imgHeight: 'h-9 sm:h-10', text: 'text-xl', sub: 'text-[7px]', gap: 'gap-2.5' },
+    md: { symbol: 'w-14 h-14', imgHeight: 'h-12 sm:h-14', text: 'text-3xl', sub: 'text-[9px]', gap: 'gap-3' },
+    lg: { symbol: 'w-16 h-16', imgHeight: 'h-16 sm:h-20', text: 'text-4xl', sub: 'text-xs', gap: 'gap-4' },
+    xl: { symbol: 'w-24 h-24', imgHeight: 'h-20 sm:h-28', text: 'text-5xl', sub: 'text-sm', gap: 'gap-5' },
   };
 
   const dim = sizeDimensions[size];
   const isLight = variant === 'light';
 
+  // Determine active custom logo URL based on variant (light vs dark)
+  const configuredLogo = isLight && branding?.logoAltUrl ? branding.logoAltUrl : branding?.logoUrl;
+  const hasCustomLogo = Boolean(configuredLogo && !customLogoError);
+  const cacheBustedLogoUrl = hasCustomLogo 
+    ? getCacheBustedUrl(configuredLogo, branding.updatedAt) 
+    : '';
+
+  // Mode 1: Full Image Logo (Standard when uploading an official logo graphic)
+  if (hasCustomLogo && branding.displayMode === 'image_only' && variant !== 'symbol-only') {
+    return (
+      <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
+        <img
+          src={cacheBustedLogoUrl}
+          alt={branding.siteName || "Logo FAFE"}
+          className={`${dim.imgHeight} w-auto max-w-[280px] object-contain transition-transform duration-300 hover:scale-[1.02] shrink-0`}
+          onError={() => setCustomLogoError(true)}
+        />
+        {(chapter || badge) && (
+          <div className="flex items-center gap-1.5 ml-1">
+            {chapter && (
+              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
+                isLight ? 'bg-white/10 text-white' : 'bg-stone-100 text-stone-500'
+              } uppercase tracking-wider`}>
+                {chapter}
+              </span>
+            )}
+            {badge && (
+              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
+                isLight ? 'bg-[#C8102E] text-white' : 'bg-[#C8102E]/10 text-[#00843D]'
+              } uppercase tracking-wider`}>
+                {badge}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Mode 2: Symbol Emblem (either custom symbol or SVG) + FAFE Typography
   return (
     <div className={`inline-flex items-center ${dim.gap} select-none ${className}`}>
-      {/* Official Emblem Symbol */}
-      <FafeOfficialEmblem 
-        className={`${dim.symbol} transition-transform duration-300 hover:scale-105 shrink-0`} 
-        isLight={isLight} 
-      />
+      {/* Emblem: either custom logo image or official vector SVG */}
+      {hasCustomLogo ? (
+        <img
+          src={cacheBustedLogoUrl}
+          alt="Emblème FAFE"
+          className={`${dim.symbol} object-contain rounded-full transition-transform duration-300 hover:scale-105 shrink-0`}
+          onError={() => setCustomLogoError(true)}
+        />
+      ) : (
+        <FafeOfficialEmblem 
+          className={`${dim.symbol} transition-transform duration-300 hover:scale-105 shrink-0`} 
+          isLight={isLight} 
+        />
+      )}
 
       {/* Typography side */}
       {variant !== 'symbol-only' && (
@@ -139,7 +213,7 @@ export function FafeLogo({
                 isLight ? 'text-white' : 'text-[#063F3A]'
               } ${dim.text}`}
             >
-              FAFE
+              {branding?.siteName || 'FAFE'}
             </span>
             {(chapter || badge) && (
               <div className="flex items-center gap-1.5 ml-1">

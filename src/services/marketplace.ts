@@ -360,11 +360,12 @@ class MarketplaceService {
     const newStatus: ProductStatus = newStock === 0 ? 'OUT_OF_STOCK' : (product.status === 'OUT_OF_STOCK' ? 'PUBLISHED' : product.status);
 
     const docRef = doc(db, 'products', productId);
-    await updateDoc(docRef, {
+    await setDoc(docRef, {
+      ...product,
       stock: newStock,
       status: newStatus,
       updatedAt: Date.now()
-    });
+    }, { merge: true });
 
     // Update local cache
     const cached = this.getCachedProducts();
@@ -392,11 +393,12 @@ class MarketplaceService {
     const newStatus: ProductStatus = cleanStock === 0 ? 'OUT_OF_STOCK' : (product.status === 'OUT_OF_STOCK' ? 'PUBLISHED' : product.status);
 
     const docRef = doc(db, 'products', productId);
-    await updateDoc(docRef, {
+    await setDoc(docRef, {
+      ...product,
       stock: cleanStock,
       status: newStatus,
       updatedAt: Date.now()
-    });
+    }, { merge: true });
 
     const cached = this.getCachedProducts();
     const target = cached.find(p => p.id === productId);

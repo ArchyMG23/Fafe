@@ -17,6 +17,13 @@ service cloud.firestore {
       );
     }
     
+    function isSuperAdmin() {
+      return isAuthenticated() && (
+        (getUserData() != null && getUserData().role == 'SUPER_ADMIN') ||
+        request.auth.token.email == 'yombivictor@gmail.com'
+      );
+    }
+    
     function isContentManager() {
       return isAuthenticated() && (
         (getUserData() != null && (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN' || getUserData().role == 'CONTENT_MANAGER')) ||
@@ -194,6 +201,17 @@ service cloud.firestore {
       allow create: if true;
       // Only admins can update or delete orders
       allow update, delete: if isAdmin();
+    }
+
+    // Site Identity & Branding Rules (Only SUPER_ADMIN can modify)
+    match /siteSettings/{settingId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    match /site_settings/{settingId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
     }
   }
 }

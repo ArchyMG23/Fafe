@@ -224,7 +224,7 @@ class OrdersService {
   async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
     try {
       const docRef = doc(db, 'orders', orderId);
-      await updateDoc(docRef, { orderStatus: status, updatedAt: Date.now() });
+      await setDoc(docRef, { orderStatus: status, updatedAt: Date.now() }, { merge: true });
     } catch (err) {
       console.warn('Firestore update order status error:', err);
     }
@@ -245,11 +245,11 @@ class OrdersService {
   async updatePaymentStatus(orderId: string, status: OrderPaymentStatus): Promise<void> {
     try {
       const docRef = doc(db, 'orders', orderId);
-      await updateDoc(docRef, {
+      await setDoc(docRef, {
         paymentStatus: status,
         paidAt: status === 'PAID' ? Date.now() : undefined,
         updatedAt: Date.now()
-      });
+      }, { merge: true });
     } catch (err) {
       console.warn('Firestore update payment status error:', err);
     }

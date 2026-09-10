@@ -74,6 +74,21 @@
         "updatedAt": { "type": "number" }
       },
       "required": ["firstName", "lastName", "country", "status", "verificationStatus", "createdAt", "updatedAt"]
+    },
+    "siteSettings": {
+      "title": "SiteSetting",
+      "description": "Global website configuration documents including branding, logos, and site identity.",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string" },
+        "logoAltUrl": { "type": "string" },
+        "faviconUrl": { "type": "string" },
+        "displayMode": { "type": "string", "enum": ["image_only", "emblem_with_text"] },
+        "siteName": { "type": "string" },
+        "updatedAt": { "type": "number" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["updatedAt"]
     }
   },
   "firestoreRulesTemplate": "standard"

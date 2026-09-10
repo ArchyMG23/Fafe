@@ -351,15 +351,22 @@ export function getCMSLocalizedText(field: any, language: 'fr' | 'en' = 'fr', fa
  */
 export function mergeWithDefaults<T>(defaults: T, current: any): T {
   if (!current || typeof current !== 'object') return defaults;
-  const result: any = Array.isArray(defaults) ? [...(Array.isArray(current) ? current : defaults)] : { ...defaults };
-  
+  if (Array.isArray(defaults)) {
+    return (Array.isArray(current) && current.length > 0 ? current : defaults) as unknown as T;
+  }
+  const result: any = { ...defaults, ...current };
   for (const key of Object.keys(defaults as any)) {
-    if (current[key] === undefined || current[key] === null) {
-      result[key] = (defaults as any)[key];
-    } else if (typeof (defaults as any)[key] === 'object' && !Array.isArray((defaults as any)[key]) && (defaults as any)[key] !== null) {
-      result[key] = mergeWithDefaults((defaults as any)[key], current[key]);
+    const defVal = (defaults as any)[key];
+    const curVal = current[key];
+    if (curVal === undefined || curVal === null) {
+      result[key] = defVal;
+    } else if (
+      typeof defVal === 'object' && defVal !== null && !Array.isArray(defVal) &&
+      typeof curVal === 'object' && curVal !== null && !Array.isArray(curVal)
+    ) {
+      result[key] = mergeWithDefaults(defVal, curVal);
     } else {
-      result[key] = current[key];
+      result[key] = curVal;
     }
   }
   return result;

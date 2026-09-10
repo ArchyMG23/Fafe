@@ -30,7 +30,18 @@ const getIcon = (iconName: string) => {
 };
 
 export function About() {
-  const [cmsData, setCmsData] = useState<any>(defaultNousCMS);
+  const [cmsData, setCmsData] = useState<any>(() => {
+    try {
+      const cached = localStorage.getItem("fafe_cms_published_nous") || localStorage.getItem("fafe_cms_draft_nous");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && typeof parsed === 'object') {
+          return parsed.content || parsed;
+        }
+      }
+    } catch (e) {}
+    return defaultNousCMS;
+  });
   const { hash } = useLocation();
 
   useEffect(() => {

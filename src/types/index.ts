@@ -559,3 +559,15 @@ export interface Order {
   paidAt?: number;
 }
 
+export type LogoDisplayMode = 'image_only' | 'emblem_with_text';
+
+export interface SiteBrandingSettings {
+  logoUrl?: string;
+  logoAltUrl?: string;
+  faviconUrl?: string;
+  displayMode?: LogoDisplayMode;
+  siteName?: string;
+  updatedAt?: number;
+  updatedBy?: string;
+}
+
