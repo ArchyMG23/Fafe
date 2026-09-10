@@ -11,7 +11,8 @@ import {
   uploadBrandingAsset, 
   saveBrandingSettings, 
   deleteBrandingAsset, 
-  getCacheBustedUrl 
+  getCacheBustedUrl,
+  fileToOptimizedDataUri
 } from '../../../services/branding';
 import { FafeLogo, FafeOfficialEmblem } from '../../../components/ui/FafeLogo';
 import { LogoDisplayMode } from '../../../types';
@@ -50,6 +51,10 @@ export function AdminCMSBranding() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [fallbackOption, setFallbackOption] = useState<{
+    file: File;
+    target: 'logo' | 'logoAlt' | 'favicon';
+  } | null>(null);
 
   // Preview background toggle
   const [logoPreviewBg, setLogoPreviewBg] = useState<'light' | 'dark'>('dark');
@@ -59,14 +64,16 @@ export function AdminCMSBranding() {
   };
 
   /**
-   * Complete 7-Step Direct Upload & Save Pipeline:
-   * 1. File selection
-   * 2. Upload to Firebase Storage
-   * 3. Download URL retrieval
-   * 4. Save to Firestore (siteSettings/branding & cms/global)
-   * 5. Immediate Live Preview
-   * 6. Durable persistence (localStorage + Firestore)
-   * 7. Real-time propagation to public site
+   * Complete 9-Step Direct Upload & Save Pipeline:
+   * ÉTAPE 1 : Sélection fichier
+   * ÉTAPE 2 : Validation
+   * ÉTAPE 3 : Upload Storage
+   * ÉTAPE 4 : Confirmation Storage
+   * ÉTAPE 5 : getDownloadURL
+   * ÉTAPE 6 : Écriture Firestore
+   * ÉTAPE 7 : Confirmation Firestore
+   * ÉTAPE 8 : Mise à jour interface
+   * ÉTAPE 9 : Fin loading (garanti via finally)
    */
   const handleDirectUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -74,6 +81,7 @@ export function AdminCMSBranding() {
   ) => {
     setErrorMsg(null);
     setSuccessMsg(null);
+    setFallbackOption(null);
 
     const file = e.target.files?.[0];
     if (!file) return;
@@ -81,23 +89,38 @@ export function AdminCMSBranding() {
     // Reset input value so re-selecting the same file works
     e.target.value = '';
 
-    // Step 1: Validate file format and size
+    // ÉTAPE 1 : Sélection fichier
+    console.log(`[CMS] Sélection fichier: ${file.name} (${file.size} octets, type: ${file.type || 'inconnu'})`);
+
+    // ÉTAPE 2 : Validation
     const validation = await validateBrandingFile(file);
     if (!validation.valid) {
+      console.error(`[CMS] ERREUR — Validation fichier: ${validation.error}`);
       setErrorMsg(validation.error || 'Format ou taille de fichier invalide.');
       return;
     }
+    console.log(`[CMS] Validation fichier OK (${validation.width || '?'}x${validation.height || '?'}px)`);
 
     setIsSaving(true);
     setUploadingTarget(target);
     const targetName = target === 'logo' ? 'du logo principal' : target === 'logoAlt' ? 'du logo alternatif' : 'du favicon';
 
     try {
-      // Step 2 & 3: Upload to Firebase Storage and get public URL
+      // ÉTAPE 3, 4, 5 : Upload Storage, Confirmation, getDownloadURL
       setSavingStep(`1/2 - Téléversement ${targetName} vers Firebase Storage...`);
-      const downloadUrl = await uploadBrandingAsset(file, target);
+      let downloadUrl: string;
+      try {
+        downloadUrl = await uploadBrandingAsset(file, target);
+      } catch (storageErr: any) {
+        console.error(`[CMS] ERREUR — Upload Storage: ${storageErr?.message || storageErr}`);
+        setFallbackOption({ file, target });
+        setErrorMsg(
+          `Le téléversement vers Firebase Storage n'a pas pu être terminé (${storageErr?.message || 'délai dépassé ou bucket indisponible'}). Vérifiez votre connexion ou la configuration Firebase. Vous pouvez également enregistrer directement l'image optimisée dans Firestore ci-dessous.`
+        );
+        return;
+      }
 
-      // Step 4: Save URL into CMS configuration & Firestore
+      // ÉTAPE 6 : Écriture Firestore
       setSavingStep(`2/2 - Enregistrement de l'URL dans Firebase Firestore...`);
       const updates: any = {};
       if (target === 'logo') updates.logoUrl = downloadUrl;
@@ -105,6 +128,7 @@ export function AdminCMSBranding() {
       if (target === 'favicon') updates.faviconUrl = downloadUrl;
 
       const adminEmail = getAdminEmail();
+      // ÉTAPE 7 : Confirmation Firestore
       await saveBrandingSettings(updates, adminEmail);
 
       // Clean old asset from storage safely
@@ -113,13 +137,56 @@ export function AdminCMSBranding() {
         deleteBrandingAsset(oldUrl);
       }
 
-      // Step 5, 6, 7: Update state & immediate notifications
+      // ÉTAPE 8 : Mise à jour interface
       await fetchBranding();
       setSuccessMsg(`✓ Succès : Le ${target === 'logo' ? 'logo principal' : target === 'logoAlt' ? 'logo alternatif' : 'favicon'} a été téléversé et enregistré avec succès dans Firebase ! Il est immédiatement visible sur le site.`);
       setTimeout(() => setSuccessMsg(null), 7000);
+
+      // ÉTAPE 9 : Fin loading (garanti via finally)
+      console.log('[CMS] Opération terminée');
     } catch (err: any) {
-      console.error(`Error uploading ${target}:`, err);
+      console.error(`[CMS] ERREUR — Traitement: ${err?.message || err}`);
       setErrorMsg(`Erreur lors du traitement de l'image : ${err?.message || 'Veuillez vérifier votre connexion.'}`);
+    } finally {
+      setIsSaving(false);
+      setUploadingTarget(null);
+      setSavingStep('');
+    }
+  };
+
+  /**
+   * Fallback direct save into Firebase Firestore if Storage bucket is not yet provisioned
+   */
+  const handleDirectFirestoreSave = async () => {
+    if (!fallbackOption) return;
+    const { file, target } = fallbackOption;
+    setIsSaving(true);
+    setUploadingTarget(target);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    const targetName = target === 'logo' ? 'du logo principal' : target === 'logoAlt' ? 'du logo alternatif' : 'du favicon';
+
+    console.log(`[CMS] Début enregistrement direct Firestore pour ${targetName}`);
+    try {
+      setSavingStep(`Optimisation de l'image pour Firestore...`);
+      const dataUri = await fileToOptimizedDataUri(file);
+
+      setSavingStep(`Enregistrement dans Firebase Firestore...`);
+      const updates: any = {};
+      if (target === 'logo') updates.logoUrl = dataUri;
+      if (target === 'logoAlt') updates.logoAltUrl = dataUri;
+      if (target === 'favicon') updates.faviconUrl = dataUri;
+
+      await saveBrandingSettings(updates, getAdminEmail());
+      await fetchBranding();
+
+      setFallbackOption(null);
+      setSuccessMsg(`✓ Succès : Le ${targetName} a été optimisé et enregistré avec succès dans Firebase Firestore ! Il est immédiatement persistant et visible.`);
+      setTimeout(() => setSuccessMsg(null), 7000);
+      console.log('[CMS] Opération terminée');
+    } catch (err: any) {
+      console.error(`[CMS] ERREUR — Enregistrement direct Firestore: ${err?.message || err}`);
+      setErrorMsg(`Erreur lors de l'enregistrement dans Firestore : ${err?.message || 'Erreur'}`);
     } finally {
       setIsSaving(false);
       setUploadingTarget(null);
@@ -280,9 +347,38 @@ export function AdminCMSBranding() {
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="font-bold">Erreur de mise à jour</p>
-              <p className="mt-0.5">{errorMsg}</p>
+              <p className="mt-0.5 leading-relaxed">{errorMsg}</p>
+              {fallbackOption && (
+                <div className="mt-3 pt-3 border-t border-red-200/70 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleDirectFirestoreSave}
+                    disabled={isSaving}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#00843D] hover:bg-[#007033] text-white font-bold rounded-lg transition-colors shadow-xs text-xs disabled:opacity-50"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Enregistrement en cours...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-3.5 h-3.5" />
+                        <span>Enregistrer l'image directement dans Firebase Firestore</span>
+                      </>
+                    )}
+                  </button>
+                  <span className="text-stone-600 text-[11px]">
+                    (Persistance garantie dans Firestore sans dépendre de Firebase Storage)
+                  </span>
+                </div>
+              )}
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-red-400 hover:text-red-700">
+            <button 
+              onClick={() => { setErrorMsg(null); setFallbackOption(null); }} 
+              className="text-red-400 hover:text-red-700"
+              title="Fermer"
+            >
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -456,7 +552,7 @@ export function AdminCMSBranding() {
                 {uploadingTarget === 'logo' ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Téléversement et enregistrement...</span>
+                    <span>{savingStep || 'Téléversement et enregistrement...'}</span>
                   </>
                 ) : (
                   <>
@@ -594,7 +690,7 @@ export function AdminCMSBranding() {
                 {uploadingTarget === 'favicon' ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Mise à jour de l'icône...</span>
+                    <span>{savingStep || "Mise à jour de l'icône..."}</span>
                   </>
                 ) : (
                   <>
@@ -730,7 +826,7 @@ export function AdminCMSBranding() {
                 {uploadingTarget === 'logoAlt' ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Téléversement du logo alternatif...</span>
+                    <span>{savingStep || "Téléversement du logo alternatif..."}</span>
                   </>
                 ) : (
                   <>

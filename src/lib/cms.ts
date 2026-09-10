@@ -592,6 +592,27 @@ export async function logCMSAudit(log: Omit<CMSAuditLog, 'id' | 'timestamp'>): P
   }
 }
 
+/**
+ * Timeout wrapper for Firestore operations
+ */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, operationLabel: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`Délai d'attente dépassé (${Math.round(timeoutMs / 1000)}s) pour l'opération "${operationLabel}".`));
+    }, timeoutMs);
+
+    promise
+      .then((res) => {
+        clearTimeout(timer);
+        resolve(res);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
+
 export async function saveCMSDraft(
   pageId: CMSPageId,
   draftContent: any,
@@ -623,8 +644,12 @@ export async function saveCMSDraft(
     version: nextVersion
   };
 
-  // 2. Persist to Firestore with sanitized payload (no undefined)
-  await setDoc(docRef, cleanFirestoreData(payload), { merge: true });
+  // 2. Persist to Firestore with sanitized payload (no undefined) with timeout protection
+  await withTimeout(
+    setDoc(docRef, cleanFirestoreData(payload), { merge: true }),
+    12000,
+    `Enregistrement brouillon (${pageId})`
+  );
 
   await logCMSAudit({
     adminId: user.id || 'admin',
@@ -687,8 +712,12 @@ export async function publishCMSPage(
     version: nextVersion
   };
 
-  // 2. Persist to Firestore with sanitized payload (no undefined)
-  await setDoc(docRef, cleanFirestoreData(payload), { merge: true });
+  // 2. Persist to Firestore with sanitized payload (no undefined) with timeout protection
+  await withTimeout(
+    setDoc(docRef, cleanFirestoreData(payload), { merge: true }),
+    12000,
+    `Publication page (${pageId})`
+  );
 
   // 3. Sync with legacy cms/global if applicable
   try {
@@ -818,11 +847,19 @@ export async function addCMSMedia(mediaItem: Omit<Media, 'id'>): Promise<Media> 
     ...mediaItem,
     id: newId
   };
-  await setDoc(doc(db, 'media', newId), item);
+  await withTimeout(
+    setDoc(doc(db, 'media', newId), item),
+    12000,
+    'Ajout média'
+  );
   return item;
 }
 
 export async function deleteCMSMedia(id: string): Promise<void> {
   if (id.startsWith('stock-')) return; // do not delete virtual stock media
-  await deleteDoc(doc(db, 'media', id));
+  await withTimeout(
+    deleteDoc(doc(db, 'media', id)),
+    12000,
+    'Suppression média'
+  );
 }

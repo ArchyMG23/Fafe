@@ -22,6 +22,15 @@ export const auth = getAuth(app);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 export const storage = getStorage(app);
 
+// Prevent indefinite hangs: default maxUploadRetryTime is 600,000ms (10 mins).
+// Set strict 10s maximum retry time for Storage network operations.
+try {
+  storage.maxUploadRetryTime = 10000;
+  storage.maxOperationRetryTime = 10000;
+} catch (e) {
+  // Ignored if unsupported in specific environment
+}
+
 // Connection test helper
 export async function testFirestoreConnection() {
   try {

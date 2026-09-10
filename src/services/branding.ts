@@ -127,7 +127,89 @@ export async function validateBrandingFile(file: File): Promise<FileValidationRe
 }
 
 /**
- * Uploads an image asset to Firebase Storage in /branding/
+ * Wraps a promise with a strict timeout to prevent indefinite hangs
+ */
+export function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number = 12000,
+  stepDescription: string = 'Opération réseau'
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(
+        new Error(
+          `Délai d'attente dépassé (${Math.round(timeoutMs / 1000)}s) lors de : "${stepDescription}". Vérifiez votre connexion ou les permissions Firebase, puis réessayez.`
+        )
+      );
+    }, timeoutMs);
+
+    promise
+      .then((res) => {
+        clearTimeout(timer);
+        resolve(res);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
+
+/**
+ * Converts an image file to an optimized Data URI suitable for direct Firestore storage
+ */
+export async function fileToOptimizedDataUri(
+  file: File,
+  maxWidth: number = 800,
+  maxHeight: number = 400
+): Promise<string> {
+  // If SVG, read as standard Data URL
+  if (file.type === 'image/svg+xml' || file.name.endsWith('.svg')) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier SVG.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Raster image: render to canvas to ensure reasonable size (< 200KB for Firestore)
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('Erreur de lecture du fichier image.'));
+        reader.readAsDataURL(file);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL(file.type || 'image/png', 0.9);
+      resolve(dataUrl);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Impossible d'interpréter le fichier comme une image valide."));
+    };
+    img.src = objectUrl;
+  });
+}
+
+/**
+ * Uploads an image asset to Firebase Storage in /branding/ with strict timeout & diagnostic logs
  */
 export async function uploadBrandingAsset(
   file: File,
@@ -146,9 +228,32 @@ export async function uploadBrandingAsset(
     }
   };
 
-  await uploadBytes(storageRef, file, metadata);
-  const downloadURL = await getDownloadURL(storageRef);
-  return downloadURL;
+  console.log(`[CMS] Début upload Storage vers ${path}`);
+  try {
+    await withTimeout(
+      uploadBytes(storageRef, file, metadata),
+      12000,
+      'Upload Storage'
+    );
+    console.log('[CMS] Upload Storage terminé');
+  } catch (err: any) {
+    console.error(`[CMS] ERREUR — Upload Storage: ${err?.message || err}`);
+    throw new Error(`Échec de l'upload vers Firebase Storage (${err?.message || 'délai dépassé ou bucket inaccessible'}). Vérifiez la configuration du bucket dans la console Firebase.`);
+  }
+
+  console.log("[CMS] Récupération de l'URL...");
+  try {
+    const downloadURL = await withTimeout(
+      getDownloadURL(storageRef),
+      6000,
+      'Récupération URL Storage'
+    );
+    console.log(`[CMS] URL récupérée: ${downloadURL}`);
+    return downloadURL;
+  } catch (err: any) {
+    console.error(`[CMS] ERREUR — Récupération URL: ${err?.message || err}`);
+    throw new Error(`Impossible de récupérer l'URL publique Firebase Storage : ${err?.message || 'délai dépassé'}.`);
+  }
 }
 
 /**
@@ -207,6 +312,7 @@ export async function saveBrandingSettings(
   updates: Partial<SiteBrandingSettings>,
   updatedBy: string = 'SUPER_ADMIN'
 ): Promise<SiteBrandingSettings> {
+  console.log('[CMS] Début sauvegarde Firestore dans siteSettings/branding');
   const current = await getBrandingSettings();
   const timestamp = Date.now();
 
@@ -217,9 +323,19 @@ export async function saveBrandingSettings(
     updatedBy
   };
 
-  // 1. Update Firestore in siteSettings/branding
+  // 1. Update Firestore in siteSettings/branding with timeout
   const docRef = doc(db, BRANDING_DOC_PATH, BRANDING_DOC_ID);
-  await setDoc(docRef, cleanFirestoreData(newSettings), { merge: true });
+  try {
+    await withTimeout(
+      setDoc(docRef, cleanFirestoreData(newSettings), { merge: true }),
+      15000,
+      'Enregistrement Firestore (siteSettings/branding)'
+    );
+    console.log('[CMS] Firestore sauvegardé');
+  } catch (err: any) {
+    console.error(`[CMS] ERREUR — Sauvegarde Firestore: ${err?.message || err}`);
+    throw new Error(`Erreur lors de l'enregistrement dans Firebase Firestore : ${err?.message || 'timeout'}.`);
+  }
 
   // 2. Also mirror to site_settings/branding and cms/global for robust rule and legacy compatibility
   try {
@@ -241,6 +357,7 @@ export async function saveBrandingSettings(
 
   // 3. Update localStorage cache
   localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(newSettings));
+  console.log('[CMS] Mise à jour interface');
 
   // 4. Update favicon dynamically
   applyFavicon(newSettings.faviconUrl, timestamp);
