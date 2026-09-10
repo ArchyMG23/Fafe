@@ -203,15 +203,15 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // Site Identity & Branding Rules (Only SUPER_ADMIN can modify)
+    // Site Identity & Branding Rules (SUPER_ADMIN and ADMIN can modify)
     match /siteSettings/{settingId} {
       allow read: if true;
-      allow write: if isSuperAdmin();
+      allow write: if isSuperAdmin() || isAdmin();
     }
 
     match /site_settings/{settingId} {
       allow read: if true;
-      allow write: if isSuperAdmin();
+      allow write: if isSuperAdmin() || isAdmin();
     }
   }
 }

@@ -352,7 +352,7 @@ export function getCMSLocalizedText(field: any, language: 'fr' | 'en' = 'fr', fa
 export function mergeWithDefaults<T>(defaults: T, current: any): T {
   if (!current || typeof current !== 'object') return defaults;
   if (Array.isArray(defaults)) {
-    return (Array.isArray(current) && current.length > 0 ? current : defaults) as unknown as T;
+    return (Array.isArray(current) ? current : defaults) as unknown as T;
   }
   const result: any = { ...defaults, ...current };
   for (const key of Object.keys(defaults as any)) {
@@ -370,6 +370,27 @@ export function mergeWithDefaults<T>(defaults: T, current: any): T {
     }
   }
   return result;
+}
+
+/**
+ * Recursively sanitizes any object before passing to Firestore setDoc().
+ * Replaces undefined values with empty string/null and ensures valid objects/arrays.
+ * Prevents "FirebaseError: Function setDoc() called with invalid data. Unsupported field value: undefined"
+ */
+export function cleanFirestoreData<T = any>(data: T): T {
+  if (data === undefined) return '' as unknown as T;
+  if (data === null) return null as unknown as T;
+  if (typeof data !== 'object') return data;
+  if (Array.isArray(data)) {
+    return data.map(item => cleanFirestoreData(item)) as unknown as T;
+  }
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(data as Record<string, any>)) {
+    if (value !== undefined) {
+      result[key] = cleanFirestoreData(value);
+    }
+  }
+  return result as T;
 }
 
 /**
@@ -575,110 +596,137 @@ export async function saveCMSDraft(
   pageId: CMSPageId,
   draftContent: any,
   user: { id: string; name: string; email: string }
-): Promise<void> {
+): Promise<CMSPageRecord> {
   const currentRecord = await getCMSPageRecord(pageId);
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
-  const payload: Partial<CMSPageRecord> = {
-    pageId,
-    status: 'DRAFT',
-    updatedAt: Date.now(),
-    updatedBy: user.name || user.email,
-    draftContent,
-    publishedContent: currentRecord.publishedContent,
-    version: nextVersion
-  };
+  const cleanDraft = cleanFirestoreData(draftContent);
 
-  await setDoc(docRef, payload, { merge: true });
-
+  // 1. Optimistic persistence in localStorage immediately so work is never lost
   if (typeof window !== 'undefined') {
     try {
-      localStorage.setItem(`fafe_cms_draft_${pageId}`, JSON.stringify(draftContent));
-      window.dispatchEvent(new CustomEvent('fafe_cms_draft_updated', { detail: { pageId, content: draftContent } }));
+      localStorage.setItem(`fafe_cms_draft_${pageId}`, JSON.stringify(cleanDraft));
+      window.dispatchEvent(new CustomEvent('fafe_cms_draft_updated', { detail: { pageId, content: cleanDraft } }));
     } catch (e) {
       console.warn("Storage sync draft notice:", e);
     }
   }
 
+  const payload: Partial<CMSPageRecord> = {
+    pageId,
+    status: 'DRAFT',
+    updatedAt: Date.now(),
+    updatedBy: user.name || user.email || 'SUPER_ADMIN',
+    draftContent: cleanDraft,
+    publishedContent: currentRecord.publishedContent,
+    version: nextVersion
+  };
+
+  // 2. Persist to Firestore with sanitized payload (no undefined)
+  await setDoc(docRef, cleanFirestoreData(payload), { merge: true });
+
   await logCMSAudit({
-    adminId: user.id,
-    adminEmail: user.email,
-    adminName: user.name,
+    adminId: user.id || 'admin',
+    adminEmail: user.email || 'yombivictor@gmail.com',
+    adminName: user.name || 'SUPER_ADMIN',
     page: pageId,
     action: 'SAVE_DRAFT',
-    changesSummary: `Enregistrement du brouillon (${pageId})`,
+    changesSummary: `Enregistrement du brouillon (${pageId}) v${nextVersion}`,
     previousVersion: currentRecord.version,
     newVersion: nextVersion
   });
+
+  return {
+    pageId,
+    status: 'DRAFT',
+    updatedAt: payload.updatedAt!,
+    updatedBy: payload.updatedBy!,
+    publishedAt: currentRecord.publishedAt,
+    publishedBy: currentRecord.publishedBy,
+    draftContent: cleanDraft,
+    publishedContent: currentRecord.publishedContent,
+    version: nextVersion
+  };
 }
 
 export async function publishCMSPage(
   pageId: CMSPageId,
   contentToPublish: any,
   user: { id: string; name: string; email: string }
-): Promise<void> {
+): Promise<CMSPageRecord> {
   const currentRecord = await getCMSPageRecord(pageId);
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
-  const payload: CMSPageRecord = {
-    pageId,
-    status: 'PUBLISHED',
-    updatedAt: Date.now(),
-    updatedBy: user.name || user.email,
-    publishedAt: Date.now(),
-    publishedBy: user.name || user.email,
-    draftContent: contentToPublish,
-    publishedContent: contentToPublish,
-    version: nextVersion
-  };
+  const cleanContent = cleanFirestoreData(contentToPublish);
+  const now = Date.now();
+  const userName = user.name || user.email || 'SUPER_ADMIN';
 
-  await setDoc(docRef, payload, { merge: true });
-
+  // 1. Optimistic update in localStorage immediately
   if (typeof window !== 'undefined') {
     try {
-      localStorage.setItem(`fafe_cms_published_${pageId}`, JSON.stringify(contentToPublish));
-      localStorage.setItem(`fafe_cms_draft_${pageId}`, JSON.stringify(contentToPublish));
-      window.dispatchEvent(new CustomEvent('fafe_cms_updated', { detail: { pageId, content: contentToPublish } }));
+      localStorage.setItem(`fafe_cms_published_${pageId}`, JSON.stringify(cleanContent));
+      localStorage.setItem(`fafe_cms_draft_${pageId}`, JSON.stringify(cleanContent));
+      window.dispatchEvent(new CustomEvent('fafe_cms_updated', { detail: { pageId, content: cleanContent } }));
+      window.dispatchEvent(new CustomEvent('fafe_cms_draft_updated', { detail: { pageId, content: cleanContent } }));
     } catch (e) {
       console.warn("Storage sync published notice:", e);
     }
   }
 
-  // Sync with legacy cms/global if it is nous, dons, or accueil
+  const payload: CMSPageRecord = {
+    pageId,
+    status: 'PUBLISHED',
+    updatedAt: now,
+    updatedBy: userName,
+    publishedAt: now,
+    publishedBy: userName,
+    draftContent: cleanContent,
+    publishedContent: cleanContent,
+    version: nextVersion
+  };
+
+  // 2. Persist to Firestore with sanitized payload (no undefined)
+  await setDoc(docRef, cleanFirestoreData(payload), { merge: true });
+
+  // 3. Sync with legacy cms/global if applicable
   try {
     if (pageId === 'nous') {
-      await setDoc(doc(db, 'cms', 'global'), { about: contentToPublish }, { merge: true });
-    } else if (pageId === 'dons' && contentToPublish.bankDetails) {
-      await setDoc(doc(db, 'cms', 'global'), { bankDetails: contentToPublish.bankDetails }, { merge: true });
-    } else if (pageId === 'accueil' && contentToPublish.hero) {
+      await setDoc(doc(db, 'cms', 'global'), { about: cleanContent }, { merge: true });
+    } else if (pageId === 'dons' && cleanContent.bankDetails) {
+      await setDoc(doc(db, 'cms', 'global'), { bankDetails: cleanContent.bankDetails }, { merge: true });
+    } else if (pageId === 'accueil' && cleanContent.hero) {
       const slide = {
         id: 'slide-1',
-        image: contentToPublish.hero.heroImage || defaultHeroSlides[0].image,
-        title: contentToPublish.hero.title,
-        shortText: contentToPublish.hero.shortText,
-        buttonText: contentToPublish.hero.buttonText,
-        link: contentToPublish.hero.buttonLink || '/rejoindre',
+        image: cleanContent.hero.heroImage || defaultHeroSlides[0].image,
+        title: cleanContent.hero.title,
+        shortText: cleanContent.hero.shortText,
+        buttonText: cleanContent.hero.buttonText,
+        link: cleanContent.hero.buttonLink || '/rejoindre',
         order: 1,
         status: 'ACTIVE'
       };
       await setDoc(doc(db, 'cms', 'global'), { heroSlides: [slide] }, { merge: true });
+    } else if (pageId === 'global') {
+      await setDoc(doc(db, 'cms', 'global'), cleanContent, { merge: true });
     }
   } catch (syncErr) {
     console.warn("Legacy global sync notice:", syncErr);
   }
 
   await logCMSAudit({
-    adminId: user.id,
-    adminEmail: user.email,
-    adminName: user.name,
+    adminId: user.id || 'admin',
+    adminEmail: user.email || 'yombivictor@gmail.com',
+    adminName: userName,
     page: pageId,
     action: 'PUBLISH',
-    changesSummary: `Publication officielle des modifications de la page "${pageId}"`,
+    changesSummary: `Publication officielle des modifications de la page "${pageId}" v${nextVersion}`,
     previousVersion: currentRecord.version,
     newVersion: nextVersion
   });
+
+  return payload;
 }
 
 export async function fetchCMSAuditLogs(pageId?: string, limitCount = 50): Promise<CMSAuditLog[]> {

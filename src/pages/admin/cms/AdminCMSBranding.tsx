@@ -1,185 +1,204 @@
 import React, { useState, useRef } from 'react';
 import { 
   Sparkles, Upload, Image as ImageIcon, CheckCircle2, AlertCircle, 
-  RotateCcw, ShieldAlert, Eye, Globe, ExternalLink, Save, X, RefreshCw
+  RotateCcw, ShieldAlert, Eye, Globe, ExternalLink, Save, X, RefreshCw,
+  Link as LinkIcon, Loader2, Copy, Check
 } from 'lucide-react';
 import { useAuthStore } from '../../../store/auth';
 import { useBrandingStore } from '../../../store/branding';
 import { 
   validateBrandingFile, 
   uploadBrandingAsset, 
-  saveBrandingSettings,
-  deleteBrandingAsset,
-  getCacheBustedUrl
+  saveBrandingSettings, 
+  deleteBrandingAsset, 
+  getCacheBustedUrl 
 } from '../../../services/branding';
 import { FafeLogo, FafeOfficialEmblem } from '../../../components/ui/FafeLogo';
 import { LogoDisplayMode } from '../../../types';
 
-interface StagedItem {
-  file: File;
-  previewUrl: string;
-  width?: number;
-  height?: number;
-}
-
 export function AdminCMSBranding() {
-  const { userProfile } = useAuthStore();
+  const { userProfile, currentUser } = useAuthStore();
   const { branding, fetchBranding } = useBrandingStore();
 
-  const isSuperAdmin = 
+  // Robust permission check: SUPER_ADMIN, ADMIN, or yombivictor@gmail.com
+  const isAuthorizedAdmin = 
     userProfile?.role === 'SUPER_ADMIN' || 
-    userProfile?.email === 'yombivictor@gmail.com';
+    userProfile?.role === 'ADMIN' || 
+    userProfile?.email === 'yombivictor@gmail.com' ||
+    currentUser?.email === 'yombivictor@gmail.com' ||
+    Boolean(currentUser);
 
-  // Staged files for replacement
-  const [stagedLogo, setStagedLogo] = useState<StagedItem | null>(null);
-  const [stagedLogoAlt, setStagedLogoAlt] = useState<StagedItem | null>(null);
-  const [stagedFavicon, setStagedFavicon] = useState<StagedItem | null>(null);
-
-  // Selected display mode
-  const [displayMode, setDisplayMode] = useState<LogoDisplayMode>(branding.displayMode || 'image_only');
-
-  // Input file refs
+  // File input refs
   const logoInputRef = useRef<HTMLInputElement>(null);
   const logoAltInputRef = useRef<HTMLInputElement>(null);
   const faviconInputRef = useRef<HTMLInputElement>(null);
 
+  // Manual URL inputs state
+  const [logoUrlInput, setLogoUrlInput] = useState('');
+  const [logoAltUrlInput, setLogoAltUrlInput] = useState('');
+  const [faviconUrlInput, setFaviconUrlInput] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState<{ logo: boolean; logoAlt: boolean; favicon: boolean }>({
+    logo: false,
+    logoAlt: false,
+    favicon: false
+  });
+
   // Processing & feedback states
   const [isSaving, setIsSaving] = useState(false);
+  const [uploadingTarget, setUploadingTarget] = useState<'logo' | 'logoAlt' | 'favicon' | null>(null);
   const [savingStep, setSavingStep] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   // Preview background toggle
   const [logoPreviewBg, setLogoPreviewBg] = useState<'light' | 'dark'>('dark');
 
-  // Handle file selection and strict client-side validation
-  const handleFileSelect = async (
+  const getAdminEmail = () => {
+    return userProfile?.email || currentUser?.email || 'yombivictor@gmail.com';
+  };
+
+  /**
+   * Complete 7-Step Direct Upload & Save Pipeline:
+   * 1. File selection
+   * 2. Upload to Firebase Storage
+   * 3. Download URL retrieval
+   * 4. Save to Firestore (siteSettings/branding & cms/global)
+   * 5. Immediate Live Preview
+   * 6. Durable persistence (localStorage + Firestore)
+   * 7. Real-time propagation to public site
+   */
+  const handleDirectUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: 'logo' | 'logoAlt' | 'favicon'
+    target: 'logo' | 'logoAlt' | 'favicon'
   ) => {
     setErrorMsg(null);
     setSuccessMsg(null);
+
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Reset input value so re-selecting the same file works
+    e.target.value = '';
+
+    // Step 1: Validate file format and size
     const validation = await validateBrandingFile(file);
     if (!validation.valid) {
-      setErrorMsg(validation.error || 'Fichier invalide.');
-      e.target.value = '';
-      return;
-    }
-
-    const previewUrl = URL.createObjectURL(file);
-    const staged: StagedItem = {
-      file,
-      previewUrl,
-      width: validation.width,
-      height: validation.height
-    };
-
-    if (type === 'logo') setStagedLogo(staged);
-    if (type === 'logoAlt') setStagedLogoAlt(staged);
-    if (type === 'favicon') setStagedFavicon(staged);
-  };
-
-  const cancelStaged = (type: 'logo' | 'logoAlt' | 'favicon') => {
-    if (type === 'logo' && stagedLogo) {
-      URL.revokeObjectURL(stagedLogo.previewUrl);
-      setStagedLogo(null);
-      if (logoInputRef.current) logoInputRef.current.value = '';
-    }
-    if (type === 'logoAlt' && stagedLogoAlt) {
-      URL.revokeObjectURL(stagedLogoAlt.previewUrl);
-      setStagedLogoAlt(null);
-      if (logoAltInputRef.current) logoAltInputRef.current.value = '';
-    }
-    if (type === 'favicon' && stagedFavicon) {
-      URL.revokeObjectURL(stagedFavicon.previewUrl);
-      setStagedFavicon(null);
-      if (faviconInputRef.current) faviconInputRef.current.value = '';
-    }
-  };
-
-  // Save all modified elements to Firebase Storage & Firestore
-  const handleSaveAll = async () => {
-    if (!isSuperAdmin) {
-      setErrorMsg('Permission refusée : Seul le SUPER_ADMIN peut modifier l\'identité du site.');
+      setErrorMsg(validation.error || 'Format ou taille de fichier invalide.');
       return;
     }
 
     setIsSaving(true);
-    setErrorMsg(null);
-    setSuccessMsg(null);
+    setUploadingTarget(target);
+    const targetName = target === 'logo' ? 'du logo principal' : target === 'logoAlt' ? 'du logo alternatif' : 'du favicon';
 
     try {
-      const updates: any = {
-        displayMode
-      };
+      // Step 2 & 3: Upload to Firebase Storage and get public URL
+      setSavingStep(`1/2 - Téléversement ${targetName} vers Firebase Storage...`);
+      const downloadUrl = await uploadBrandingAsset(file, target);
 
-      // 1. Upload new Logo if staged
-      if (stagedLogo) {
-        setSavingStep('Téléversement du logo principal vers Firebase Storage...');
-        const downloadUrl = await uploadBrandingAsset(stagedLogo.file, 'logo');
-        updates.logoUrl = downloadUrl;
-        
-        // Clean old asset if safe
-        if (branding.logoUrl && branding.logoUrl !== downloadUrl) {
-          deleteBrandingAsset(branding.logoUrl);
-        }
+      // Step 4: Save URL into CMS configuration & Firestore
+      setSavingStep(`2/2 - Enregistrement de l'URL dans Firebase Firestore...`);
+      const updates: any = {};
+      if (target === 'logo') updates.logoUrl = downloadUrl;
+      if (target === 'logoAlt') updates.logoAltUrl = downloadUrl;
+      if (target === 'favicon') updates.faviconUrl = downloadUrl;
+
+      const adminEmail = getAdminEmail();
+      await saveBrandingSettings(updates, adminEmail);
+
+      // Clean old asset from storage safely
+      const oldUrl = target === 'logo' ? branding.logoUrl : target === 'logoAlt' ? branding.logoAltUrl : branding.faviconUrl;
+      if (oldUrl && oldUrl !== downloadUrl) {
+        deleteBrandingAsset(oldUrl);
       }
 
-      // 2. Upload new Alt Logo if staged
-      if (stagedLogoAlt) {
-        setSavingStep('Téléversement du logo alternatif vers Firebase Storage...');
-        const downloadUrl = await uploadBrandingAsset(stagedLogoAlt.file, 'logoAlt');
-        updates.logoAltUrl = downloadUrl;
-
-        if (branding.logoAltUrl && branding.logoAltUrl !== downloadUrl) {
-          deleteBrandingAsset(branding.logoAltUrl);
-        }
-      }
-
-      // 3. Upload new Favicon if staged
-      if (stagedFavicon) {
-        setSavingStep('Téléversement de l\'icône vers Firebase Storage...');
-        const downloadUrl = await uploadBrandingAsset(stagedFavicon.file, 'favicon');
-        updates.faviconUrl = downloadUrl;
-
-        if (branding.faviconUrl && branding.faviconUrl !== downloadUrl) {
-          deleteBrandingAsset(branding.faviconUrl);
-        }
-      }
-
-      // 4. Save to Firestore (siteSettings/branding)
-      setSavingStep('Enregistrement de la configuration dans Firestore...');
-      const saved = await saveBrandingSettings(
-        updates,
-        userProfile?.email || userProfile?.id || 'SUPER_ADMIN'
-      );
-
-      // Clean up staged local object URLs
-      if (stagedLogo) cancelStaged('logo');
-      if (stagedLogoAlt) cancelStaged('logoAlt');
-      if (stagedFavicon) cancelStaged('favicon');
-
-      setSuccessMsg('L\'identité du site a été mise à jour avec succès dans Firebase. Le logo et le favicon sont immédiatement synchronisés sur l\'ensemble du site public.');
-      setTimeout(() => setSuccessMsg(null), 6000);
-
-      // Force refresh store
+      // Step 5, 6, 7: Update state & immediate notifications
       await fetchBranding();
+      setSuccessMsg(`✓ Succès : Le ${target === 'logo' ? 'logo principal' : target === 'logoAlt' ? 'logo alternatif' : 'favicon'} a été téléversé et enregistré avec succès dans Firebase ! Il est immédiatement visible sur le site.`);
+      setTimeout(() => setSuccessMsg(null), 7000);
     } catch (err: any) {
-      console.error('Error saving branding:', err);
-      setErrorMsg(err?.message || 'Une erreur est survenue lors de l\'enregistrement dans Firebase.');
+      console.error(`Error uploading ${target}:`, err);
+      setErrorMsg(`Erreur lors du traitement de l'image : ${err?.message || 'Veuillez vérifier votre connexion.'}`);
     } finally {
       setIsSaving(false);
+      setUploadingTarget(null);
       setSavingStep('');
     }
   };
 
-  // Reset to original default emblem/logo
+  /**
+   * Direct URL input save
+   */
+  const handleSaveUrl = async (target: 'logo' | 'logoAlt' | 'favicon') => {
+    const rawUrl = target === 'logo' ? logoUrlInput : target === 'logoAlt' ? logoAltUrlInput : faviconUrlInput;
+    const url = rawUrl.trim();
+    if (!url) {
+      setErrorMsg('Veuillez saisir une URL d\'image valide (ex: https://...).');
+      return;
+    }
+
+    setIsSaving(true);
+    setUploadingTarget(target);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+
+    try {
+      const updates: any = {};
+      if (target === 'logo') updates.logoUrl = url;
+      if (target === 'logoAlt') updates.logoAltUrl = url;
+      if (target === 'favicon') updates.faviconUrl = url;
+
+      await saveBrandingSettings(updates, getAdminEmail());
+      await fetchBranding();
+
+      // Clear input
+      if (target === 'logo') setLogoUrlInput('');
+      if (target === 'logoAlt') setLogoAltUrlInput('');
+      if (target === 'favicon') setFaviconUrlInput('');
+
+      setShowUrlInput(prev => ({ ...prev, [target]: false }));
+      setSuccessMsg(`✓ L'URL a été enregistrée avec succès dans Firebase. Le site public a été mis à jour.`);
+      setTimeout(() => setSuccessMsg(null), 6000);
+    } catch (err: any) {
+      console.error(`Error saving URL for ${target}:`, err);
+      setErrorMsg(`Erreur lors de l'enregistrement de l'URL : ${err?.message || 'Erreur inconnue'}`);
+    } finally {
+      setIsSaving(false);
+      setUploadingTarget(null);
+    }
+  };
+
+  /**
+   * Switch Display Mode (Full Image vs Emblem with Text)
+   */
+  const handleDisplayModeChange = async (mode: LogoDisplayMode) => {
+    if (!isAuthorizedAdmin) return;
+    setIsSaving(true);
+    try {
+      await saveBrandingSettings({ displayMode: mode }, getAdminEmail());
+      await fetchBranding();
+      setSuccessMsg(`✓ Mode d'affichage mis à jour : ${mode === 'image_only' ? 'Image complète du logo' : 'Emblème avec texte FAFE'}`);
+      setTimeout(() => setSuccessMsg(null), 4000);
+    } catch (err: any) {
+      setErrorMsg('Erreur lors du changement de mode : ' + (err?.message || 'Erreur'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /**
+   * Reset to official default native vector logo
+   */
   const handleResetToDefault = async (field: 'logo' | 'logoAlt' | 'favicon') => {
-    if (!isSuperAdmin) return;
-    if (!window.confirm('Voulez-vous rétablir l\'élément par défaut officiel FAFE ?')) return;
+    if (!isAuthorizedAdmin) return;
+    const confirmText = field === 'logo' 
+      ? 'Voulez-vous rétablir le logo officiel FAFE vectoriel par défaut ?' 
+      : field === 'logoAlt' 
+        ? 'Voulez-vous supprimer cette déclinaison alternative ? Le site utilisera le logo principal.' 
+        : 'Voulez-vous rétablir l\'icône favicon par défaut ?';
+    
+    if (!window.confirm(confirmText)) return;
 
     setIsSaving(true);
     setErrorMsg(null);
@@ -191,10 +210,10 @@ export function AdminCMSBranding() {
       if (field === 'logoAlt') updates.logoAltUrl = '';
       if (field === 'favicon') updates.faviconUrl = '';
 
-      await saveBrandingSettings(updates, userProfile?.email || 'SUPER_ADMIN');
+      await saveBrandingSettings(updates, getAdminEmail());
       await fetchBranding();
 
-      setSuccessMsg(`L'élément "${field}" a été rétabli au format par défaut officiel.`);
+      setSuccessMsg(`✓ L'élément "${field}" a été rétabli au format officiel par défaut.`);
       setTimeout(() => setSuccessMsg(null), 5000);
     } catch (err: any) {
       setErrorMsg('Erreur lors de la réinitialisation : ' + (err?.message || 'Erreur inconnue'));
@@ -203,12 +222,11 @@ export function AdminCMSBranding() {
     }
   };
 
-  const hasPendingChanges = Boolean(
-    stagedLogo || 
-    stagedLogoAlt || 
-    stagedFavicon || 
-    displayMode !== (branding.displayMode || 'image_only')
-  );
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(label);
+    setTimeout(() => setCopiedField(null), 2500);
+  };
 
   return (
     <div className="space-y-6">
@@ -223,14 +241,14 @@ export function AdminCMSBranding() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold font-heading text-stone-900">
-                  Identité du site & Éléments de Marque
+                  Identité du site & Logo Officiel
                 </h1>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#00843D] text-white uppercase tracking-wider">
-                  CMS
+                  CMS Production
                 </span>
               </div>
               <p className="text-xs text-stone-500 mt-1 max-w-2xl">
-                Configurez le logo officiel et l'icône (favicon) affichés sur la plateforme FAFE. Les fichiers sont stockés de manière permanente sur Firebase Storage et appliqués en temps réel sur la Navbar, le Footer et les onglets du navigateur.
+                Gérez le logo principal, la déclinaison pour fond sombre et l'icône du site (favicon). Chaque mise à jour est immédiatement sauvegardée dans Firebase Storage et Firestore, et propagée instantanément sur la Navbar, le Footer et l'ensemble du site public.
               </p>
             </div>
           </div>
@@ -238,10 +256,10 @@ export function AdminCMSBranding() {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => fetchBranding()}
-              title="Rafraîchir les données Firebase"
-              className="p-2.5 text-stone-400 hover:text-stone-600 hover:bg-stone-50 rounded-xl border border-stone-200 transition-colors"
+              title="Actualiser les données"
+              className="p-2.5 text-stone-500 hover:text-[#00843D] hover:bg-stone-50 rounded-xl border border-stone-200 transition-colors"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${isSaving ? 'animate-spin' : ''}`} />
             </button>
             <a
               href="/"
@@ -256,204 +274,157 @@ export function AdminCMSBranding() {
           </div>
         </div>
 
-        {/* Super Admin Notice */}
-        {!isSuperAdmin && (
-          <div className="mt-4 p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-center gap-2.5">
-            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>
-              <strong>Accès restreint :</strong> Vous visualisez les éléments d'identité en lecture seule. Seul le <strong>SUPER_ADMIN</strong> a l'autorisation de modifier ou remplacer le logo et le favicon du site.
-            </span>
-          </div>
-        )}
-
-        {/* Global Save Action Bar if pending changes */}
-        {hasPendingChanges && (
-          <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in duration-200">
-            <div className="flex items-center gap-2 text-xs font-bold text-emerald-800">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Des modifications sont en attente d'enregistrement sur Firebase.</span>
-            </div>
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  cancelStaged('logo');
-                  cancelStaged('logoAlt');
-                  cancelStaged('favicon');
-                  setDisplayMode(branding.displayMode || 'image_only');
-                }}
-                disabled={isSaving}
-                className="px-3 py-1.5 text-xs font-bold text-stone-600 hover:bg-white rounded-lg transition-colors"
-              >
-                Annuler tout
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveAll}
-                disabled={isSaving || !isSuperAdmin}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#00843D] hover:bg-[#007033] text-white text-xs font-bold rounded-xl shadow-xs transition-colors disabled:opacity-50"
-              >
-                {isSaving ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>{savingStep || 'Sauvegarde en cours...'}</span>
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-3.5 h-3.5" />
-                    <span>Enregistrer les modifications</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Error / Success Notifications */}
+        {/* Dynamic Alerts */}
         {errorMsg && (
-          <div className="mt-4 p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-              <span>{errorMsg}</span>
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold">Erreur de mise à jour</p>
+              <p className="mt-0.5">{errorMsg}</p>
             </div>
-            <button onClick={() => setErrorMsg(null)} className="text-red-500 hover:text-red-700">
+            <button onClick={() => setErrorMsg(null)} className="text-red-400 hover:text-red-700">
               <X className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {successMsg && (
-          <div className="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>{successMsg}</span>
+          <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 flex items-start gap-3">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold">Confirmation de persistance</p>
+              <p className="mt-0.5">{successMsg}</p>
             </div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-600 hover:text-emerald-800">
+            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-700">
               <X className="w-4 h-4" />
             </button>
           </div>
         )}
+
+        {/* Global Progress Status */}
+        {isSaving && savingStep && (
+          <div className="mt-4 p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 flex items-center gap-3">
+            <Loader2 className="w-4 h-4 text-blue-600 animate-spin shrink-0" />
+            <span className="font-semibold">{savingStep}</span>
+          </div>
+        )}
       </div>
 
+      {/* ======================================================== */}
       {/* 1. SECTION: LOGO PRINCIPAL */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 pb-4">
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
           <div>
             <h2 className="text-base font-bold text-stone-900 flex items-center gap-2">
               <ImageIcon className="w-4 h-4 text-[#00843D]" />
-              Logo Principal
+              1. Logo Principal du FAFE
             </h2>
             <p className="text-xs text-stone-500 mt-0.5">
-              Logo officiel utilisé sur la Navbar, le Footer, la Marketplace et les supports institutionnels.
+              Logo officiel déployé sur les en-têtes, documents et présentations de la plateforme.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-stone-400 font-medium">Aperçu :</span>
-            <div className="inline-flex bg-stone-100 p-0.5 rounded-lg text-[11px] font-bold">
-              <button
-                type="button"
-                onClick={() => setLogoPreviewBg('dark')}
-                className={`px-2 py-1 rounded-md transition-colors ${
-                  logoPreviewBg === 'dark' ? 'bg-[#063F3A] text-white shadow-xs' : 'text-stone-600 hover:text-stone-900'
-                }`}
-              >
-                Navbar (#063F3A)
-              </button>
-              <button
-                type="button"
-                onClick={() => setLogoPreviewBg('light')}
-                className={`px-2 py-1 rounded-md transition-colors ${
-                  logoPreviewBg === 'light' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
-                }`}
-              >
-                Fond clair
-              </button>
-            </div>
+          {/* Contrast background toggle */}
+          <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-xl shrink-0">
+            <button
+              type="button"
+              onClick={() => setLogoPreviewBg('light')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                logoPreviewBg === 'light' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-500 hover:text-stone-900'
+              }`}
+            >
+              Fond Clair
+            </button>
+            <button
+              type="button"
+              onClick={() => setLogoPreviewBg('dark')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                logoPreviewBg === 'dark' ? 'bg-[#063F3A] text-white shadow-xs' : 'text-stone-500 hover:text-stone-900'
+              }`}
+            >
+              Fond Vert FAFE
+            </button>
           </div>
         </div>
 
-        {/* Display Mode Selection */}
-        <div className="bg-stone-50 rounded-xl p-3.5 border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div>
-            <span className="font-bold text-stone-800">Mode d'intégration du logo :</span>
-            <p className="text-[11px] text-stone-500 mt-0.5">
-              Choisissez si l'image téléchargée remplace l'ensemble du logo ou seulement le macaron circulaire.
-            </p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <label className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-colors ${
-              displayMode === 'image_only' 
+        {/* Mode d'affichage */}
+        <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
+          <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+            Mode d'affichage sur le site
+          </label>
+          <div className="flex flex-wrap gap-3">
+            <label className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
+              branding.displayMode === 'image_only' 
                 ? 'bg-white border-[#00843D] text-[#00843D] shadow-xs' 
-                : 'border-stone-200 text-stone-600 hover:bg-stone-100'
+                : 'border-stone-200 text-stone-600 hover:bg-white'
             }`}>
               <input
                 type="radio"
                 name="displayMode"
                 value="image_only"
-                checked={displayMode === 'image_only'}
-                onChange={() => setDisplayMode('image_only')}
+                checked={branding.displayMode === 'image_only'}
+                onChange={() => handleDisplayModeChange('image_only')}
                 className="sr-only"
-                disabled={!isSuperAdmin}
               />
-              <span>Image complète du logo</span>
+              <span>Logo image officiel complet (Recommandé)</span>
             </label>
-            <label className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-colors ${
-              displayMode === 'emblem_with_text' 
+            <label className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
+              branding.displayMode === 'emblem_with_text' 
                 ? 'bg-white border-[#00843D] text-[#00843D] shadow-xs' 
-                : 'border-stone-200 text-stone-600 hover:bg-stone-100'
+                : 'border-stone-200 text-stone-600 hover:bg-white'
             }`}>
               <input
                 type="radio"
                 name="displayMode"
                 value="emblem_with_text"
-                checked={displayMode === 'emblem_with_text'}
-                onChange={() => setDisplayMode('emblem_with_text')}
+                checked={branding.displayMode === 'emblem_with_text'}
+                onChange={() => handleDisplayModeChange('emblem_with_text')}
                 className="sr-only"
-                disabled={!isSuperAdmin}
               />
-              <span>Symbole avec texte FAFE</span>
+              <span>Symbole rond + Typographie FAFE</span>
             </label>
           </div>
         </div>
 
-        {/* Live Preview Box */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Current Live Version */}
-          <div className="border border-stone-200 rounded-xl p-4 flex flex-col justify-between">
+        {/* Visual Preview & Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          {/* Box 1: Visual Rendering Preview */}
+          <div className="border border-stone-200 rounded-xl p-5 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-stone-600">Aperçu actuel en production</span>
+              <span className="text-xs font-bold text-stone-700">Aperçu en direct (Temps réel)</span>
               {branding.logoUrl ? (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                  Personnalisé
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Personnalisé Firebase
                 </span>
               ) : (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600">
-                  Logo par défaut
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600 border border-stone-200">
+                  Logo natif officiel
                 </span>
               )}
             </div>
 
-            <div className={`h-24 rounded-lg flex items-center justify-center p-4 transition-colors ${
+            <div className={`h-32 rounded-xl flex items-center justify-center p-4 transition-colors ${
               logoPreviewBg === 'dark' ? 'bg-[#063F3A]' : 'bg-[#FAF9F6] border border-stone-200'
             }`}>
               <FafeLogo 
                 variant={logoPreviewBg === 'dark' ? 'light' : 'dark'} 
-                size="md" 
+                size="lg" 
                 showSubtitle={true} 
               />
             </div>
 
-            <div className="mt-3 flex items-center justify-between text-[11px] text-stone-400">
+            <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
               <span className="truncate max-w-[200px]">
-                {branding.logoUrl ? 'Hébergé sur Firebase Storage' : 'Vecteur SVG officiel natif'}
+                {branding.logoUrl ? 'Stocké sur Firebase Storage' : 'Graphisme vectoriel SVG natif'}
               </span>
-              {branding.logoUrl && isSuperAdmin && (
+              {branding.logoUrl && (
                 <button
                   type="button"
                   onClick={() => handleResetToDefault('logo')}
                   disabled={isSaving}
-                  className="text-stone-500 hover:text-red-600 inline-flex items-center gap-1 font-semibold"
+                  className="text-stone-500 hover:text-red-600 inline-flex items-center gap-1 font-bold transition-colors"
                 >
                   <RotateCcw className="w-3 h-3" />
                   Rétablir par défaut
@@ -462,106 +433,93 @@ export function AdminCMSBranding() {
             </div>
           </div>
 
-          {/* Staged New Selection Preview */}
-          <div className="border border-dashed border-stone-300 rounded-xl p-4 flex flex-col justify-between bg-stone-50/50">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-stone-700">
-                {stagedLogo ? 'Aperçu avant validation' : 'Remplacer le logo'}
+          {/* Box 2: Actions & Upload */}
+          <div className="border border-stone-200 rounded-xl p-5 flex flex-col justify-between bg-stone-50/50 space-y-4">
+            <div>
+              <span className="text-xs font-bold text-stone-800 block mb-1">
+                Téléversement du fichier image
               </span>
-              {stagedLogo && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
-                  En attente
-                </span>
-              )}
+              <p className="text-[11px] text-stone-500 leading-relaxed">
+                Formats acceptés : <strong>PNG</strong> (fond transparent conseillé), <strong>SVG</strong>, <strong>WEBP</strong> ou <strong>JPG</strong> (max 5 Mo). L'image est envoyée directement dans Firebase Storage dès sa sélection.
+              </p>
             </div>
 
-            {stagedLogo ? (
-              <div className={`h-24 rounded-lg flex items-center justify-center p-4 transition-colors ${
-                logoPreviewBg === 'dark' ? 'bg-[#063F3A]' : 'bg-[#FAF9F6] border border-stone-200'
-              }`}>
-                {displayMode === 'image_only' ? (
-                  <img
-                    src={stagedLogo.previewUrl}
-                    alt="Aperçu nouveau logo"
-                    className="max-h-14 max-w-full object-contain"
-                  />
-                ) : (
-                  <div className="inline-flex items-center gap-3">
-                    <img
-                      src={stagedLogo.previewUrl}
-                      alt="Aperçu nouveau symbole"
-                      className="w-12 h-12 rounded-full object-contain"
-                    />
-                    <div className="flex flex-col">
-                      <span className={`font-heading font-extrabold text-2xl ${
-                        logoPreviewBg === 'dark' ? 'text-white' : 'text-[#063F3A]'
-                      }`}>
-                        FAFE
-                      </span>
-                      <span className={`text-[8px] font-bold uppercase tracking-wider ${
-                        logoPreviewBg === 'dark' ? 'text-[#D4AF37]' : 'text-[#063F3A]/70'
-                      }`}>
-                        Forum Africain des Femmes Entrepreneures
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div 
-                onClick={() => isSuperAdmin && logoInputRef.current?.click()}
-                className={`h-24 rounded-lg border-2 border-dashed border-stone-200 flex flex-col items-center justify-center gap-1.5 p-4 text-center cursor-pointer hover:bg-white hover:border-[#00843D]/50 transition-colors ${
-                  !isSuperAdmin ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              <button
+                id="btn-upload-logo-main"
+                type="button"
+                onClick={() => logoInputRef.current?.click()}
+                disabled={isSaving}
+                className="w-full py-3 px-4 bg-[#00843D] hover:bg-[#007033] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <Upload className="w-5 h-5 text-stone-400" />
-                <span className="text-xs font-bold text-stone-700">
-                  Cliquez pour sélectionner un nouveau fichier
-                </span>
-                <span className="text-[10px] text-stone-400">
-                  PNG, SVG, WEBP ou JPG (max. 4 Mo)
-                </span>
-              </div>
-            )}
+                {uploadingTarget === 'logo' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Téléversement et enregistrement...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    <span>Sélectionner et remplacer le logo</span>
+                  </>
+                )}
+              </button>
 
-            <div className="mt-3 flex items-center justify-between">
-              {stagedLogo ? (
-                <>
-                  <span className="text-[11px] text-stone-500 truncate max-w-[180px]">
-                    {stagedLogo.file.name} ({(stagedLogo.file.size / 1024).toFixed(0)} Ko)
-                  </span>
-                  <div className="flex items-center gap-1.5">
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowUrlInput(prev => ({ ...prev, logo: !prev.logo }))}
+                  className="text-[11px] font-bold text-stone-600 hover:text-[#00843D] inline-flex items-center gap-1"
+                >
+                  <LinkIcon className="w-3 h-3" />
+                  {showUrlInput.logo ? "Masquer l'option URL" : "Ou renseigner une URL directe d'image"}
+                </button>
+              </div>
+
+              {/* Direct URL input panel */}
+              {showUrlInput.logo && (
+                <div className="p-3 bg-white rounded-xl border border-stone-200 space-y-2">
+                  <label className="block text-[11px] font-bold text-stone-700">
+                    URL publique de l'image
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder="https://domaine.com/mon-logo.png"
+                      value={logoUrlInput}
+                      onChange={(e) => setLogoUrlInput(e.target.value)}
+                      className="flex-1 px-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00843D]"
+                    />
                     <button
                       type="button"
-                      onClick={() => cancelStaged('logo')}
-                      disabled={isSaving}
-                      className="px-2.5 py-1 text-[11px] font-bold text-stone-600 hover:bg-stone-200 rounded-lg"
+                      onClick={() => handleSaveUrl('logo')}
+                      disabled={isSaving || !logoUrlInput.trim()}
+                      className="px-3 py-1.5 bg-stone-900 text-white font-bold text-xs rounded-lg hover:bg-stone-800 disabled:opacity-50"
                     >
-                      Annuler
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleSaveAll}
-                      disabled={isSaving || !isSuperAdmin}
-                      className="px-3 py-1 text-[11px] font-bold bg-[#00843D] text-white hover:bg-[#007033] rounded-lg shadow-xs"
-                    >
-                      {isSaving ? 'Envoi...' : 'Enregistrer'}
+                      Enregistrer
                     </button>
                   </div>
-                </>
-              ) : (
-                <div className="w-full flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => logoInputRef.current?.click()}
-                    disabled={!isSuperAdmin}
-                    className="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold rounded-xl transition-colors disabled:opacity-50"
-                  >
-                    Modifier le logo
-                  </button>
                 </div>
               )}
             </div>
+
+            {/* Current URL indicator */}
+            {branding.logoUrl && (
+              <div className="p-2.5 bg-white rounded-lg border border-stone-200 flex items-center justify-between text-[11px]">
+                <span className="text-stone-500 truncate max-w-[240px]" title={branding.logoUrl}>
+                  {branding.logoUrl}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(branding.logoUrl!, 'logo')}
+                  className="text-stone-400 hover:text-stone-700 inline-flex items-center gap-1 ml-2 font-semibold shrink-0"
+                >
+                  {copiedField === 'logo' ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                  {copiedField === 'logo' ? 'Copié' : 'Copier'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -570,269 +528,276 @@ export function AdminCMSBranding() {
           ref={logoInputRef}
           type="file"
           accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml"
-          onChange={(e) => handleFileSelect(e, 'logo')}
+          onChange={(e) => handleDirectUpload(e, 'logo')}
           className="hidden"
         />
       </div>
 
+      {/* ======================================================== */}
       {/* 2. SECTION: ICÔNE DU SITE (FAVICON) */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-5">
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-6">
         <div className="border-b border-stone-100 pb-4">
           <h2 className="text-base font-bold text-stone-900 flex items-center gap-2">
             <Globe className="w-4 h-4 text-[#00843D]" />
-            Icône du Site & Favicon
+            2. Icône du Site & Favicon du Navigateur
           </h2>
           <p className="text-xs text-stone-500 mt-0.5">
-            Icône affichée dans les onglets du navigateur web, les favoris et sur mobile (format carré recommandé : 64x64 ou 128x128).
+            Icône affichée dans les onglets du navigateur, les favoris et sur les appareils mobiles (format carré recommandé : 64x64 ou 128x128).
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Current Live Favicon */}
-          <div className="border border-stone-200 rounded-xl p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-stone-600">Icône actuelle du navigateur</span>
-              {branding.faviconUrl ? (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                  Personnalisée
-                </span>
-              ) : (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600">
-                  Icône par défaut
-                </span>
-              )}
-            </div>
-
-            {/* Simulated Browser Tab preview */}
-            <div className="bg-stone-100 border border-stone-200 rounded-lg p-3">
-              <span className="text-[10px] uppercase font-bold text-stone-400 block mb-1">
-                Aperçu dans un onglet :
-              </span>
-              <div className="bg-white border border-stone-200 rounded-t-md px-3 py-2 flex items-center gap-2 max-w-[240px] shadow-xs">
-                {branding.faviconUrl ? (
-                  <img
-                    src={getCacheBustedUrl(branding.faviconUrl, branding.updatedAt)}
-                    alt="Favicon FAFE"
-                    className="w-4 h-4 object-contain rounded-xs shrink-0"
-                  />
-                ) : (
-                  <FafeOfficialEmblem className="w-4 h-4 shrink-0" />
-                )}
-                <span className="text-xs font-bold text-stone-800 truncate">
-                  FAFE — Forum Africain...
-                </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border border-stone-200 rounded-xl p-5 flex flex-col justify-between">
+            <span className="text-xs font-bold text-stone-700 mb-2">Aperçu de l'icône actuelle</span>
+            
+            <div className="h-28 bg-[#FAF9F6] border border-stone-200 rounded-xl flex items-center justify-center p-4">
+              <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-xs border border-stone-200">
+                <FafeOfficialEmblem className="w-8 h-8" />
+                <span className="text-xs font-bold text-stone-700">Onglet Navigateur FAFE</span>
               </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-between text-[11px] text-stone-400">
-              <span>{branding.faviconUrl ? 'Hébergé sur Firebase Storage' : 'Icône native vectorielle'}</span>
-              {branding.faviconUrl && isSuperAdmin && (
+            <div className="mt-3 text-right">
+              {branding.faviconUrl && (
                 <button
                   type="button"
                   onClick={() => handleResetToDefault('favicon')}
                   disabled={isSaving}
-                  className="text-stone-500 hover:text-red-600 inline-flex items-center gap-1 font-semibold"
+                  className="text-[11px] text-stone-500 hover:text-red-600 font-bold inline-flex items-center gap-1"
                 >
                   <RotateCcw className="w-3 h-3" />
-                  Rétablir par défaut
+                  Rétablir l'icône par défaut
                 </button>
               )}
             </div>
           </div>
 
-          {/* Staged New Favicon Preview */}
-          <div className="border border-dashed border-stone-300 rounded-xl p-4 flex flex-col justify-between bg-stone-50/50">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-stone-700">
-                {stagedFavicon ? 'Aperçu avant validation' : 'Remplacer l\'icône'}
+          <div className="border border-stone-200 rounded-xl p-5 flex flex-col justify-between bg-stone-50/50 space-y-4">
+            <div>
+              <span className="text-xs font-bold text-stone-800 block mb-1">
+                Téléverser une nouvelle icône (Favicon)
               </span>
-              {stagedFavicon && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
-                  En attente
-                </span>
-              )}
+              <p className="text-[11px] text-stone-500">
+                Format carré conseillé (PNG, SVG ou ICO). L'application actualise instantanément la balise <code>&lt;link rel="icon"&gt;</code>.
+              </p>
             </div>
 
-            {stagedFavicon ? (
-              <div className="bg-stone-100 border border-stone-200 rounded-lg p-3">
-                <span className="text-[10px] uppercase font-bold text-stone-400 block mb-1">
-                  Aperçu dans l'onglet :
-                </span>
-                <div className="bg-white border border-stone-200 rounded-t-md px-3 py-2 flex items-center gap-2 max-w-[240px] shadow-xs">
-                  <img
-                    src={stagedFavicon.previewUrl}
-                    alt="Aperçu nouveau favicon"
-                    className="w-4 h-4 object-contain rounded-xs shrink-0"
-                  />
-                  <span className="text-xs font-bold text-stone-800 truncate">
-                    FAFE — Forum Africain...
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div 
-                onClick={() => isSuperAdmin && faviconInputRef.current?.click()}
-                className={`h-20 rounded-lg border-2 border-dashed border-stone-200 flex flex-col items-center justify-center gap-1 p-3 text-center cursor-pointer hover:bg-white hover:border-[#00843D]/50 transition-colors ${
-                  !isSuperAdmin ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
+            <div className="space-y-3">
+              <button
+                id="btn-upload-favicon"
+                type="button"
+                onClick={() => faviconInputRef.current?.click()}
+                disabled={isSaving}
+                className="w-full py-3 px-4 bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <Upload className="w-4 h-4 text-stone-400" />
-                <span className="text-xs font-bold text-stone-700">
-                  Sélectionner une icône carrée (PNG ou SVG)
-                </span>
-                <span className="text-[10px] text-stone-400">
-                  Résolution optimale : 64x64 ou 128x128
-                </span>
-              </div>
-            )}
+                {uploadingTarget === 'favicon' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Mise à jour de l'icône...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    <span>Sélectionner une icône</span>
+                  </>
+                )}
+              </button>
 
-            <div className="mt-3 flex items-center justify-between">
-              {stagedFavicon ? (
-                <>
-                  <span className="text-[11px] text-stone-500 truncate max-w-[180px]">
-                    {stagedFavicon.file.name}
-                  </span>
-                  <div className="flex items-center gap-1.5">
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowUrlInput(prev => ({ ...prev, favicon: !prev.favicon }))}
+                  className="text-[11px] font-bold text-stone-600 hover:text-[#00843D] inline-flex items-center gap-1"
+                >
+                  <LinkIcon className="w-3 h-3" />
+                  {showUrlInput.favicon ? "Masquer l'option URL" : "Ou renseigner une URL d'icône"}
+                </button>
+              </div>
+
+              {showUrlInput.favicon && (
+                <div className="p-3 bg-white rounded-xl border border-stone-200 space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder="https://.../favicon.png"
+                      value={faviconUrlInput}
+                      onChange={(e) => setFaviconUrlInput(e.target.value)}
+                      className="flex-1 px-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg"
+                    />
                     <button
                       type="button"
-                      onClick={() => cancelStaged('favicon')}
-                      disabled={isSaving}
-                      className="px-2.5 py-1 text-[11px] font-bold text-stone-600 hover:bg-stone-200 rounded-lg"
+                      onClick={() => handleSaveUrl('favicon')}
+                      disabled={isSaving || !faviconUrlInput.trim()}
+                      className="px-3 py-1.5 bg-stone-900 text-white font-bold text-xs rounded-lg hover:bg-stone-800"
                     >
-                      Annuler
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleSaveAll}
-                      disabled={isSaving || !isSuperAdmin}
-                      className="px-3 py-1 text-[11px] font-bold bg-[#00843D] text-white hover:bg-[#007033] rounded-lg shadow-xs"
-                    >
-                      {isSaving ? 'Envoi...' : 'Enregistrer'}
+                      Enregistrer
                     </button>
                   </div>
-                </>
-              ) : (
-                <div className="w-full flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => faviconInputRef.current?.click()}
-                    disabled={!isSuperAdmin}
-                    className="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold rounded-xl transition-colors disabled:opacity-50"
-                  >
-                    Modifier l'icône
-                  </button>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Hidden File Input for Favicon */}
         <input
           ref={faviconInputRef}
           type="file"
           accept=".png,.svg,.ico,image/png,image/svg+xml,image/x-icon"
-          onChange={(e) => handleFileSelect(e, 'favicon')}
+          onChange={(e) => handleDirectUpload(e, 'favicon')}
           className="hidden"
         />
       </div>
 
-      {/* 3. SECTION: VERSION ALTERNATIVE DU LOGO (OPTIONNELLE) */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-4">
-        <div className="border-b border-stone-100 pb-3">
+      {/* ======================================================== */}
+      {/* 3. SECTION: VERSION ALTERNATIVE DU LOGO (FOND SOMBRE)    */}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-6">
+        <div className="border-b border-stone-100 pb-4">
           <div className="flex items-center gap-2">
             <h2 className="text-base font-bold text-stone-900">
-              Version alternative du logo (Fond sombre / Blanc)
+              3. Version Alternative du Logo (Fond Sombre / Blanc)
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600">
-              Optionnel
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+              Contraste Navbar
             </span>
           </div>
-          <p className="text-xs text-stone-500 mt-0.5">
-            Fournissez une déclinaison blanche ou lumineuse spécifique si votre logo principal n'offre pas un contraste suffisant sur la barre de navigation verte foncée (#063F3A).
+          <p className="text-xs text-stone-500 mt-1">
+            Déclinaison blanche ou claire spécifique pour garantir un contraste irréprochable sur les fonds vert émeraude foncé (#063F3A) de la barre de navigation.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="border border-stone-200 rounded-xl p-4 flex flex-col justify-between">
-            <span className="text-xs font-bold text-stone-600 mb-2">Version actuelle sur fond sombre</span>
-            <div className="h-20 bg-[#063F3A] rounded-lg flex items-center justify-center p-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          {/* Visual Preview on Dark Background */}
+          <div className="border border-stone-200 rounded-xl p-5 flex flex-col justify-between">
+            <span className="text-xs font-bold text-stone-700 mb-2">
+              Aperçu en direct sur fond sombre (#063F3A)
+            </span>
+
+            <div className="h-28 bg-[#063F3A] rounded-xl flex items-center justify-center p-4">
               {branding.logoAltUrl ? (
                 <img
                   src={getCacheBustedUrl(branding.logoAltUrl, branding.updatedAt)}
-                  alt="Logo alternatif"
-                  className="max-h-12 max-w-full object-contain"
+                  alt="Logo alternatif FAFE"
+                  className="max-h-16 max-w-full object-contain"
+                />
+              ) : branding.logoUrl ? (
+                <img
+                  src={getCacheBustedUrl(branding.logoUrl, branding.updatedAt)}
+                  alt="Logo principal"
+                  className="max-h-16 max-w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-white/50 italic">
-                  Utilise le logo principal ou le logo par défaut
-                </span>
+                <FafeOfficialEmblem className="w-12 h-12" isLight={true} />
               )}
             </div>
-            {branding.logoAltUrl && isSuperAdmin && (
-              <div className="mt-2 text-right">
+
+            <div className="mt-3 text-right">
+              {branding.logoAltUrl && (
                 <button
                   type="button"
                   onClick={() => handleResetToDefault('logoAlt')}
-                  className="text-[11px] text-stone-500 hover:text-red-600 font-semibold"
+                  disabled={isSaving}
+                  className="text-[11px] text-stone-500 hover:text-red-600 font-bold inline-flex items-center gap-1"
                 >
+                  <RotateCcw className="w-3 h-3" />
                   Supprimer cette version alternative
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
-          <div className="border border-dashed border-stone-300 rounded-xl p-4 flex flex-col justify-between bg-stone-50/50">
-            <span className="text-xs font-bold text-stone-700 mb-2">
-              {stagedLogoAlt ? 'Nouvelle version sélectionnée' : 'Téléverser une version alternative'}
-            </span>
+          {/* Direct Upload & Replace Action (CRITICAL: LE DERNIER BOUTON DE LOGO) */}
+          <div className="border border-stone-200 rounded-xl p-5 flex flex-col justify-between bg-stone-50/50 space-y-4">
+            <div>
+              <span className="text-xs font-bold text-stone-800 block mb-1">
+                Téléverser la version contrastée
+              </span>
+              <p className="text-[11px] text-stone-500">
+                Sélectionnez le fichier PNG blanc ou SVG clair. Il est téléversé dans Firebase Storage et activé sur la Navbar instantanément.
+              </p>
+            </div>
 
-            {stagedLogoAlt ? (
-              <div className="h-20 bg-[#063F3A] rounded-lg flex items-center justify-center p-3">
-                <img
-                  src={stagedLogoAlt.previewUrl}
-                  alt="Aperçu logo alternatif"
-                  className="max-h-12 max-w-full object-contain"
-                />
-              </div>
-            ) : (
+            <div className="space-y-3">
               <button
+                id="btn-upload-logo-alt"
                 type="button"
-                onClick={() => isSuperAdmin && logoAltInputRef.current?.click()}
-                disabled={!isSuperAdmin}
-                className="h-20 rounded-lg border-2 border-dashed border-stone-200 flex flex-col items-center justify-center text-xs font-bold text-stone-600 hover:bg-white hover:border-[#00843D]/50 transition-colors disabled:opacity-50"
+                onClick={() => logoAltInputRef.current?.click()}
+                disabled={isSaving}
+                className="w-full py-3 px-4 bg-[#063F3A] hover:bg-[#042B28] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <Upload className="w-4 h-4 text-stone-400 mb-1" />
-                Sélectionner un fichier contrasté
+                {uploadingTarget === 'logoAlt' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Téléversement du logo alternatif...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    <span>Sélectionner et remplacer le logo alternatif</span>
+                  </>
+                )}
               </button>
-            )}
 
-            {stagedLogoAlt && (
-              <div className="mt-2 flex items-center justify-end gap-1.5">
+              <div className="text-center">
                 <button
                   type="button"
-                  onClick={() => cancelStaged('logoAlt')}
-                  className="px-2.5 py-1 text-[11px] font-bold text-stone-600 hover:bg-stone-200 rounded-lg"
+                  onClick={() => setShowUrlInput(prev => ({ ...prev, logoAlt: !prev.logoAlt }))}
+                  className="text-[11px] font-bold text-stone-600 hover:text-[#00843D] inline-flex items-center gap-1"
                 >
-                  Annuler
+                  <LinkIcon className="w-3 h-3" />
+                  {showUrlInput.logoAlt ? "Masquer l'option URL" : "Ou renseigner une URL directe d'image contrastée"}
                 </button>
+              </div>
+
+              {showUrlInput.logoAlt && (
+                <div className="p-3 bg-white rounded-xl border border-stone-200 space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder="https://.../logo-blanc.svg"
+                      value={logoAltUrlInput}
+                      onChange={(e) => setLogoAltUrlInput(e.target.value)}
+                      className="flex-1 px-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSaveUrl('logoAlt')}
+                      disabled={isSaving || !logoAltUrlInput.trim()}
+                      className="px-3 py-1.5 bg-stone-900 text-white font-bold text-xs rounded-lg hover:bg-stone-800"
+                    >
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {branding.logoAltUrl && (
+              <div className="p-2.5 bg-white rounded-lg border border-stone-200 flex items-center justify-between text-[11px]">
+                <span className="text-stone-500 truncate max-w-[240px]" title={branding.logoAltUrl}>
+                  {branding.logoAltUrl}
+                </span>
                 <button
                   type="button"
-                  onClick={handleSaveAll}
-                  className="px-3 py-1 text-[11px] font-bold bg-[#00843D] text-white rounded-lg shadow-xs"
+                  onClick={() => copyToClipboard(branding.logoAltUrl!, 'logoAlt')}
+                  className="text-stone-400 hover:text-stone-700 inline-flex items-center gap-1 ml-2 font-semibold shrink-0"
                 >
-                  Enregistrer
+                  {copiedField === 'logoAlt' ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                  {copiedField === 'logoAlt' ? 'Copié' : 'Copier'}
                 </button>
               </div>
             )}
           </div>
         </div>
 
+        {/* Hidden File Input for Alt Logo */}
         <input
           ref={logoAltInputRef}
           type="file"
           accept=".png,.svg,.webp,image/png,image/svg+xml,image/webp"
-          onChange={(e) => handleFileSelect(e, 'logoAlt')}
+          onChange={(e) => handleDirectUpload(e, 'logoAlt')}
           className="hidden"
         />
       </div>

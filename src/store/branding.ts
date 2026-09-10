@@ -66,10 +66,7 @@ export const useBrandingStore = create<BrandingStoreState>((set, get) => ({
   },
 
   initBrandingListener: () => {
-    // 1. Initial fetch
-    get().fetchBranding();
-
-    // 2. Real-time Firestore subscription
+    // Real-time Firestore subscription (onSnapshot emits the current state immediately)
     try {
       const docRef = doc(db, BRANDING_DOC_PATH, BRANDING_DOC_ID);
       const unsubscribe = onSnapshot(docRef, (docSnap) => {
@@ -80,16 +77,21 @@ export const useBrandingStore = create<BrandingStoreState>((set, get) => ({
             ...data
           };
           localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(merged));
-          set({ branding: merged, initialized: true });
+          set({ branding: merged, initialized: true, loading: false });
           applyFavicon(merged.faviconUrl, merged.updatedAt);
+        } else {
+          set({ initialized: true, loading: false });
         }
       }, (error) => {
-        console.warn('Branding real-time listener error:', error);
+        console.warn('Branding real-time listener notice:', error);
+        // Fallback to one-time fetch if listener encounters an issue
+        get().fetchBranding();
       });
 
       return unsubscribe;
     } catch (err) {
-      console.warn('Error setting up branding listener:', err);
+      console.warn('Error setting up branding listener, falling back to one-time fetch:', err);
+      get().fetchBranding();
       return () => {};
     }
   }

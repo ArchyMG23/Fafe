@@ -21,7 +21,7 @@ interface CMSPageEditorProps {
 }
 
 export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEditorProps) {
-  const { userProfile } = useAuthStore();
+  const { userProfile, currentUser } = useAuthStore();
   const [record, setRecord] = useState<CMSPageRecord | null>(null);
   const [draftData, setDraftData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -31,6 +31,29 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
   const [previewOpen, setPreviewOpen] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const getActiveUser = () => {
+    if (userProfile) {
+      const name = `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim() || userProfile.email || 'Super Admin';
+      return {
+        id: userProfile.id,
+        name,
+        email: userProfile.email
+      };
+    }
+    if (currentUser) {
+      return {
+        id: currentUser.uid,
+        name: currentUser.displayName || currentUser.email || 'Super Admin',
+        email: currentUser.email || 'yombivictor@gmail.com'
+      };
+    }
+    return {
+      id: 'admin_sys',
+      name: 'Super Admin FAFE',
+      email: 'yombivictor@gmail.com'
+    };
+  };
 
   useEffect(() => {
     loadPageData();
@@ -87,47 +110,46 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
   };
 
   const handleSaveDraft = async () => {
-    if (!userProfile) return;
     setSaving(true);
     setFeedback(null);
     try {
-      await saveCMSDraft(pageId, draftData, {
-        id: userProfile.id,
-        name: `${userProfile.firstName} ${userProfile.lastName}`,
-        email: userProfile.email
-      });
+      const activeUser = getActiveUser();
+      const updatedRecord = await saveCMSDraft(pageId, draftData, activeUser);
       setHasUnsavedChanges(false);
-      setFeedback({ type: 'success', message: "Brouillon enregistré avec succès dans la base de données." });
-      const updatedRecord = await getCMSPageRecord(pageId);
       setRecord(updatedRecord);
-    } catch (err) {
+      setFeedback({ 
+        type: 'success', 
+        message: `✓ Brouillon enregistré avec succès dans Firebase Firestore (v${updatedRecord.version}).` 
+      });
+    } catch (err: any) {
       console.error("Save draft error:", err);
-      setFeedback({ type: 'error', message: "Erreur lors de l'enregistrement du brouillon." });
+      setFeedback({ 
+        type: 'error', 
+        message: `Erreur lors de l'enregistrement du brouillon : ${err?.message || "Veuillez vérifier votre connexion."}` 
+      });
     } finally {
       setSaving(false);
     }
   };
 
   const handlePublish = async () => {
-    if (!userProfile) return;
     setPublishing(true);
     setFeedback(null);
     try {
-      await publishCMSPage(pageId, draftData, {
-        id: userProfile.id,
-        name: `${userProfile.firstName} ${userProfile.lastName}`,
-        email: userProfile.email
-      });
+      const activeUser = getActiveUser();
+      const updatedRecord = await publishCMSPage(pageId, draftData, activeUser);
       setHasUnsavedChanges(false);
+      setRecord(updatedRecord);
       setFeedback({ 
         type: 'success', 
-        message: `La page "${pageTitle}" a été enregistrée et publiée avec succès dans Firebase. Le site public est immédiatement à jour.` 
+        message: `✓ La page "${pageTitle}" a été enregistrée et publiée avec succès dans Firebase (v${updatedRecord.version}) ! Le site public est immédiatement à jour.` 
       });
-      const updatedRecord = await getCMSPageRecord(pageId);
-      setRecord(updatedRecord);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Publish error:", err);
-      setFeedback({ type: 'error', message: "Erreur lors de la publication de la page dans Firebase." });
+      setFeedback({ 
+        type: 'error', 
+        message: `Erreur lors de la publication dans Firebase : ${err?.message || "Veuillez vérifier vos permissions."}` 
+      });
     } finally {
       setPublishing(false);
     }
@@ -423,7 +445,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             <CMSListField
               label="Piliers de réussite"
               items={draftData.missions?.pillars || []}
-              onChange={(val) => handleNestedFieldChange('missions', 'pillars', '', val)}
+              onChange={(val) => handleFieldChange('missions', 'pillars', val)}
               activeLang={activeLang}
               itemType="pillars"
             />

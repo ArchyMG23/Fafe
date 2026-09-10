@@ -2,6 +2,7 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db, storage } from '../lib/firebase';
 import { SiteBrandingSettings } from '../types';
+import { cleanFirestoreData } from '../lib/cms';
 
 export const BRANDING_STORAGE_FOLDER = 'branding';
 export const BRANDING_DOC_PATH = 'siteSettings';
@@ -218,12 +219,22 @@ export async function saveBrandingSettings(
 
   // 1. Update Firestore in siteSettings/branding
   const docRef = doc(db, BRANDING_DOC_PATH, BRANDING_DOC_ID);
-  await setDoc(docRef, newSettings, { merge: true });
+  await setDoc(docRef, cleanFirestoreData(newSettings), { merge: true });
 
-  // 2. Also mirror to site_settings/branding for robust rule compatibility
+  // 2. Also mirror to site_settings/branding and cms/global for robust rule and legacy compatibility
   try {
     const docRefAlt = doc(db, 'site_settings', BRANDING_DOC_ID);
-    await setDoc(docRefAlt, newSettings, { merge: true });
+    await setDoc(docRefAlt, cleanFirestoreData(newSettings), { merge: true });
+  } catch (e) {
+    // Non-blocking mirror
+  }
+
+  try {
+    const globalCmsRef = doc(db, 'cms', 'global');
+    await setDoc(globalCmsRef, { 
+      logoUrl: newSettings.logoUrl, 
+      branding: cleanFirestoreData(newSettings) 
+    }, { merge: true });
   } catch (e) {
     // Non-blocking mirror
   }
