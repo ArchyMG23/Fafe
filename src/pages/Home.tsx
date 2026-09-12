@@ -401,7 +401,7 @@ export function Home() {
   const { language } = useLanguageStore();
   const [cmsData, setCmsData] = useState<any>(() => {
     try {
-      const cached = localStorage.getItem("fafe_cms_published_accueil") || localStorage.getItem("fafe_cms_draft_accueil");
+      const cached = localStorage.getItem("fafe_cms_published_accueil");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed && typeof parsed === 'object') {

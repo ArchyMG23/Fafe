@@ -138,20 +138,12 @@ class OrdersService {
     };
 
     // 3. Write Order directly to Firestore
-    try {
-      const orderRef = doc(db, 'orders', orderId);
-      await setDoc(orderRef, newOrder);
-    } catch (err) {
-      console.warn('Could not write order directly to Firestore:', err);
-    }
+    const orderRef = doc(db, 'orders', orderId);
+    await setDoc(orderRef, newOrder);
 
     // 4. Decrement stock for all purchased items in Firestore
     for (const item of input.items) {
-      try {
-        await marketplaceService.updateStock(item.productId, -item.quantity);
-      } catch (stockErr) {
-        console.warn(`Could not update stock for product ${item.productId}:`, stockErr);
-      }
+      await marketplaceService.updateStock(item.productId, -item.quantity);
     }
 
     // 5. Update local cache

@@ -69,6 +69,17 @@ export const initAuth = () => {
                 console.error('Failed to promote to SUPER_ADMIN:', err);
               }
             }
+
+            // Strictly lock gabielyombi311@gmail.com as a NORMAL MEMBER (never ADMIN / SUPER_ADMIN)
+            if (user.email === 'gabielyombi311@gmail.com' && profileData.role !== 'MEMBER') {
+              try {
+                await updateDoc(docRef, { role: 'MEMBER', membershipStatus: 'ACTIVE' });
+                profileData.role = 'MEMBER';
+                profileData.membershipStatus = 'ACTIVE';
+              } catch (err) {
+                console.error('Failed to enforce MEMBER role for demo user:', err);
+              }
+            }
             
             useAuthStore.getState().setProfile(profileData);
             useAuthStore.setState({ loading: false, initialized: true });
@@ -76,8 +87,30 @@ export const initAuth = () => {
             // Auto-repair: Profile is missing! (Race condition from signup or incomplete Google login)
             const now = Date.now();
             const isSuperAdmin = user.email === 'yombivictor@gmail.com';
+            const isDemoMember = user.email === 'gabielyombi311@gmail.com';
             
-            const fallbackProfile = {
+            const fallbackProfile: UserProfile = isDemoMember ? {
+              id: user.uid,
+              firstName: 'Gaby',
+              lastName: 'YOMBI',
+              email: 'gabielyombi311@gmail.com',
+              phone: '+237 6 99 00 11 22',
+              country: 'Cameroun',
+              city: 'Douala',
+              address: 'Akwa, Boulevard de la Liberté',
+              company: 'Atelier Kmer Couture',
+              position: 'Fondatrice & Directrice Artistique',
+              sector: 'Mode, Textile & Habillement',
+              expertise: 'Confection textile, Stylisme éco-responsable, Teinture artisanale',
+              bio: 'Membre active du réseau FAFE Cameroun, entrepreneure passionnée par la valorisation du textile africain et l\'autonomisation des femmes artisanes.',
+              role: 'MEMBER',
+              membershipStatus: 'ACTIVE',
+              membershipNumber: 'FAFE-CM-2026-0042',
+              status: 'ACTIVE',
+              createdAt: now,
+              updatedAt: now,
+              lastLoginAt: now
+            } : {
               id: user.uid,
               firstName: user.displayName?.split(' ')[0] || (isSuperAdmin ? 'Super' : 'Utilisateur'),
               lastName: user.displayName?.split(' ').slice(1).join(' ') || (isSuperAdmin ? 'Admin' : ''),

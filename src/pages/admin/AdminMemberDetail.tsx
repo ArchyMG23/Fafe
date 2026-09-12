@@ -88,6 +88,11 @@ export function AdminMemberDetail() {
         throw new Error("Vous ne pouvez pas modifier votre propre rôle ou statut.");
       }
 
+      // Protection PCA: gabielyombi311@gmail.com must remain a MEMBER
+      if (member.email === 'gabielyombi311@gmail.com' && role !== 'MEMBER') {
+        throw new Error("Le compte de démonstration PCA (gabielyombi311@gmail.com) est strictement réservé au rôle MEMBRE.");
+      }
+
       await updateDoc(doc(db, 'users', id), {
         role,
         status,
