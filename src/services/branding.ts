@@ -1,8 +1,8 @@
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { db, storage, auth } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
 import { SiteBrandingSettings } from '../types';
 import { cleanFirestoreData } from '../lib/cms';
+import { uploadImage } from '../lib/imageUpload';
 
 export const BRANDING_STORAGE_FOLDER = 'branding';
 export const BRANDING_DOC_PATH = 'siteSettings';
@@ -335,86 +335,22 @@ export async function uploadBrandingAsset(
   file: File,
   assetType: 'logo' | 'logoAlt' | 'favicon'
 ): Promise<string> {
-  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const timestamp = Date.now();
-  const path = `${BRANDING_STORAGE_FOLDER}/${assetType}_${timestamp}_${safeName}`;
-  const storageRef = ref(storage, path);
-  const configuredBucket = storage.app.options.storageBucket || 'NON_DEFINI';
-
-  // Section 7 : Vérification et traçabilité de l'authentification au moment exact de l'upload
-  const currentUser = auth.currentUser;
-  const isAuthenticated = !!currentUser;
-  const uid = currentUser?.uid || 'NON_CONNECTE';
-
-  let roleInFirestore = 'NON_AUTHENTIFIE';
-  if (currentUser) {
-    try {
-      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-      roleInFirestore = userDoc.exists() ? (userDoc.data()?.role || 'MEMBER') : 'DOCUMENT_NON_TROUVE';
-    } catch {
-      roleInFirestore = 'ERREUR_LECTURE_FIRESTORE';
-    }
-  }
-
-  // Logs temporaires stricts (sans token ni donnée sensible)
-  console.log(`[CMS-AUTH] Utilisateur authentifié : ${isAuthenticated ? 'OUI' : 'NON'}`);
-  console.log(`[CMS-AUTH] UID utilisateur : ${uid}`);
-  console.log(`[CMS-AUTH] Rôle Firestore détecté : ${roleInFirestore}`);
-  console.log(`[CMS-AUTH] Chemin Storage ciblé : ${path}`);
-  console.log(`[CMS-AUTH] Bucket configuré : ${configuredBucket}`);
-
-  const metadata = {
-    contentType: file.type || (file.name.endsWith('.svg') ? 'image/svg+xml' : 'image/png'),
-    customMetadata: {
-      assetType,
-      uploadedAt: timestamp.toString()
-    }
-  };
-
-  console.log(`[CMS] Début upload Storage vers ${path}`);
+  const kind = assetType === 'favicon' ? 'favicon' : 'logo';
   try {
-    await withTimeout(
-      uploadBytes(storageRef, file, metadata),
-      12000,
-      'Upload Storage'
-    );
-    console.log('[CMS] Upload Storage terminé avec succès');
+    const dataUrl = await uploadImage(file, kind);
+    return dataUrl;
   } catch (err: any) {
-    console.error(`[CMS] ERREUR — Upload Storage: ${err?.message || err}`);
-    let explanation = `Échec de l'upload vers Firebase Storage (${err?.message || 'délai dépassé ou bucket inaccessible'}).`;
-    if (err?.code === 'storage/retry-limit-exceeded' || err?.message?.includes('retry-limit-exceeded')) {
-      explanation = `Le bucket "${configuredBucket}" est introuvable ou Cloud Storage n'est pas encore activé dans votre projet Firebase "fafe-platform" (HTTP 404). Veuillez activer Cloud Storage dans la console Firebase (Build > Storage > Commencer) ou vérifier le nom exact du bucket.`;
-    }
-    throw new Error(explanation);
-  }
-
-  console.log("[CMS] Récupération de l'URL...");
-  try {
-    const downloadURL = await withTimeout(
-      getDownloadURL(storageRef),
-      6000,
-      'Récupération URL Storage'
-    );
-    console.log(`[CMS] URL publique récupérée: ${downloadURL}`);
-    return downloadURL;
-  } catch (err: any) {
-    console.error(`[CMS] ERREUR — Récupération URL: ${err?.message || err}`);
-    throw new Error(`Impossible de récupérer l'URL publique Firebase Storage : ${err?.message || 'délai dépassé'}.`);
+    console.error(`[CMS] ERREUR — Upload Branding: ${err?.message || err}`);
+    throw new Error(`Échec de l'upload de l'asset : ${err?.message || 'Erreur inconnue'}.`);
   }
 }
 
 /**
- * Safely tries to delete an old asset from Firebase Storage if it's hosted there
+ * Safely tries to delete an old asset (does nothing as we use data URLs now)
  */
 export async function deleteBrandingAsset(url?: string): Promise<void> {
-  if (!url || !url.includes('firebasestorage.googleapis.com')) return;
-  try {
-    const storageRef = ref(storage, url);
-    await deleteObject(storageRef);
-  } catch (err) {
-    // If delete fails (e.g. storage permissions or object not found), silently continue
-    console.warn('Unable to delete old branding asset from Storage:', err);
-  }
+  // Data URLs are embedded in Firestore, no storage file to delete
+  return Promise.resolve();
 }
 
 /**

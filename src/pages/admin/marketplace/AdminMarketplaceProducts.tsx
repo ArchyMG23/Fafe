@@ -15,11 +15,10 @@ import {
   EyeOff,
   Boxes
 } from 'lucide-react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../../lib/firebase';
 import { Product, MarketplaceCategory, ProductStatus } from '../../../types';
 import { Button } from '../../../components/ui/Button';
 import { marketplaceService } from '../../../services/marketplace';
+import { uploadImage } from '../../../lib/imageUpload';
 
 export function AdminMarketplaceProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -63,50 +62,22 @@ export function AdminMarketplaceProducts() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check size (< 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setActionError("L'image est trop volumineuse. Taille maximale : 5 Mo.");
-      return;
-    }
-
     try {
       setIsUploadingImage(true);
       setActionError(null);
 
-      // Clean file name
-      const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const storageRef = ref(storage, `products/${Date.now()}_${safeName}`);
-      
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-
+      const compressedDataUrl = await uploadImage(file, 'product');
       const currentImages = editingProduct?.images || [];
       setEditingProduct({
         ...editingProduct,
-        images: [...currentImages, downloadURL]
+        images: [...currentImages, compressedDataUrl]
       });
 
-      setActionSuccess('Image téléchargée et hébergée sur Firebase Storage.');
+      setActionSuccess('Image compressée et ajoutée au produit.');
       setTimeout(() => setActionSuccess(null), 3000);
     } catch (error: any) {
-      console.error('Error uploading image to Firebase Storage:', error);
-      // Fallback: If Firebase storage is not activated or blocked by security rules, convert to high-res data URL safely
-      try {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          const currentImages = editingProduct?.images || [];
-          setEditingProduct({
-            ...editingProduct,
-            images: [...currentImages, result]
-          });
-          setActionSuccess('Image importée localement avec succès.');
-          setTimeout(() => setActionSuccess(null), 3000);
-        };
-        reader.readAsDataURL(file);
-      } catch (fallbackErr) {
-        setActionError("Échec du téléversement de l'image. Veuillez vérifier la connexion.");
-      }
+      console.error('Error uploading product image:', error);
+      setActionError(error.message || "Échec du téléversement de l'image.");
     } finally {
       setIsUploadingImage(false);
       if (fileInputRef.current) {

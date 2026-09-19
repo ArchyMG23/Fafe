@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Upload, Image as ImageIcon, Search, Check, Trash2, Plus, Loader2 } from 'lucide-react';
 import { Button } from '../../ui/Button';
 import { Media } from '../../../types';
+import { uploadImage } from '../../../lib/imageUpload';
 import { fetchCMSMedia, addCMSMedia, deleteCMSMedia } from '../../../lib/cms';
 import { useAuthStore } from '../../../store/auth';
 
@@ -53,8 +54,8 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Le fichier est trop volumineux (maximum 5 Mo).");
+      if (file.size > 10 * 1024 * 1024) {
+        alert("Le fichier est trop volumineux (maximum 10 Mo).");
         return;
       }
       setUploadFile(file);
@@ -69,12 +70,13 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
 
   const handleUploadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!uploadPreview) return;
+    if (!uploadFile) return;
     setUploading(true);
     try {
+      const compressedDataUrl = await uploadImage(uploadFile, 'cms');
       const newMedia = await addCMSMedia({
-        url: uploadPreview,
-        title: uploadTitle || uploadFile?.name || 'Image téléversée',
+        url: compressedDataUrl,
+        title: uploadTitle || uploadFile.name || 'Image téléversée',
         type: 'IMAGE',
         createdAt: Date.now(),
         authorId: userProfile?.id || 'admin'
@@ -82,9 +84,9 @@ export function CMSMediaModal({ isOpen, onClose, onSelect, currentUrl }: CMSMedi
       setMediaList(prev => [newMedia, ...prev]);
       onSelect(newMedia.url, newMedia.title);
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to upload media:", err);
-      alert("Erreur lors de l'enregistrement de l'image.");
+      alert(err.message || "Erreur lors de l'enregistrement de l'image.");
     } finally {
       setUploading(false);
     }

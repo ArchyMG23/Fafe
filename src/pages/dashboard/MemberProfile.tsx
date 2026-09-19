@@ -1,10 +1,8 @@
 import { FafeImage } from '../../components/ui/FafeImage';
 import React, { useState, useRef, useEffect } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { sendPasswordResetEmail } from 'firebase/auth';
 import { useAuthStore } from '../../store/auth';
-import { db, storage, auth } from '../../lib/firebase';
+import { db, auth } from '../../lib/firebase';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -16,6 +14,7 @@ import {
   Instagram, Twitter, Linkedin, MessageCircle, AlertTriangle
 } from 'lucide-react';
 import { SECTORS, AFRICAN_COUNTRIES } from '../../lib/constants';
+import { uploadImage } from '../../lib/imageUpload';
 
 export function MemberProfile() {
   const { currentUser, userProfile, setProfile } = useAuthStore();
@@ -94,32 +93,20 @@ export function MemberProfile() {
     const file = e.target.files?.[0];
     if (!file || !currentUser || !userProfile) return;
 
-    // Validate size and format (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: 'error', text: 'La taille de l\'image ne doit pas dépasser 5 Mo.' });
-      return;
-    }
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      setMessage({ type: 'error', text: 'Format non supporté. Veuillez utiliser JPG, PNG ou WEBP.' });
-      return;
-    }
-
     setIsUploading(true);
     setMessage({ type: '', text: '' });
     
     try {
-      const storageRef = ref(storage, `users/${currentUser.uid}/profile_${Date.now()}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
+      const compressedDataUrl = await uploadImage(file, 'avatar');
       
       const userRef = doc(db, 'users', currentUser.uid);
-      await updateDoc(userRef, { photoURL: downloadURL });
+      await updateDoc(userRef, { photoURL: compressedDataUrl });
       
-      setProfile({ ...userProfile, photoURL: downloadURL });
+      setProfile({ ...userProfile, photoURL: compressedDataUrl });
       setMessage({ type: 'success', text: 'Photo de profil mise à jour avec succès.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading photo:', error);
-      setMessage({ type: 'error', text: 'Erreur lors du téléchargement de la photo.' });
+      setMessage({ type: 'error', text: error.message || 'Erreur lors du téléchargement de la photo.' });
     } finally {
       setIsUploading(false);
     }

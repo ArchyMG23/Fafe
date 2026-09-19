@@ -618,6 +618,12 @@ export async function saveCMSDraft(
   draftContent: any,
   user: { id: string; name: string; email: string }
 ): Promise<CMSPageRecord> {
+  const jsonSize = new Blob([JSON.stringify(draftContent)]).size;
+  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
+
+  const jsonSize = new Blob([JSON.stringify(draftContent)]).size;
+  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
+
   const currentRecord = await getCMSPageRecord(pageId);
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
@@ -680,6 +686,9 @@ export async function publishCMSPage(
   contentToPublish: any,
   user: { id: string; name: string; email: string }
 ): Promise<CMSPageRecord> {
+  const jsonSize = new Blob([JSON.stringify(contentToPublish)]).size;
+  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
+
   const currentRecord = await getCMSPageRecord(pageId);
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);

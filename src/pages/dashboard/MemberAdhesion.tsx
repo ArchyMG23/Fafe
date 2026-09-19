@@ -8,10 +8,10 @@ import { useLanguageStore } from '../../store/language';
 import { createMembershipRequest, getUserMemberships, submitMembershipPayment } from '../../lib/memberships';
 import { getCMSGlobal, defaultBankDetails } from '../../lib/cms';
 import { Membership, CMSBankDetails } from '../../types';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage, db } from '../../lib/firebase';
+import { db } from '../../lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { PaymentService } from '../../services/payment';
+import { uploadImage } from '../../lib/imageUpload';
 
 export function MemberAdhesion() {
   const { currentUser: user, userProfile, setProfile } = useAuthStore();
@@ -119,14 +119,12 @@ export function MemberAdhesion() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate size (max 5MB) and format
-    if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: 'error', text: 'La taille du fichier ne doit pas dépasser 5 Mo.' });
+    if (file.type === 'application/pdf') {
+      setMessage({ type: 'error', text: 'Les fichiers PDF ne sont pas acceptés. Veuillez utiliser une image JPG ou PNG.' });
       return;
     }
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
-    if (!validTypes.includes(file.type)) {
-      setMessage({ type: 'error', text: 'Format non supporté. Veuillez utiliser PDF, JPG ou PNG.' });
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      setMessage({ type: 'error', text: 'Format non supporté. Veuillez utiliser JPG ou PNG.' });
       return;
     }
     
@@ -172,25 +170,21 @@ export function MemberAdhesion() {
     setMessage({ type: '', text: '' });
     
     try {
-      // 1. Upload proof file
-      const fileExt = proofFile.name.split('.').pop();
-      const storageRef = ref(storage, `memberships/${user.uid}/proof_${Date.now()}.${fileExt}`);
-      await uploadBytes(storageRef, proofFile);
-      const downloadURL = await getDownloadURL(storageRef);
+      const compressedDataUrl = await uploadImage(proofFile, 'cms');
       
       // 2. Submit payment and update membership
-      await submitMembershipPayment(membership.id, bankReference, downloadURL);
+      await submitMembershipPayment(membership.id, bankReference, compressedDataUrl);
       
       // 3. Update user profile status
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, { membershipStatus: 'PAYMENT_SUBMITTED' });
-      setProfile({ ...userProfile, membershipStatus: 'PAYMENT_SUBMITTED' });
+      setProfile({ ...userProfile, membershipStatus: 'PAYMENT_SUBMITTED' } as any);
       
       setMessage({ type: 'success', text: 'Votre preuve de paiement a bien été transmise. Votre demande sera vérifiée par l\'équipe FAFE.' });
       await loadData();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      setMessage({ type: 'error', text: 'Erreur lors de l\'envoi du paiement.' });
+      setMessage({ type: 'error', text: error.message || 'Erreur lors de l\'envoi du paiement.' });
     } finally {
       setIsUploading(false);
     }
