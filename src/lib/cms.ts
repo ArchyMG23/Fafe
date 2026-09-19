@@ -370,6 +370,12 @@ export function cleanFirestoreData<T = any>(data: T): T {
   if (data === undefined) return '' as unknown as T;
   if (data === null) return null as unknown as T;
   if (typeof data !== 'object') return data;
+  
+  // STRIP DATA URLs FROM LOCALSTORAGE CACHE
+  if (typeof data === 'string' && data.startsWith('data:image')) {
+    return '' as unknown as T;
+  }
+
   if (Array.isArray(data)) {
     return data.map(item => cleanFirestoreData(item)) as unknown as T;
   }

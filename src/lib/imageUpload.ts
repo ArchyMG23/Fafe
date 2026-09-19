@@ -17,11 +17,11 @@ export async function uploadImage(file: File, kind: 'logo' | 'favicon' | 'cms' |
 
   // 3. Paramètres par kind
   const configs = {
-    logo: { max: 512, type: 'image/webp', limit: 250000 },
-    favicon: { max: 64, type: 'image/png', limit: 40000 },
-    avatar: { max: 300, type: 'image/jpeg', limit: 60000 },
-    cms: { max: 800, type: 'image/jpeg', limit: 120000 },
-    product: { max: 1000, type: 'image/jpeg', limit: 200000 },
+    logo: { max: 384, type: 'image/webp', limit: 60000, quality: 0.7 },
+    favicon: { max: 64, type: 'image/png', limit: 20000, quality: 0.7 },
+    avatar: { max: 200, type: 'image/webp', limit: 30000, quality: 0.7 },
+    cms: { max: 640, type: 'image/webp', limit: 70000, quality: 0.7 },
+    product: { max: 800, type: 'image/webp', limit: 100000, quality: 0.72 },
   };
   const config = configs[kind];
 
@@ -30,7 +30,9 @@ export async function uploadImage(file: File, kind: 'logo' | 'favicon' | 'cms' |
     const canvas = document.createElement('canvas');
     resolve(!!canvas.toDataURL('image/webp').startsWith('data:image/webp'));
   });
-  const finalType = (kind === 'logo' && supportsWebP) ? 'image/webp' : config.type;
+  
+  // Utilise WebP si supporté, sinon fallback au type original
+  const finalType = supportsWebP ? 'image/webp' : (kind === 'favicon' ? 'image/png' : 'image/jpeg');
 
   // 4. Compression/Redimensionnement
   const img = await createImageBitmap(file);
@@ -42,24 +44,24 @@ export async function uploadImage(file: File, kind: 'logo' | 'favicon' | 'cms' |
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Erreur de traitement image.');
   
-  // Fond blanc pour JPEG
+  // Fond blanc pour JPEG (si fallback nécessaire)
   if (finalType === 'image/jpeg') {
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-  let quality = 0.85;
+  let quality = config.quality;
   let dataUrl = canvas.toDataURL(finalType, quality);
 
   // 5. Ajustement si dépassement de limite (qualité puis dimensions)
   let currentMax = config.max;
   while (dataUrl.length > config.limit) {
-    if (quality > 0.6) {
+    if (quality > 0.4) {
       quality -= 0.05;
-    } else if (currentMax > 256) {
-      currentMax -= 128;
-      quality = 0.85;
+    } else if (currentMax > config.max / 2) {
+      currentMax -= 64;
+      quality = config.quality;
       scale = Math.min(1, currentMax / Math.max(img.width, img.height));
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
