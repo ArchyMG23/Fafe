@@ -214,14 +214,11 @@ class OrdersService {
 
   // Update order status in Firestore
   async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
-    try {
-      const docRef = doc(db, 'orders', orderId);
-      await setDoc(docRef, { orderStatus: status, updatedAt: Date.now() }, { merge: true });
-    } catch (err) {
-      console.warn('Firestore update order status error:', err);
-    }
+    // 1. Update in Firestore
+    const docRef = doc(db, 'orders', orderId);
+    await setDoc(docRef, { orderStatus: status, updatedAt: Date.now() }, { merge: true });
 
-    // Update local cache
+    // 2. Update local cache (only after success)
     const current = this.getCachedOrders();
     const target = current.find(o => o.id === orderId || o.orderNumber === orderId);
     if (target) {
@@ -235,17 +232,15 @@ class OrdersService {
 
   // Update payment status
   async updatePaymentStatus(orderId: string, status: OrderPaymentStatus): Promise<void> {
-    try {
-      const docRef = doc(db, 'orders', orderId);
-      await setDoc(docRef, {
-        paymentStatus: status,
-        paidAt: status === 'PAID' ? Date.now() : undefined,
-        updatedAt: Date.now()
-      }, { merge: true });
-    } catch (err) {
-      console.warn('Firestore update payment status error:', err);
-    }
+    // 1. Update in Firestore
+    const docRef = doc(db, 'orders', orderId);
+    await setDoc(docRef, {
+      paymentStatus: status,
+      paidAt: status === 'PAID' ? Date.now() : undefined,
+      updatedAt: Date.now()
+    }, { merge: true });
 
+    // 2. Update local cache (only after success)
     const current = this.getCachedOrders();
     const target = current.find(o => o.id === orderId || o.orderNumber === orderId);
     if (target) {

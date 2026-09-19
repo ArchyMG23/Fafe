@@ -53,6 +53,7 @@ function Placeholder({ title }: { title: string }) {
   );
 }
 
+import { DiagnosticFirestore } from './pages/DiagnosticFirestore';
 import { MemberProfile } from './pages/dashboard/MemberProfile';
 import { MemberAdhesion } from "./pages/dashboard/MemberAdhesion";
 
@@ -162,6 +163,9 @@ function App() {
           {/* Projects */}
           <Route path="/projets-sociaux" element={<ProjectsList />} />
           <Route path="/projets-sociaux/:slug" element={<ProjectDetail />} />
+          
+          {/* Diagnostic */}
+          <Route path="/diagnostic-firestore" element={<DiagnosticFirestore />} />
           
           {/* Misc */}
           <Route path="/pays" element={<Placeholder title="Pays membres" />} />

@@ -14,6 +14,18 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ''
 };
 
+// Diagnostic de configuration
+console.info('--- DIAGNOSTIC FIREBASE ---');
+console.info('Configuration source: Variables d\'environnement (import.meta.env)');
+console.info('Project ID:', firebaseConfig.projectId ? 'défini' : 'MANQUANT');
+console.info('Firestore DB ID:', firebaseConfig.firestoreDatabaseId || '(default)');
+Object.entries(firebaseConfig).forEach(([key, value]) => {
+  if (key !== 'projectId' && key !== 'firestoreDatabaseId') {
+    console.info(`${key}: ${value ? 'défini' : 'MANQUANT'}`);
+  }
+});
+console.info('---------------------------');
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 

@@ -190,7 +190,8 @@ class MarketplaceService {
         }
       }
     } catch (error) {
-      console.warn('Firestore products fetch error, using cache:', error);
+      console.error('Firestore products fetch error, using local data:', error);
+      // Afficher une bannière discrète (implémentation suggérée : via une custom event si nécessaire ou juste le log)
     }
 
     const cached = this.getCachedProducts();
@@ -268,11 +269,11 @@ class MarketplaceService {
       createdAt: productData.createdAt || Date.now()
     });
 
-    // 1. Write to Firestore (Throws if fails)
+    // 1. Write to Firestore (throws error if fails)
     const docRef = doc(db, 'products', id);
     await setDoc(docRef, normalized, { merge: true });
 
-    // 2. Update local cache
+    // 2. Update local cache (only after success)
     const currentLocal = this.getCachedProducts();
     const existingIndex = currentLocal.findIndex(p => p.id === id);
     if (existingIndex >= 0) {
@@ -290,11 +291,11 @@ class MarketplaceService {
 
   // Admin: Delete Product
   async deleteProduct(id: string): Promise<void> {
-    // 1. Delete from Firestore
+    // 1. Delete from Firestore (throws error if fails)
     const docRef = doc(db, 'products', id);
     await deleteDoc(docRef);
 
-    // 2. Remove from cache
+    // 2. Remove from cache (only after success)
     const current = this.getCachedProducts().filter(p => p.id !== id);
     this.setCachedProducts(current);
 
