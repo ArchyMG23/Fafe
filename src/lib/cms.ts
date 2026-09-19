@@ -15,14 +15,9 @@ export const defaultAccueilCMS = {
     buttonLink: "/rejoindre",
     secondaryButtonText: { fr: "Découvrir le FAFE", en: "Discover FAFE" },
     secondaryButtonLink: "/nous",
-    heroImage: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80"
+    heroImage: ""
   },
-  stats: [
-    { value: "5 000+", label: { fr: "Femmes accompagnées", en: "Women empowered" }, icon: "Heart" },
-    { value: "15+", label: { fr: "Pays africains", en: "African countries" }, icon: "Globe" },
-    { value: "200+", label: { fr: "Projets financés", en: "Projects financed" }, icon: "Briefcase" },
-    { value: "85%", label: { fr: "Taux de réussite", en: "Success rate" }, icon: "TrendingUp" }
-  ],
+  stats: [],
   missions: {
     badge: { fr: "Notre Vocation", en: "Our Vocation" },
     title: { fr: "Trois piliers pour la réussite de vos projets", en: "Three pillars for your project success" },
@@ -86,13 +81,7 @@ export const defaultAccueilCMS = {
   },
   partners: {
     title: { fr: "Partenaires institutionnels & stratégiques", en: "Institutional & strategic partners" },
-    list: [
-      { name: "ONU Femmes", logo: "" },
-      { name: "BAD", logo: "" },
-      { name: "AFD", logo: "" },
-      { name: "Union Européenne", logo: "" },
-      { name: "OIF", logo: "" }
-    ]
+    list: []
   },
   seo: {
     metaTitle: { fr: "FAFE - Forum Africain des Femmes Entrepreneures | Réseau Panafricain", en: "FAFE - African Women Entrepreneurs Forum | Pan-African Network" },
@@ -260,10 +249,10 @@ export const defaultDonsCMS = {
     note: { fr: "Veuillez préciser votre nom ou référence lors de la transaction afin de recevoir votre reçu fiscal et attestation de don.", en: "Please specify your name or reference in the transfer memo to receive your official donation receipt." }
   },
   bankDetails: {
-    bankName: "Banque Panafricaine FAFE (Siège Régional)",
-    accountNumber: "CI092 01001 02345678901 23",
-    iban: "CI93 CI09 2010 0102 3456 7890 123",
-    swift: "BPAFCIIA"
+    bankName: "",
+    accountNumber: "",
+    iban: "",
+    swift: ""
   },
   seo: {
     metaTitle: { fr: "Faire un don au FAFE - Investir dans le potentiel féminin africain", en: "Donate to FAFE - Invest in African Women's Potential" },
@@ -281,14 +270,14 @@ export const defaultGlobalCMS = {
   footer: {
     tagline: { fr: "Le premier réseau panafricain dédié à l'accompagnement, au financement et à la valorisation des femmes entrepreneures.", en: "The premier pan-African network dedicated to empowering, financing, and promoting women entrepreneurs." },
     copyright: { fr: `© ${new Date().getFullYear()} FAFE. Tous droits réservés.`, en: `© ${new Date().getFullYear()} FAFE. All rights reserved.` },
-    address: "Plateau, Immeuble Alpha 2000, Abidjan, Côte d'Ivoire",
-    email: "contact@fafe-afrique.org",
-    phone: "+225 27 20 00 00 00",
+    address: "",
+    email: "",
+    phone: "",
     socialLinks: {
-      facebook: "https://facebook.com",
-      linkedin: "https://linkedin.com",
-      twitter: "https://twitter.com",
-      instagram: "https://instagram.com"
+      facebook: "",
+      linkedin: "",
+      twitter: "",
+      instagram: ""
     }
   }
 };
@@ -440,14 +429,14 @@ export async function getCMSPageRecord(pageId: CMSPageId): Promise<CMSPageRecord
 
   return {
     pageId,
-    status: 'PUBLISHED',
+    status: 'DRAFT', // Change from PUBLISHED
     updatedAt: Date.now(),
     updatedBy: 'Système',
-    publishedAt: Date.now(),
-    publishedBy: 'Initialisation FAFE',
+    publishedAt: undefined, // Indicate not published yet
+    publishedBy: 'Jamais publié — valeurs par défaut',
     draftContent: initialDraft,
     publishedContent: initialPub,
-    version: 1
+    version: 0 // Change from 1
   };
 }
 

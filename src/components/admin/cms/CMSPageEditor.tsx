@@ -200,7 +200,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
                 </span>
               ) : (
                 <span className="text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-medium border border-amber-100">
-                  ⚠️ Jamais publié
+                  ⚠️ Jamais publié — valeurs par défaut
                 </span>
               )}
               {record.status === 'DRAFT' && record.publishedAt && (
@@ -264,7 +264,7 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             onClick={handleSaveDraft}
             disabled={saving || publishing}
             className="text-stone-700 border-stone-300 hover:bg-stone-50 text-xs h-9"
-            title="Enregistrer vos modifications dans Firebase en tant que brouillon"
+            title="Brouillon enregistré — non visible sur le site public tant que vous n'avez pas cliqué sur Enregistrer & Mettre en ligne"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : <Save className="w-3.5 h-3.5 mr-1.5 text-stone-500" />}
             Enregistrer brouillon

@@ -33,35 +33,41 @@ export function ProjectsList() {
         <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-12 text-center">
           Projets Sociaux
         </h1>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
-            <Card key={project.id} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow bg-white rounded-2xl group flex flex-col">
-              <div className="relative h-64 overflow-hidden">
-                <img
-                  src={project.image || "https://images.unsplash.com/photo-1593113563332-ba78c9d115e4?auto=format&fit=crop&q=80&w=600"}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-              <CardContent className="p-8 flex flex-col flex-grow">
-                <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">
-                  {project.title}
-                </h3>
-                <p className="text-stone-600 mb-8 line-clamp-3">
-                  {project.description}
-                </p>
-                <div className="mt-auto">
-                  <Link to={`/projets-sociaux/${project.id}`}>
-                    <Button variant="outline" className="w-full border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D] hover:text-white rounded-full">
-                      En savoir plus
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
+        {projects.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project) => (
+              <Card key={project.id} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow bg-white rounded-2xl group flex flex-col">
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={project.image || "https://images.unsplash.com/photo-1593113563332-ba78c9d115e4?auto=format&fit=crop&q=80&w=600"}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <CardContent className="p-8 flex flex-col flex-grow">
+                  <h3 className="text-2xl font-bold font-heading text-[#063F3A] mb-4">
+                    {project.title}
+                  </h3>
+                  <p className="text-stone-600 mb-8 line-clamp-3">
+                    {project.description}
+                  </p>
+                  <div className="mt-auto">
+                    <Link to={`/projets-sociaux/${project.id}`}>
+                      <Button variant="outline" className="w-full border-[#063F3A]/20 text-[#063F3A] hover:bg-[#00843D] hover:text-white rounded-full">
+                        En savoir plus
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 text-stone-500">
+            <p>Contenu à venir.</p>
+          </div>
+        )}
       </div>
     </div>
   );

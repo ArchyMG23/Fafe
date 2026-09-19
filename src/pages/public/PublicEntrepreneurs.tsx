@@ -6,44 +6,17 @@ import { FafeImage } from '../../components/ui/FafeImage';
 import { Button } from '../../components/ui/Button';
 
 // Quick mock data for public showcase
-const SHOWCASE_ENTREPRENEURS = [
-  {
-    id: '1',
-    firstName: 'Fatou',
-    lastName: 'Diop',
-    company: 'AgriTech Sénégal',
-    role: 'Fondatrice & CEO',
-    country: 'Sénégal',
-    image: 'https://images.unsplash.com/photo-1531123897727-8f129e1bf98c?auto=format&fit=crop&q=80',
-    storyFR: 'Révolutionne l\'irrigation grâce à l\'intelligence artificielle.',
-    storyEN: 'Revolutionizing irrigation with artificial intelligence.',
-  },
-  {
-    id: '2',
-    firstName: 'Amaka',
-    lastName: 'Okafor',
-    company: 'GreenEnergy Solutions',
-    role: 'CEO',
-    country: 'Nigeria',
-    image: 'https://images.unsplash.com/photo-1589156191108-c762ff4b96ab?auto=format&fit=crop&q=80',
-    storyFR: 'Apporte l\'énergie solaire aux communautés rurales isolées.',
-    storyEN: 'Bringing solar energy to isolated rural communities.',
-  },
-  {
-    id: '3',
-    firstName: 'Marie',
-    lastName: 'Kouassi',
-    company: 'Cocoa Beauty',
-    role: 'Fondatrice',
-    country: 'Côte d\'Ivoire',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80',
-    storyFR: 'Valorise le beurre de cacao local à l\'international.',
-    storyEN: 'Promoting local cocoa butter internationally.',
-  },
-];
-
 export function PublicEntrepreneurs() {
   const { language } = useLanguageStore();
+  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+        const ents = await fetchEntrepreneurs(3);
+        setEntrepreneurs(ents);
+    };
+    loadData();
+  }, []);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -79,7 +52,8 @@ export function PublicEntrepreneurs() {
       </section>
 
       {/* Showcase */}
-      <section className="py-24 bg-[#FAF9F6]">
+      {entrepreneurs.length > 0 && (
+        <section className="py-24 bg-[#FAF9F6]">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold font-heading text-[#063F3A] mb-4">
@@ -89,7 +63,7 @@ export function PublicEntrepreneurs() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {SHOWCASE_ENTREPRENEURS.map((ent, idx) => (
+            {entrepreneurs.map((ent, idx) => (
               <motion.div 
                 key={ent.id}
                 initial="hidden"
@@ -103,9 +77,10 @@ export function PublicEntrepreneurs() {
               >
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <FafeImage 
-                    src={ent.image} 
+                    src={ent.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
                     alt={`${ent.firstName} ${ent.lastName}`} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-6 left-6 right-6">
@@ -116,15 +91,16 @@ export function PublicEntrepreneurs() {
                       {ent.firstName} {ent.lastName}
                     </h3>
                     <p className="text-stone-600 font-medium">
-                      {ent.role}, {ent.company}
+                      {ent.position || 'Entrepreneure'}, {ent.company}
                     </p>
                   </div>
                 </div>
                 <div className="p-6 flex-grow flex flex-col">
                   <p className="text-stone-600 mb-6 italic line-clamp-3">
-                    "{language === 'fr' ? ent.storyFR : ent.storyEN}"
+                    {/* Simplified story/expertise */}
+                    {(ent.expertise || []).join(', ')}
                   </p>
-                  <Link to="/hub/annuaire" className="mt-auto">
+                  <Link to={`/hub/annuaire/${ent.id}`} className="mt-auto">
                     <Button variant="outline" className="w-full border-stone-200 text-[#063F3A] hover:border-[#00843D] hover:text-[#00843D] group-hover:bg-[#C8102E] group-hover:text-white transition-all">
                       {language === 'fr' ? 'Découvrir son profil complet' : 'View full profile'}
                     </Button>
@@ -135,6 +111,7 @@ export function PublicEntrepreneurs() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Stats/Impact */}
       <section className="py-24 bg-[#FAF9F6] text-[#063F3A] text-center border-t border-stone-100">

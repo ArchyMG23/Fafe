@@ -30,8 +30,8 @@ import {
 function DynamicHeroSection({ hero }: { hero?: any }) {
   // Initialize immediately with solid default data so the Hero is NEVER null
   const [heroText, setHeroText] = useState<any>(defaultHeroSlides[0]);
-  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>(DEMO_ENTREPRENEURS);
-  const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * DEMO_ENTREPRENEURS.length));
+  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const { language, tl } = useLanguageStore();
 
@@ -83,7 +83,7 @@ function DynamicHeroSection({ hero }: { hero?: any }) {
     return () => clearInterval(interval);
   }, [entrepreneurs.length, isPaused, currentIndex]);
 
-  const currentEnt = entrepreneurs[currentIndex] || DEMO_ENTREPRENEURS[0];
+  const currentEnt = entrepreneurs[currentIndex];
 
   const activeHero = hero || heroText;
   const badgeText = getCMSLocalizedText(activeHero.badge, language, language === "fr" ? "Réseau Panafricain" : "Pan-African Network");
@@ -93,6 +93,9 @@ function DynamicHeroSection({ hero }: { hero?: any }) {
   const button1Link = activeHero.buttonLink || heroText.link || "/rejoindre";
   const button2Text = getCMSLocalizedText(activeHero.secondaryButtonText, language, "Découvrir le FAFE");
   const button2Link = activeHero.secondaryButtonLink || "/nous";
+
+  // Use heroImage if available in activeHero, otherwise use carrousel
+  const displayImage = activeHero.heroImage;
 
   return (
     <section
@@ -146,87 +149,98 @@ function DynamicHeroSection({ hero }: { hero?: any }) {
             </div>
           </div>
 
-          {/* Right Column: Superimposed Card on Photo */}
+          {/* Right Column: Hero Image or Carrousel */}
           <div className="relative mx-auto max-w-sm sm:max-w-md lg:max-w-md xl:max-w-[450px] w-full">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#C8102E] to-[#D4AF37] rounded-[2.5rem] blur-2xl opacity-20 transform -rotate-1" />
             
             <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] bg-stone-900 ring-1 ring-[#063F3A]/10">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`slide-${currentEnt.id}-${currentIndex}`}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.7, ease: "easeInOut" }}
-                  className="w-full h-full relative"
-                >
-                  <FafeImage
-                    src={currentEnt.professionalPhoto}
-                    alt={`${currentEnt.firstName} ${currentEnt.lastName}`}
-                    fallbackType="person"
-                    priority={true}
-                    className="w-full h-full object-cover"
-                  />
+              {displayImage ? (
+                <FafeImage
+                  src={displayImage}
+                  alt="Hero"
+                  priority={true}
+                  className="w-full h-full object-cover"
+                />
+              ) : currentEnt ? (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`slide-${currentEnt.id}-${currentIndex}`}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.02 }}
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                    className="w-full h-full relative"
+                  >
+                    <FafeImage
+                      src={currentEnt.professionalPhoto}
+                      alt={`${currentEnt.firstName} ${currentEnt.lastName}`}
+                      fallbackType="person"
+                      priority={true}
+                      className="w-full h-full object-cover"
+                    />
 
-                  {/* Gradient Overlay for card contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    {/* Gradient Overlay for card contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                  {/* Superimposed Card directly ON the photo */}
-                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
-                        <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
-                          À LA UNE
+                    {/* Superimposed Card directly ON the photo */}
+                    <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
+                          <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
+                            À LA UNE
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+                          {currentIndex + 1} / {entrepreneurs.length}
                         </span>
                       </div>
-                      <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
-                        {currentIndex + 1} / {entrepreneurs.length}
-                      </span>
-                    </div>
 
-                    <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
-                      {currentEnt.firstName} {currentEnt.lastName}
-                    </h3>
-                    
-                    <p className="text-xs sm:text-sm font-medium text-stone-600 mb-1.5 truncate">
-                      {currentEnt.company} • <span className="text-[#D4AF37] font-semibold">{currentEnt.sector}</span>
-                    </p>
-
-                    <div className="flex items-center justify-between pt-2 border-t border-stone-100">
-                      <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
-                        {currentEnt.country}
-                      </div>
+                      <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
+                        {currentEnt.firstName} {currentEnt.lastName}
+                      </h3>
                       
-                      <Link
-                        to={`/hub/annuaire/${currentEnt.id}`}
-                        className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
-                      >
-                        Découvrir son profil
-                        <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                      <p className="text-xs sm:text-sm font-medium text-stone-600 mb-1.5 truncate">
+                        {currentEnt.company} • <span className="text-[#D4AF37] font-semibold">{currentEnt.sector}</span>
+                      </p>
 
-            {/* Pagination Dots */}
-            <div className="mt-5 flex justify-center gap-2">
-              {entrepreneurs.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentIndex
-                      ? "bg-[#C8102E] w-7"
-                      : "bg-[#00843D]/20 hover:bg-[#00843D]/40 w-2"
-                  }`}
-                  aria-label={`Voir entrepreneure ${index + 1}`}
-                />
-              ))}
+                      <div className="flex items-center justify-between pt-2 border-t border-stone-100">
+                        <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
+                          <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
+                          {currentEnt.country}
+                        </div>
+                        
+                        <Link
+                          to={`/hub/annuaire/${currentEnt.id}`}
+                          className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
+                        >
+                          Découvrir son profil
+                          <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              ) : null}
             </div>
+            
+            {!displayImage && (
+              /* Pagination Dots */
+              <div className="mt-5 flex justify-center gap-2">
+                {entrepreneurs.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentIndex
+                        ? "bg-[#C8102E] w-7"
+                        : "bg-[#00843D]/20 hover:bg-[#00843D]/40 w-2"
+                    }`}
+                    aria-label={`Voir entrepreneure ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
         </div>

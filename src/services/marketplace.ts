@@ -124,41 +124,6 @@ class MarketplaceService {
     }
   }
 
-  // Seed default demonstration catalog to Firestore if collection is empty
-  async seedInitialCatalogIfEmpty(): Promise<Product[]> {
-    try {
-      const prodsColl = collection(db, 'products');
-      const catsColl = collection(db, 'marketplace_categories');
-
-      const [prodsSnap, catsSnap] = await Promise.all([
-        getDocs(prodsColl),
-        getDocs(catsColl)
-      ]);
-
-      // Seed categories if empty
-      if (catsSnap.empty) {
-        for (const cat of initialMarketplaceCategories) {
-          await setDoc(doc(db, 'marketplace_categories', cat.id), cat, { merge: true });
-        }
-      }
-
-      // Seed products if empty
-      if (prodsSnap.empty) {
-        const seeded: Product[] = [];
-        for (const prod of initialMarketplaceProducts) {
-          const normalized = normalizeProduct(prod);
-          await setDoc(doc(db, 'products', normalized.id), normalized, { merge: true });
-          seeded.push(normalized);
-        }
-        this.setCachedProducts(seeded);
-        return seeded;
-      }
-    } catch (err) {
-      console.warn('Could not seed initial catalog into Firestore:', err);
-    }
-    return [];
-  }
-
   // Fetch all products with Firestore as authorative source of truth
   async getProducts(options?: { includeAllStatus?: boolean }): Promise<Product[]> {
     const includeAll = Boolean(options?.includeAllStatus);
@@ -179,19 +144,9 @@ class MarketplaceService {
           return fetched.filter(p => p.status === 'PUBLISHED');
         }
         return fetched;
-      } else {
-        // If Firestore is completely empty, bootstrap it once
-        const seeded = await this.seedInitialCatalogIfEmpty();
-        if (seeded.length > 0) {
-          if (!includeAll) {
-            return seeded.filter(p => p.status === 'PUBLISHED');
-          }
-          return seeded;
-        }
       }
     } catch (error) {
       console.error('Firestore products fetch error, using local data:', error);
-      // Afficher une bannière discrète (implémentation suggérée : via une custom event si nécessaire ou juste le log)
     }
 
     const cached = this.getCachedProducts();
@@ -241,15 +196,6 @@ class MarketplaceService {
         });
         this.setCachedCategories(fetched);
         return fetched;
-      } else {
-        await this.seedInitialCatalogIfEmpty();
-        const secondSnap = await getDocs(q);
-        if (!secondSnap.empty) {
-          const list: MarketplaceCategory[] = [];
-          secondSnap.forEach(d => list.push({ id: d.id, ...d.data() } as MarketplaceCategory));
-          this.setCachedCategories(list);
-          return list;
-        }
       }
     } catch (err) {
       console.warn('Firestore categories fetch error, using cache:', err);
