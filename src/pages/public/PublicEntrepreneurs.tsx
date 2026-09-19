@@ -1,22 +1,17 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useLanguageStore } from '../../store/language';
-import { ArrowRight, Star, Award, TrendingUp, Users } from 'lucide-react';
+import { ArrowRight, Star, Award, TrendingUp, Users, Globe } from 'lucide-react';
 import { FafeImage } from '../../components/ui/FafeImage';
 import { Button } from '../../components/ui/Button';
+import { Entrepreneur } from '../../types';
+import { fetchEntrepreneurs } from '../../services/entrepreneur';
 
 // Quick mock data for public showcase
 export function PublicEntrepreneurs() {
   const { language } = useLanguageStore();
   const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-        const ents = await fetchEntrepreneurs(3);
-        setEntrepreneurs(ents);
-    };
-    loadData();
-  }, []);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -167,27 +162,5 @@ export function PublicEntrepreneurs() {
         </div>
       </section>
     </div>
-  );
-}
-
-// Just adding a simple Globe icon since we didn't import it above
-function Globe(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-      <path d="M2 12h20" />
-    </svg>
   );
 }

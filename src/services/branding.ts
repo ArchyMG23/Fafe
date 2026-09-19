@@ -158,12 +158,21 @@ export function applyFavicon(faviconUrl?: string, version?: number): void {
     document.head.appendChild(link);
   }
   
-  if (url.endsWith('.svg') || url.includes('image%2Fsvg')) {
+  if (url.startsWith('data:')) {
+    const match = url.match(/^data:(image\/[^;]+);/);
+    if (match) {
+      link.type = match[1];
+    }
+  } else if (url.endsWith('.svg') || url.includes('image%2Fsvg')) {
     link.type = 'image/svg+xml';
   } else if (url.endsWith('.png') || url.includes('image%2Fpng')) {
     link.type = 'image/png';
   } else if (url.endsWith('.ico')) {
     link.type = 'image/x-icon';
+  } else if (url.endsWith('.webp')) {
+    link.type = 'image/webp';
+  } else if (url.endsWith('.jpg') || url.endsWith('.jpeg')) {
+    link.type = 'image/jpeg';
   }
 
   link.href = url;
@@ -180,6 +189,7 @@ export function applyFavicon(faviconUrl?: string, version?: number): void {
  */
 export function getCacheBustedUrl(url?: string, version?: number): string {
   if (!url) return '';
+  if (url.startsWith('data:') || url.startsWith('blob:')) return url;
   if (!version) return url;
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}v=${version}`;

@@ -6,7 +6,6 @@ import { MapPin, Briefcase, Globe, ArrowLeft, CheckCircle2, Loader2, ShieldCheck
 import { FafeImage } from '../components/ui/FafeImage';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
-import { DEMO_ENTREPRENEURS } from '../lib/mockData';
 import { Entrepreneur } from '../types';
 import { AFRICAN_COUNTRIES, SECTORS } from '../lib/constants';
 import { useAuthStore } from '../store/auth';
@@ -29,19 +28,9 @@ export function DirectoryProfile() {
         
         if (docSnap.exists()) {
           setProfile({ id: docSnap.id, ...docSnap.data() } as Entrepreneur);
-        } else {
-          // Fallback to demo data
-          const demoProfile = DEMO_ENTREPRENEURS.find(e => e.id === id);
-          if (demoProfile) {
-            setProfile({...demoProfile, status: 'APPROVED', verificationStatus: 'VERIFIED'} as Entrepreneur);
-          }
         }
       } catch (error) {
         console.error("Error fetching profile", error);
-        const demoProfile = DEMO_ENTREPRENEURS.find(e => e.id === id);
-        if (demoProfile) {
-          setProfile({...demoProfile, status: 'APPROVED', verificationStatus: 'VERIFIED'} as Entrepreneur);
-        }
       } finally {
         setLoading(false);
       }

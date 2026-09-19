@@ -147,6 +147,7 @@ export function About() {
                   src={pcaHero?.pcaPhoto} 
                   alt={pcaHero?.pcaName}
                   className="w-full h-full object-cover"
+                  fallbackType="person"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90/40 to-transparent"></div>
               </div>

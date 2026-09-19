@@ -141,7 +141,7 @@ function App() {
 
           {/* Redirections for old actualités / événements routes */}
           <Route path="/actualites-evenements" element={<Navigate to="/actualites" replace />} />
-          <Route path="/evenements" element={<Navigate to="/actualites" replace />} />
+          <Route path="/evenements" element={<EventList />} />
           <Route path="/actualites/categorie/:slug" element={<Navigate to="/actualites" replace />} />
           <Route path="/actualites/tag/:slug" element={<Navigate to="/actualites" replace />} />
           
