@@ -12,10 +12,10 @@ import {
   saveBrandingSettings, 
   deleteBrandingAsset, 
   getCacheBustedUrl,
-  fileToOptimizedDataUri,
   runStorageDiagnosticTest,
   StorageDiagnosticResult
 } from '../../../services/branding';
+import { uploadImage } from '../../../lib/imageUpload';
 import { FafeLogo, FafeOfficialEmblem } from '../../../components/ui/FafeLogo';
 import { LogoDisplayMode } from '../../../types';
 
@@ -62,52 +62,31 @@ export function AdminCMSBranding() {
   const [logoPreviewBg, setLogoPreviewBg] = useState<'light' | 'dark'>('dark');
 
   // Diagnostic state (Section 8)
-  const [diagnosticRunning, setDiagnosticRunning] = useState(false);
-  const [diagnosticResult, setDiagnosticResult] = useState<StorageDiagnosticResult | null>(null);
+  // [REMOVED]
 
-  const handleRunDiagnostic = async () => {
-    setDiagnosticRunning(true);
-    setDiagnosticResult(null);
-    try {
-      const res = await runStorageDiagnosticTest();
-      setDiagnosticResult(res);
-    } catch (err: any) {
-      setDiagnosticResult({
-        success: false,
-        durationMs: 0,
-        bucket: 'INCONNU',
-        projectId: 'fafe-platform',
-        authStatus: {
-          authenticated: !!currentUser,
-          uid: currentUser?.uid || null,
-          email: currentUser?.email || null,
-          role: userProfile?.role || 'INCONNU'
-        },
-        stepReached: 'EXCEPTION_IMPREVUE',
-        error: err?.message || String(err),
-        errorCode: 'UNEXPECTED',
-        advice: 'Une erreur imprévue est survenue.'
-      });
-    } finally {
-      setDiagnosticRunning(false);
-    }
-  };
 
   const getAdminEmail = () => {
     return userProfile?.email || currentUser?.email || 'yombivictor@gmail.com';
   };
 
+  // 1. Validation de la taille totale du branding (avant sauvegarde)
+  const validateBrandingSize = (updates: any) => {
+    const currentSettings = { ...branding, ...updates };
+    const totalSize = (currentSettings.logoUrl?.length || 0) + 
+                      (currentSettings.logoAltUrl?.length || 0) + 
+                      (currentSettings.faviconUrl?.length || 0);
+    if (totalSize > 700000) {
+      throw new Error('La taille totale des images de branding dépasse la limite autorisée (700 Ko). Veuillez choisir des images plus légères.');
+    }
+  };
+
   /**
-   * Complete 9-Step Direct Upload & Save Pipeline:
+   * Complete Pipeline:
    * ÉTAPE 1 : Sélection fichier
    * ÉTAPE 2 : Validation
-   * ÉTAPE 3 : Upload Storage
-   * ÉTAPE 4 : Confirmation Storage
-   * ÉTAPE 5 : getDownloadURL
-   * ÉTAPE 6 : Écriture Firestore
-   * ÉTAPE 7 : Confirmation Firestore
-   * ÉTAPE 8 : Mise à jour interface
-   * ÉTAPE 9 : Fin loading (garanti via finally)
+   * ÉTAPE 3 : Compression/Optimisation (uploadImage -> Data URL)
+   * ÉTAPE 4 : Écriture Firestore
+   * ÉTAPE 5 : Mise à jour interface
    */
   const handleDirectUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -115,71 +94,47 @@ export function AdminCMSBranding() {
   ) => {
     setErrorMsg(null);
     setSuccessMsg(null);
-    setFallbackOption(null);
 
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Reset input value so re-selecting the same file works
+    // Reset input
     e.target.value = '';
-
-    // ÉTAPE 1 : Sélection fichier
-    console.log(`[CMS] Sélection fichier: ${file.name} (${file.size} octets, type: ${file.type || 'inconnu'})`);
 
     // ÉTAPE 2 : Validation
     const validation = await validateBrandingFile(file);
     if (!validation.valid) {
-      console.error(`[CMS] ERREUR — Validation fichier: ${validation.error}`);
       setErrorMsg(validation.error || 'Format ou taille de fichier invalide.');
       return;
     }
-    console.log(`[CMS] Validation fichier OK (${validation.width || '?'}x${validation.height || '?'}px)`);
 
     setIsSaving(true);
     setUploadingTarget(target);
     const targetName = target === 'logo' ? 'du logo principal' : target === 'logoAlt' ? 'du logo alternatif' : 'du favicon';
 
     try {
-      // ÉTAPE 3, 4, 5 : Upload Storage, Confirmation, getDownloadURL
-      setSavingStep(`1/2 - Téléversement ${targetName} vers Firebase Storage...`);
-      let downloadUrl: string;
-      try {
-        downloadUrl = await uploadBrandingAsset(file, target);
-      } catch (storageErr: any) {
-        console.error(`[CMS] ERREUR — Upload Storage: ${storageErr?.message || storageErr}`);
-        setFallbackOption({ file, target });
-        setErrorMsg(
-          `Le téléversement vers Firebase Storage n'a pas pu être terminé (${storageErr?.message || 'délai dépassé ou bucket indisponible'}). Vérifiez votre connexion ou la configuration Firebase. Vous pouvez également enregistrer directement l'image optimisée dans Firestore ci-dessous.`
-        );
-        return;
-      }
+      // ÉTAPE 3 : Compression
+      setSavingStep(`Optimisation ${targetName}...`);
+      const dataUrl = await uploadBrandingAsset(file, target);
 
-      // ÉTAPE 6 : Écriture Firestore
-      setSavingStep(`2/2 - Enregistrement de l'URL dans Firebase Firestore...`);
+      // ÉTAPE 4 : Écriture Firestore
+      setSavingStep(`Enregistrement dans Firebase Firestore...`);
       const updates: any = {};
-      if (target === 'logo') updates.logoUrl = downloadUrl;
-      if (target === 'logoAlt') updates.logoAltUrl = downloadUrl;
-      if (target === 'favicon') updates.faviconUrl = downloadUrl;
+      if (target === 'logo') updates.logoUrl = dataUrl;
+      if (target === 'logoAlt') updates.logoAltUrl = dataUrl;
+      if (target === 'favicon') updates.faviconUrl = dataUrl;
+
+      // Check size
+      validateBrandingSize(updates);
 
       const adminEmail = getAdminEmail();
-      // ÉTAPE 7 : Confirmation Firestore
       await saveBrandingSettings(updates, adminEmail);
 
-      // Clean old asset from storage safely
-      const oldUrl = target === 'logo' ? branding.logoUrl : target === 'logoAlt' ? branding.logoAltUrl : branding.faviconUrl;
-      if (oldUrl && oldUrl !== downloadUrl) {
-        deleteBrandingAsset(oldUrl);
-      }
-
-      // ÉTAPE 8 : Mise à jour interface
+      // ÉTAPE 5 : Mise à jour interface
       await fetchBranding();
-      setSuccessMsg(`✓ Succès : Le ${target === 'logo' ? 'logo principal' : target === 'logoAlt' ? 'logo alternatif' : 'favicon'} a été téléversé et enregistré avec succès dans Firebase ! Il est immédiatement visible sur le site.`);
-      setTimeout(() => setSuccessMsg(null), 7000);
-
-      // ÉTAPE 9 : Fin loading (garanti via finally)
-      console.log('[CMS] Opération terminée');
+      setSuccessMsg(`✓ Succès : Le ${target === 'logo' ? 'logo principal' : target === 'logoAlt' ? 'logo alternatif' : 'favicon'} a été enregistré avec succès !`);
+      setTimeout(() => setSuccessMsg(null), 5000);
     } catch (err: any) {
-      console.error(`[CMS] ERREUR — Traitement: ${err?.message || err}`);
       setErrorMsg(`Erreur lors du traitement de l'image : ${err?.message || 'Veuillez vérifier votre connexion.'}`);
     } finally {
       setIsSaving(false);
@@ -203,7 +158,7 @@ export function AdminCMSBranding() {
     console.log(`[CMS] Début enregistrement direct Firestore pour ${targetName}`);
     try {
       setSavingStep(`Optimisation de l'image pour Firestore...`);
-      const dataUri = await fileToOptimizedDataUri(file);
+      const dataUri = await uploadImage(file, target === 'favicon' ? 'favicon' : 'logo');
 
       setSavingStep(`Enregistrement dans Firebase Firestore...`);
       const updates: any = {};
@@ -356,30 +311,12 @@ export function AdminCMSBranding() {
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={handleRunDiagnostic}
-              disabled={diagnosticRunning || isSaving}
-              title="Exécuter le test de diagnostic Storage indépendant"
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-colors disabled:opacity-50"
-            >
-              {diagnosticRunning ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-700" />
-                  <span>Diagnostic en cours...</span>
-                </>
-              ) : (
-                <>
-                  <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
-                  <span>Test Firebase Storage</span>
-                </>
-              )}
-            </button>
-            <button
-              onClick={() => fetchBranding()}
-              title="Actualiser les données"
-              className="p-2.5 text-stone-500 hover:text-[#00843D] hover:bg-stone-50 rounded-xl border border-stone-200 transition-colors"
-            >
-              <RefreshCw className={`w-4 h-4 ${isSaving ? 'animate-spin' : ''}`} />
-            </button>
+               onClick={() => fetchBranding()}
+               title="Actualiser les données"
+               className="p-2.5 text-stone-500 hover:text-[#00843D] hover:bg-stone-50 rounded-xl border border-stone-200 transition-colors"
+             >
+               <RefreshCw className={`w-4 h-4 ${isSaving ? 'animate-spin' : ''}`} />
+             </button>
             <a
               href="/"
               target="_blank"
