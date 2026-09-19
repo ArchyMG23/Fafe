@@ -618,17 +618,14 @@ export async function saveCMSDraft(
   draftContent: any,
   user: { id: string; name: string; email: string }
 ): Promise<CMSPageRecord> {
-  const jsonSize = new Blob([JSON.stringify(draftContent)]).size;
-  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
-
-  const jsonSize = new Blob([JSON.stringify(draftContent)]).size;
-  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
-
   const currentRecord = await getCMSPageRecord(pageId);
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
   const cleanDraft = cleanFirestoreData(draftContent);
+
+  const jsonSize = new Blob([JSON.stringify(cleanDraft)]).size;
+  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
 
   // 1. Optimistic persistence in localStorage immediately so work is never lost
   if (typeof window !== 'undefined') {
@@ -686,9 +683,6 @@ export async function publishCMSPage(
   contentToPublish: any,
   user: { id: string; name: string; email: string }
 ): Promise<CMSPageRecord> {
-  const jsonSize = new Blob([JSON.stringify(contentToPublish)]).size;
-  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
-
   const currentRecord = await getCMSPageRecord(pageId);
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
@@ -696,6 +690,9 @@ export async function publishCMSPage(
   const cleanContent = cleanFirestoreData(contentToPublish);
   const now = Date.now();
   const userName = user.name || user.email || 'SUPER_ADMIN';
+
+  const jsonSize = new Blob([JSON.stringify(cleanContent)]).size;
+  if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
 
   // 1. Optimistic update in localStorage immediately
   if (typeof window !== 'undefined') {
