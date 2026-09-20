@@ -296,9 +296,9 @@ export const CMS_PAGE_DEFAULTS: Record<CMSPageId, any> = {
 export const defaultHeroSlides: CMSHeroSlide[] = [
   {
     id: 'slide-1',
-    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    title: { fr: "L'excellence au féminin pour le développement de l'Afrique", en: "Female Excellence for Africa's Development" },
-    shortText: { fr: "Le Fonds d'Appui aux Femmes Entrepreneures accompagne, finance et valorise les projets portés par des femmes à travers le continent.", en: "The Fund to Support Women Entrepreneurs supports, finances, and promotes projects led by women across the continent." },
+    image: '', // Image vide par défaut pour forcer l'usage du CMS
+    title: { fr: "Excellence au féminin pour l'Afrique", en: "Female Excellence for Africa" },
+    shortText: { fr: "Accompagner, financer et valoriser les projets portés par des femmes à travers le continent.", en: "Supporting and empowering women-led initiatives across the continent." },
     buttonText: { fr: "Rejoindre le réseau", en: "Join the network" },
     link: "/rejoindre",
     order: 1,

@@ -76,9 +76,17 @@ export function AdminVisualCMS() {
           }
         };
       } else {
+        // If the value is a JSON string (for structured data like card), parse it.
+        // Otherwise treat as plain string.
+        let processedValue: any = value;
+        try {
+            processedValue = JSON.parse(value);
+        } catch (e) {
+            // Not JSON
+        }
         return {
           ...s,
-          [field]: value
+          [field]: processedValue
         };
       }
     }));
@@ -237,6 +245,48 @@ export function AdminVisualCMS() {
                           <option value="INACTIVE">Inactif</option>
                         </select>
                       </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-1">Activer la carte superposée</label>
+                        <input 
+                          type="checkbox" 
+                          checked={slide.card?.enabled || false}
+                          onChange={(e) => updateSlide(slide.id, 'card', JSON.stringify({ ...slide.card, enabled: e.target.checked }), false)}
+                          className="h-5 w-5 rounded text-[#00843D] focus:ring-[#00843D]"
+                        />
+                      </div>
+                      {slide.card?.enabled && (
+                        <div className="bg-stone-50 p-4 rounded-lg space-y-4">
+                           <h5 className="font-bold text-stone-700">Contenu de la carte</h5>
+                           <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-1">Nom (Carte)</label>
+                            <input 
+                              type="text" 
+                              value={activeTab === 'FR' ? slide.card?.name.fr : slide.card?.name.en} 
+                              onChange={(e) => updateSlide(slide.id, 'card', JSON.stringify({ ...slide.card, name: { ...slide.card?.name, [activeTab.toLowerCase()]: e.target.value } }), false)}
+                              className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:border-[#D4AF37]"
+                            />
+                           </div>
+                           <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-1">Activité (Carte)</label>
+                            <input 
+                              type="text" 
+                              value={activeTab === 'FR' ? slide.card?.activity.fr : slide.card?.activity.en} 
+                              onChange={(e) => updateSlide(slide.id, 'card', JSON.stringify({ ...slide.card, activity: { ...slide.card?.activity, [activeTab.toLowerCase()]: e.target.value } }), false)}
+                              className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:border-[#D4AF37]"
+                            />
+                           </div>
+                           <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-1">Pays (Carte)</label>
+                            <input 
+                              type="text" 
+                              value={activeTab === 'FR' ? slide.card?.country.fr : slide.card?.country.en} 
+                              onChange={(e) => updateSlide(slide.id, 'card', JSON.stringify({ ...slide.card, country: { ...slide.card?.country, [activeTab.toLowerCase()]: e.target.value } }), false)}
+                              className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:border-[#D4AF37]"
+                            />
+                           </div>
+                        </div>
+                      )}
 
                     </div>
                   </div>

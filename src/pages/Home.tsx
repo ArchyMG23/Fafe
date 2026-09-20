@@ -183,42 +183,41 @@ function DynamicHeroSection({ hero }: { hero?: any }) {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                     {/* Superimposed Card directly ON the photo */}
-                    <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
-                          <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
-                            À LA UNE
-                          </span>
+                    {activeHero.card?.enabled && (
+                      <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
+                            <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
+                              À LA UNE
+                            </span>
+                          </div>
                         </div>
-                        <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
-                          {currentIndex + 1} / {entrepreneurs.length}
-                        </span>
-                      </div>
 
-                      <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
-                        {currentEnt.firstName} {currentEnt.lastName}
-                      </h3>
-                      
-                      <p className="text-xs sm:text-sm font-medium text-stone-600 mb-1.5 truncate">
-                        {currentEnt.company} • <span className="text-[#D4AF37] font-semibold">{currentEnt.sector}</span>
-                      </p>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-stone-100">
-                        <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
-                          <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
-                          {currentEnt.country}
-                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
+                          {getCMSLocalizedText(activeHero.card.name, language)}
+                        </h3>
                         
-                        <Link
-                          to={`/hub/annuaire/${currentEnt.id}`}
-                          className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
-                        >
-                          Découvrir son profil
-                          <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
-                        </Link>
+                        <p className="text-xs sm:text-sm font-medium text-stone-600 mb-1.5 truncate">
+                          {getCMSLocalizedText(activeHero.card.activity, language)} • <span className="text-[#D4AF37] font-semibold">{getCMSLocalizedText(activeHero.card.country, language)}</span>
+                        </p>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-stone-100">
+                          <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
+                            <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
+                            {getCMSLocalizedText(activeHero.card.country, language)}
+                          </div>
+                          
+                          <Link
+                            to={activeHero.card.link}
+                            className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
+                          >
+                            {getCMSLocalizedText(activeHero.card.linkText, language)}
+                            <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </motion.div>
                 </AnimatePresence>
               ) : null}

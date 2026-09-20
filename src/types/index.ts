@@ -369,6 +369,14 @@ export interface CMSHeroSlide {
   link: string;
   order: number;
   status: 'ACTIVE' | 'INACTIVE';
+  card?: {
+    enabled: boolean;
+    name: LocalizedString;
+    activity: LocalizedString;
+    country: LocalizedString;
+    linkText: LocalizedString;
+    link: string;
+  };
 }
 
 export interface CMSBankDetails {

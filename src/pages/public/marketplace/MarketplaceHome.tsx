@@ -89,9 +89,9 @@ export function MarketplaceHome() {
         </div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto px-4 mt-8 md:mt-12">
+      <div className="w-full max-w-[1600px] mx-auto px-4 mt-8 md:mt-12">
         {loading ? (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[260px,1fr] gap-8">
             <div className="space-y-6 hidden lg:block">
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100 h-96 animate-pulse">
                 <div className="h-6 w-32 bg-stone-200 rounded mb-6"></div>
@@ -100,8 +100,7 @@ export function MarketplaceHome() {
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
                 {[1, 2, 3, 4, 5, 6].map(i => (
                   <div key={i} className="bg-white rounded-2xl border border-stone-100 overflow-hidden h-[380px] animate-pulse flex flex-col">
                     <div className="w-full aspect-square bg-stone-200"></div>
@@ -114,13 +113,12 @@ export function MarketplaceHome() {
                   </div>
                 ))}
               </div>
-            </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[260px,1fr] gap-8">
             {/* Sidebar / Filters */}
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200/70">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200/70 lg:sticky lg:top-24">
                 <h3 className="font-bold text-stone-800 mb-4 flex items-center gap-2">
                   <Filter className="w-4 h-4 text-[#00843D]" />
                   Catégories
@@ -154,14 +152,14 @@ export function MarketplaceHome() {
             </div>
 
             {/* Product Grid */}
-            <div className="lg:col-span-3">
+            <div className="w-full">
               {featuredProducts.length > 0 && !searchTerm && !selectedCategory && (
                 <div className="mb-10">
                   <h2 className="text-xl sm:text-2xl font-bold font-heading text-[#063F3A] mb-5 flex items-center gap-2">
                     <Star className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />
                     Sélections en vedette
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
                     {featuredProducts.map(product => (
                       <ProductCard key={product.id} product={product} onAdd={() => addItem(product, 1)} />
                     ))}
@@ -193,7 +191,7 @@ export function MarketplaceHome() {
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
                   {filteredProducts.map(product => (
                     <ProductCard key={product.id} product={product} onAdd={() => addItem(product, 1)} />
                   ))}
