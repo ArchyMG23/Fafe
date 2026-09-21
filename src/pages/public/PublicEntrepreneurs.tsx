@@ -6,7 +6,7 @@ import { ArrowRight, Star, Award, TrendingUp, Users, Globe } from 'lucide-react'
 import { FafeImage } from '../../components/ui/FafeImage';
 import { Button } from '../../components/ui/Button';
 import { Entrepreneur } from '../../types';
-import { fetchEntrepreneurs } from '../../services/entrepreneur';
+import { fetchEntrepreneurs } from '../../lib/dataFetching';
 
 // Quick mock data for public showcase
 export function PublicEntrepreneurs() {

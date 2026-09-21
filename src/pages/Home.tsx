@@ -33,7 +33,12 @@ function DynamicHeroSection({ hero }: { hero?: any }) {
   const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [heroImageError, setHeroImageError] = useState(false);
   const { language, tl } = useLanguageStore();
+
+  useEffect(() => {
+    setHeroImageError(false); // Reset on hero change
+  }, [hero]);
 
   useEffect(() => {
     let isMounted = true;
@@ -150,97 +155,100 @@ function DynamicHeroSection({ hero }: { hero?: any }) {
           </div>
 
           {/* Right Column: Hero Image or Carrousel */}
-          <div className="relative mx-auto max-w-sm sm:max-w-md lg:max-w-md xl:max-w-[450px] w-full">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#C8102E] to-[#D4AF37] rounded-[2.5rem] blur-2xl opacity-20 transform -rotate-1" />
-            
-            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] bg-stone-900 ring-1 ring-[#063F3A]/10">
-              {displayImage ? (
-                <FafeImage
-                  src={displayImage}
-                  alt="Hero"
-                  priority={true}
-                  className="w-full h-full object-cover"
-                />
-              ) : currentEnt ? (
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`slide-${currentEnt.id}-${currentIndex}`}
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.02 }}
-                    transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="w-full h-full relative"
-                  >
-                    <FafeImage
-                      src={currentEnt.professionalPhoto}
-                      alt={`${currentEnt.firstName} ${currentEnt.lastName}`}
-                      fallbackType="person"
-                      priority={true}
-                      className="w-full h-full object-cover"
-                    />
-
-                    {/* Gradient Overlay for card contrast */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                    {/* Superimposed Card directly ON the photo */}
-                    {activeHero.card?.enabled && (
-                      <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
-                        <div className="flex items-center justify-between gap-2 mb-2">
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
-                            <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
-                              À LA UNE
-                            </span>
-                          </div>
-                        </div>
-
-                        <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
-                          {getCMSLocalizedText(activeHero.card.name, language)}
-                        </h3>
-                        
-                        <p className="text-xs sm:text-sm font-medium text-stone-600 mb-1.5 truncate">
-                          {getCMSLocalizedText(activeHero.card.activity, language)} • <span className="text-[#D4AF37] font-semibold">{getCMSLocalizedText(activeHero.card.country, language)}</span>
-                        </p>
-
-                        <div className="flex items-center justify-between pt-2 border-t border-stone-100">
-                          <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
-                            <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
-                            {getCMSLocalizedText(activeHero.card.country, language)}
-                          </div>
-                          
-                          <Link
-                            to={activeHero.card.link}
-                            className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
-                          >
-                            {getCMSLocalizedText(activeHero.card.linkText, language)}
-                            <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              ) : null}
-            </div>
-            
-            {!displayImage && (
-              /* Pagination Dots */
-              <div className="mt-5 flex justify-center gap-2">
-                {entrepreneurs.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === currentIndex
-                        ? "bg-[#C8102E] w-7"
-                        : "bg-[#00843D]/20 hover:bg-[#00843D]/40 w-2"
-                    }`}
-                    aria-label={`Voir entrepreneure ${index + 1}`}
+          {(!displayImage || heroImageError) && !currentEnt ? null : (
+            <div className="relative mx-auto max-w-sm sm:max-w-md lg:max-w-md xl:max-w-[450px] w-full">
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#C8102E] to-[#D4AF37] rounded-[2.5rem] blur-2xl opacity-20 transform -rotate-1" />
+              
+              <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] ring-1 ring-[#063F3A]/10">
+                {displayImage && !heroImageError ? (
+                  <FafeImage
+                    src={displayImage}
+                    alt="Hero"
+                    priority={true}
+                    className="w-full h-full object-cover"
+                    onError={() => setHeroImageError(true)}
                   />
-                ))}
+                ) : currentEnt ? (
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`slide-${currentEnt.id}-${currentIndex}`}
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.02 }}
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      className="w-full h-full relative"
+                    >
+                      <FafeImage
+                        src={currentEnt.professionalPhoto}
+                        alt={`${currentEnt.firstName} ${currentEnt.lastName}`}
+                        fallbackType="person"
+                        priority={true}
+                        className="w-full h-full object-cover"
+                      />
+
+                      {/* Gradient Overlay for card contrast */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                      {/* Superimposed Card directly ON the photo */}
+                      {activeHero.card?.enabled && (
+                        <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-white/40">
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <div className="flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping" />
+                              <span className="text-[10px] sm:text-xs font-bold text-[#00843D] tracking-wider uppercase">
+                                À LA UNE
+                              </span>
+                            </div>
+                          </div>
+
+                          <h3 className="text-lg sm:text-xl font-bold font-heading text-[#063F3A] leading-tight mb-0.5 truncate">
+                            {getCMSLocalizedText(activeHero.card.name, language)}
+                          </h3>
+                          
+                          <p className="text-xs sm:text-sm font-medium text-stone-600 mb-1.5 truncate">
+                            {getCMSLocalizedText(activeHero.card.activity, language)} • <span className="text-[#D4AF37] font-semibold">{getCMSLocalizedText(activeHero.card.country, language)}</span>
+                          </p>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-stone-100">
+                            <div className="flex items-center gap-1 text-xs text-stone-500 font-medium">
+                              <MapPin className="w-3.5 h-3.5 text-[#00843D]" />
+                              {getCMSLocalizedText(activeHero.card.country, language)}
+                            </div>
+                            
+                            <Link
+                              to={activeHero.card.link}
+                              className="inline-flex items-center text-xs sm:text-sm font-bold text-[#00843D] hover:text-[#c96a1a] transition-colors group"
+                            >
+                              {getCMSLocalizedText(activeHero.card.linkText, language)}
+                              <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                ) : null}
               </div>
-            )}
-          </div>
+              
+              {(!displayImage || heroImageError) && currentEnt && (
+                /* Pagination Dots */
+                <div className="mt-5 flex justify-center gap-2">
+                  {entrepreneurs.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === currentIndex
+                          ? "bg-[#C8102E] w-7"
+                          : "bg-[#00843D]/20 hover:bg-[#00843D]/40 w-2"
+                      }`}
+                      aria-label={`Voir entrepreneure ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
         </div>
       </div>
@@ -415,7 +423,7 @@ export function Home() {
   const [cmsData, setCmsData] = useState<any>(() => {
     try {
       // Force cache bust by changing storage key
-      const cached = localStorage.getItem("fafe_cms_published_accueil_v2");
+      const cached = localStorage.getItem("fafe_cms_published_accueil_v3");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed && typeof parsed === 'object') {

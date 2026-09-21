@@ -15,17 +15,7 @@ export const defaultAccueilCMS = {
     buttonLink: "/rejoindre",
     secondaryButtonText: { fr: "Découvrir le FAFE", en: "Discover FAFE" },
     secondaryButtonLink: "/nous",
-    heroImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80",
-    floatingImages: [],
-    emailPlaceholder: { fr: "exemple@domaine.com", en: "example@domain.com" },
-    showEmailForm: true
-  },
-  featuredEntrepreneurs: {
-    title: { fr: "Coups de cœur", en: "Staff Picks" },
-    subtitle: { fr: "Des projets inspirants, des femmes extraordinaires", en: "Inspiring projects, extraordinary women" }
-  },
-  featuredNews: {
-    title: { fr: "À la une", en: "Featured" }
+    heroImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80"
   },
   stats: [],
   missions: {
@@ -382,7 +372,7 @@ export function cleanFirestoreData<T = any>(data: T): T {
   if (typeof data !== 'object') return data;
   
   // STRIP DATA URLs FROM LOCALSTORAGE CACHE
-  if (typeof data === 'string' && data.startsWith('data:image')) {
+  if (typeof data === 'string' && (data as string).startsWith('data:image')) {
     return '' as unknown as T;
   }
 

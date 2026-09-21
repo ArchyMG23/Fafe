@@ -68,7 +68,7 @@ export function FafeImage({
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
-        referrerPolicy="no-referrer"
+        referrerPolicy="strict-origin-when-cross-origin"
         onLoad={() => setIsLoaded(true)}
         onError={() => setError(true)}
         className={`w-full h-full object-cover transition-opacity duration-500 ${

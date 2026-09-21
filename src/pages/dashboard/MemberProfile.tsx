@@ -1,3 +1,4 @@
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { FafeImage } from '../../components/ui/FafeImage';
 import React, { useState, useRef, useEffect } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
