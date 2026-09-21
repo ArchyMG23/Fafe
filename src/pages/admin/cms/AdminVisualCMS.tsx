@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Save, Plus, Trash, Image as ImageIcon } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useLanguageStore } from '../../../store/language';
-import { getCMSGlobal, updateCMSGlobal, defaultHeroSlides, defaultBankDetails } from '../../../lib/cms';
+import { getCMSGlobal, updateCMSGlobal, defaultHeroSlides, defaultBankDetails, publishCMSPage, defaultAccueilCMS } from '../../../lib/cms';
 import { CMSHeroSlide, CMSBankDetails } from '../../../types';
 
 export function AdminVisualCMS() {
@@ -37,12 +37,30 @@ export function AdminVisualCMS() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      // 1. Update Global CMS
       await updateCMSGlobal({
         heroSlides: slides,
         bankDetails: bankDetails
       });
-      alert('Modifications enregistrées avec succès.');
+
+      // 2. Publish Hero to 'accueil' page record for Home.tsx
+      if (slides.length > 0) {
+        const heroContent = {
+          hero: {
+            heroImage: slides[0].image,
+            title: slides[0].title,
+            shortText: slides[0].shortText,
+            buttonText: slides[0].buttonText,
+            buttonLink: slides[0].link,
+            card: slides[0].card
+          }
+        };
+        await publishCMSPage('accueil', heroContent, { id: 'admin', name: 'Admin', email: 'admin@fafe.org' });
+      }
+
+      alert('Modifications enregistrées et publiées sur la page d\'accueil.');
     } catch (error) {
+      console.error(error);
       alert('Erreur lors de la sauvegarde.');
     } finally {
       setSaving(false);
