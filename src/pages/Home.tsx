@@ -414,7 +414,8 @@ export function Home() {
   const { language } = useLanguageStore();
   const [cmsData, setCmsData] = useState<any>(() => {
     try {
-      const cached = localStorage.getItem("fafe_cms_published_accueil");
+      // Force cache bust by changing storage key
+      const cached = localStorage.getItem("fafe_cms_published_accueil_v2");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed && typeof parsed === 'object') {
