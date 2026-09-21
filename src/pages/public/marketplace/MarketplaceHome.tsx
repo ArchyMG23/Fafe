@@ -63,7 +63,7 @@ export function MarketplaceHome() {
   const featuredProducts = products.filter(p => p.isFeatured && p.status === 'PUBLISHED').slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-stone-50 pb-20">
+    <div className="min-h-screen bg-transparent pb-20">
       {/* Header Banner */}
       <div className="bg-[#00843D] text-white py-14 sm:py-16">
         <div className="w-full max-w-7xl mx-auto px-4 text-center">

@@ -28,15 +28,22 @@ export const getEventBySlug = async (slug: string) => {
   try {
     const q = query(collection(db, 'events'), where('slug', '==', slug), limit(1));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) {
-      const mock = DEMO_EVENTS.find(e => e.slug === slug);
-      if (mock) return mock as unknown as FAFEEvent;
-      return null;
+    if (!snapshot.empty) {
+      return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as FAFEEvent;
     }
-    return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as FAFEEvent;
+    
+    // Also try direct document ID lookup
+    const directDoc = await getDoc(doc(db, 'events', slug));
+    if (directDoc.exists()) {
+      return { id: directDoc.id, ...directDoc.data() } as FAFEEvent;
+    }
+
+    const mock = DEMO_EVENTS.find(e => e.slug === slug || e.id === slug);
+    if (mock) return mock as unknown as FAFEEvent;
+    return null;
   } catch (error: any) {
     console.warn('Notice fetching event by slug (using demo fallback):', error?.message || error);
-    const mock = DEMO_EVENTS.find(e => e.slug === slug);
+    const mock = DEMO_EVENTS.find(e => e.slug === slug || e.id === slug);
     return (mock as unknown as FAFEEvent) || null;
   }
 };

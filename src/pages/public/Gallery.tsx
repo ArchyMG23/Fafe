@@ -204,7 +204,7 @@ export function Gallery() {
   const location = useLocation();
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-16">
+    <div className="bg-transparent min-h-screen pt-24 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4">

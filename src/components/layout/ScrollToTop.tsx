@@ -5,22 +5,28 @@ export function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      // Small timeout to ensure DOM is ready if navigating to an anchor
+    if (hash && hash.length > 1) {
       const timeout = setTimeout(() => {
-        const element = document.querySelector(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+        try {
+          const id = hash.replace(/^#/, '');
+          const element = document.getElementById(id) || (hash.match(/^[#a-zA-Z0-9_-]+$/) ? document.querySelector(hash) : null);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        } catch (e) {
+          // Gracefully ignore selector errors
         }
-      }, 80);
+      }, 100);
       return () => clearTimeout(timeout);
     }
 
-    // Reliable scroll reset on mobile and desktop
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    } catch (e) {}
   }, [pathname, hash]);
 
   return null;
 }
+

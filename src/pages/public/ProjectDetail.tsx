@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchProjects } from '../../lib/dataFetching';
+import { DEMO_PROJECTS } from '../../lib/mockData';
 import { Project } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Loader2, ArrowLeft } from 'lucide-react';
@@ -12,10 +13,22 @@ export function ProjectDetail() {
 
   useEffect(() => {
     const loadData = async () => {
-      const data = await fetchProjects();
-      const match = data.find(p => p.id === slug || p.id === slug);
-      setProject(match || null);
-      setLoading(false);
+      try {
+        const data = await fetchProjects();
+        const match = data.find(p => p.id === slug || (p as any).slug === slug);
+        if (match) {
+          setProject(match);
+        } else {
+          const fallback = DEMO_PROJECTS.find(p => p.id === slug || (p as any).slug === slug);
+          setProject(fallback || null);
+        }
+      } catch (err) {
+        console.warn("Error loading project detail:", err);
+        const fallback = DEMO_PROJECTS.find(p => p.id === slug || (p as any).slug === slug);
+        setProject(fallback || null);
+      } finally {
+        setLoading(false);
+      }
     };
     loadData();
   }, [slug]);

@@ -9,15 +9,21 @@ export function AboutAndActions() {
   const { hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      setTimeout(() => {
-        const element = document.querySelector(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
+    if (hash && hash.length > 1) {
+      const timeout = setTimeout(() => {
+        try {
+          const id = hash.replace(/^#/, '');
+          const element = document.getElementById(id) || (hash.match(/^[#a-zA-Z0-9_-]+$/) ? document.querySelector(hash) : null);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        } catch (e) {}
       }, 100);
+      return () => clearTimeout(timeout);
     } else {
-      window.scrollTo(0, 0);
+      try {
+        window.scrollTo(0, 0);
+      } catch (e) {}
     }
   }, [hash]);
 

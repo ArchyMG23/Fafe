@@ -3,6 +3,7 @@ import { db } from './firebase';
 import { Entrepreneur, Article, Project } from '../types';
 import { FAFEEvent } from '../types';
 import { ActionCategory, FAFEAction, ActionTestimonial, ActionStatistic } from '../types';
+import { DEMO_PROJECTS, DEMO_ARTICLES, DEMO_EVENTS } from './mockData';
 
 export async function fetchEntrepreneurs(limitCount?: number, featuredOnly = false): Promise<Entrepreneur[]> {
   try {
@@ -30,10 +31,14 @@ export async function fetchProjects(limitCount?: number): Promise<Project[]> {
       projQuery = query(projQuery, limit(limitCount));
     }
     const snap = await getDocs(projQuery);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+    const firestoreProjects = snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+    if (firestoreProjects.length > 0) {
+      return firestoreProjects;
+    }
+    return limitCount ? DEMO_PROJECTS.slice(0, limitCount) : DEMO_PROJECTS;
   } catch (error: any) {
     console.warn("Notice fetching projects (using fallback defaults):", error?.message || error);
-    return [];
+    return limitCount ? DEMO_PROJECTS.slice(0, limitCount) : DEMO_PROJECTS;
   }
 }
 
@@ -48,10 +53,14 @@ export async function fetchArticles(limitCount?: number): Promise<Article[]> {
       artQuery = query(artQuery, limit(limitCount));
     }
     const snap = await getDocs(artQuery);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Article));
+    const firestoreArticles = snap.docs.map(d => ({ id: d.id, ...d.data() } as Article));
+    if (firestoreArticles.length > 0) {
+      return firestoreArticles;
+    }
+    return limitCount ? DEMO_ARTICLES.slice(0, limitCount) : DEMO_ARTICLES;
   } catch (error: any) {
     console.warn("Notice fetching articles (using fallback defaults):", error?.message || error);
-    return [];
+    return limitCount ? DEMO_ARTICLES.slice(0, limitCount) : DEMO_ARTICLES;
   }
 }
 
@@ -66,10 +75,14 @@ export async function fetchEvents(limitCount?: number): Promise<FAFEEvent[]> {
       evtQuery = query(evtQuery, limit(limitCount));
     }
     const snap = await getDocs(evtQuery);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() } as FAFEEvent));
+    const firestoreEvents = snap.docs.map(d => ({ id: d.id, ...d.data() } as FAFEEvent));
+    if (firestoreEvents.length > 0) {
+      return firestoreEvents;
+    }
+    return (limitCount ? DEMO_EVENTS.slice(0, limitCount) : DEMO_EVENTS) as unknown as FAFEEvent[];
   } catch (error: any) {
     console.warn("Notice fetching events (using fallback defaults):", error?.message || error);
-    return [];
+    return (limitCount ? DEMO_EVENTS.slice(0, limitCount) : DEMO_EVENTS) as unknown as FAFEEvent[];
   }
 }
 

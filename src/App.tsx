@@ -1,8 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { PageBackdrop, BackdropTone } from './components/layout/PageBackdrop';
 import { HubLayout } from './components/layout/HubLayout';
 import { PublicEntrepreneurs } from './pages/public/PublicEntrepreneurs';
 import { Join } from './pages/public/Join';
@@ -57,9 +59,38 @@ import { DiagnosticFirestore } from './pages/DiagnosticFirestore';
 import { MemberProfile } from './pages/dashboard/MemberProfile';
 import { MemberAdhesion } from "./pages/dashboard/MemberAdhesion";
 
+function getPublicBackdropTone(pathname: string): BackdropTone {
+  if (pathname === '/') return 'home';
+  if (pathname === '/nous' || pathname.startsWith('/nous/')) return 'about';
+  if (
+    pathname === '/actualites' ||
+    pathname.startsWith('/actualites/') ||
+    pathname === '/evenements' ||
+    pathname.startsWith('/evenements/') ||
+    pathname === '/galerie' ||
+    pathname.startsWith('/galerie/')
+  ) {
+    return 'news';
+  }
+  if (pathname.startsWith('/marketplace')) return 'shop';
+  if (
+    pathname === '/dons' ||
+    pathname.startsWith('/dons/') ||
+    pathname === '/rejoindre' ||
+    pathname.startsWith('/rejoindre/')
+  ) {
+    return 'give';
+  }
+  return 'none';
+}
+
 function PublicLayout() {
+  const { pathname } = useLocation();
+  const tone = getPublicBackdropTone(pathname);
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAF9F6] w-full max-w-full">
+    <div className="flex flex-col min-h-screen bg-transparent w-full max-w-full relative">
+      <PageBackdrop tone={tone} />
       <Navbar />
       <main className="flex-grow w-full max-w-full min-w-0">
         <Outlet />
@@ -79,9 +110,10 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Routes>
         {/* Admin Layout (No public navbar/footer) */}
         <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN', 'MODERATOR', 'CONTENT_MANAGER', 'FINANCE_MANAGER']} />}>
           <Route path="/admin/*" element={<AdminDashboard />} />
@@ -173,6 +205,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+  </ErrorBoundary>
   );
 }
 

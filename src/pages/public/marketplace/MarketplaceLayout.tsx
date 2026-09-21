@@ -7,7 +7,7 @@ import { MarketplaceConfirmation } from './MarketplaceConfirmation';
 
 export function MarketplaceLayout() {
   return (
-    <div className="min-h-screen bg-stone-50/30">
+    <div className="min-h-screen bg-transparent">
       <Routes>
         <Route index element={<MarketplaceHome />} />
         <Route path="produit/:slug" element={<MarketplaceProduct />} />

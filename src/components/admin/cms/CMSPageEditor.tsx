@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { 
   Save, Eye, CheckCircle2, RotateCcw, AlertTriangle, Globe,
   LayoutTemplate, Image as ImageIcon, Users, Award, FileText, 
-  Target, TrendingUp, Heart, Phone, ShieldCheck, Sparkles, Building, Loader2
+  Target, TrendingUp, Heart, Phone, ShieldCheck, Sparkles, Building, Loader2,
+  Calendar, Briefcase, ExternalLink
 } from 'lucide-react';
 import { Button } from '../../ui/Button';
 import { CMSPageId, CMSPageRecord } from '../../../types';
@@ -386,12 +387,9 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
                   />
                 </div>
 
-                <CMSImageField
-                  label="Image d'en-tête / Visuel Hero"
-                  value={draftData.hero?.heroImage || ''}
-                  onChange={(url) => handleFieldChange('hero', 'heroImage', url)}
-                  aspectRatio="landscape"
-                />
+                <div className="p-4 bg-amber-50/80 border border-amber-200/80 rounded-xl text-xs sm:text-sm text-amber-800">
+                  La photo du hero est celle de la PCA : modifiez-la dans Page Nous → section PCA
+                </div>
               </div>
             </div>
           </CMSSectionCard>
@@ -535,10 +533,193 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             </div>
           </CMSSectionCard>
 
-          {/* Section 6: Partenaires */}
+          {/* Section 6: Impact & Projets Sociaux */}
+          <CMSSectionCard
+            id="projects"
+            title="6. Impact & Projets Sociaux"
+            description="Titres de la section projets sur l'accueil et lien vers le gestionnaire complet."
+            icon={Briefcase}
+          >
+            <div className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <CMSFieldWrapper
+                  label="Badge / Surtitre"
+                  value={draftData.projects?.badge}
+                  onChange={(val) => handleFieldChange('projects', 'badge', val)}
+                  activeLang={activeLang}
+                  placeholder="Impact & Développement"
+                />
+                <CMSFieldWrapper
+                  label="Titre principal de la section"
+                  value={draftData.projects?.title}
+                  onChange={(val) => handleFieldChange('projects', 'title', val)}
+                  activeLang={activeLang}
+                  placeholder="Transformer l'entrepreneuriat en impact"
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <CMSFieldWrapper
+                  label="Texte du bouton d'action"
+                  value={draftData.projects?.buttonText}
+                  onChange={(val) => handleFieldChange('projects', 'buttonText', val)}
+                  activeLang={activeLang}
+                  placeholder="En savoir plus"
+                />
+                <CMSFieldWrapper
+                  label="Lien de redirection du bouton"
+                  value={draftData.projects?.buttonLink || '/projets-sociaux'}
+                  onChange={(val) => handleFieldChange('projects', 'buttonLink', val)}
+                  activeLang={activeLang}
+                  type="url"
+                />
+              </div>
+
+              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-bold text-emerald-900 uppercase tracking-wider">
+                    Gestion des projets individuels
+                  </h4>
+                  <p className="text-xs text-emerald-700 mt-0.5">
+                    Modifiez les titres, images, périmètres, objectifs, impacts mesurables et collectes de dons de chaque projet.
+                  </p>
+                </div>
+                <a
+                  href="/admin/projets"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#00843D] hover:bg-[#006A31] text-white text-xs font-bold rounded-lg transition-colors shrink-0 shadow-sm"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" /> Gérer les projets
+                </a>
+              </div>
+            </div>
+          </CMSSectionCard>
+
+          {/* Section 7: Agenda & Événements */}
+          <CMSSectionCard
+            id="events"
+            title="7. Agenda & Événements (Activités)"
+            description="Titres de la section agenda sur l'accueil et lien vers le gestionnaire complet."
+            icon={Calendar}
+          >
+            <div className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <CMSFieldWrapper
+                  label="Badge / Surtitre"
+                  value={draftData.events?.badge}
+                  onChange={(val) => handleFieldChange('events', 'badge', val)}
+                  activeLang={activeLang}
+                  placeholder="Agenda"
+                />
+                <CMSFieldWrapper
+                  label="Titre principal de la section"
+                  value={draftData.events?.title}
+                  onChange={(val) => handleFieldChange('events', 'title', val)}
+                  activeLang={activeLang}
+                  placeholder="Événements & Rendez-vous"
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <CMSFieldWrapper
+                  label="Texte du bouton d'action"
+                  value={draftData.events?.buttonText}
+                  onChange={(val) => handleFieldChange('events', 'buttonText', val)}
+                  activeLang={activeLang}
+                  placeholder="Voir tout l'agenda"
+                />
+                <CMSFieldWrapper
+                  label="Lien de redirection du bouton"
+                  value={draftData.events?.buttonLink || '/evenements'}
+                  onChange={(val) => handleFieldChange('events', 'buttonLink', val)}
+                  activeLang={activeLang}
+                  type="url"
+                />
+              </div>
+
+              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wider">
+                    Gestion des événements & activités
+                  </h4>
+                  <p className="text-xs text-amber-800 mt-0.5">
+                    Modifiez les dates, villes, formats virtuels, programmes, images et inscriptions en ligne des événements.
+                  </p>
+                </div>
+                <a
+                  href="/admin/evenements"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#D4AF37] hover:bg-[#b5952f] text-white text-xs font-bold rounded-lg transition-colors shrink-0 shadow-sm"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" /> Gérer les événements
+                </a>
+              </div>
+            </div>
+          </CMSSectionCard>
+
+          {/* Section 8: Actualités & Inspirations */}
+          <CMSSectionCard
+            id="news"
+            title="8. Actualités & Inspirations"
+            description="Titres de la section actualités sur l'accueil et lien vers les articles."
+            icon={FileText}
+          >
+            <div className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <CMSFieldWrapper
+                  label="Badge / Surtitre"
+                  value={draftData.news?.badge}
+                  onChange={(val) => handleFieldChange('news', 'badge', val)}
+                  activeLang={activeLang}
+                  placeholder="Actualités"
+                />
+                <CMSFieldWrapper
+                  label="Titre principal de la section"
+                  value={draftData.news?.title}
+                  onChange={(val) => handleFieldChange('news', 'title', val)}
+                  activeLang={activeLang}
+                  placeholder="Dernières nouvelles du FAFE"
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <CMSFieldWrapper
+                  label="Texte du bouton d'action"
+                  value={draftData.news?.buttonText}
+                  onChange={(val) => handleFieldChange('news', 'buttonText', val)}
+                  activeLang={activeLang}
+                  placeholder="Toutes les actualités"
+                />
+                <CMSFieldWrapper
+                  label="Lien de redirection du bouton"
+                  value={draftData.news?.buttonLink || '/actualites'}
+                  onChange={(val) => handleFieldChange('news', 'buttonLink', val)}
+                  activeLang={activeLang}
+                  type="url"
+                />
+              </div>
+
+              <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
+                    Gestion des articles d'actualités
+                  </h4>
+                  <p className="text-xs text-stone-600 mt-0.5">
+                    Rédigez, modifiez ou programmez la parution d'articles de presse et communiqués.
+                  </p>
+                </div>
+                <a
+                  href="/admin/contenus/articles"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-stone-800 hover:bg-stone-900 text-white text-xs font-bold rounded-lg transition-colors shrink-0 shadow-sm"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" /> Gérer les articles
+                </a>
+              </div>
+            </div>
+          </CMSSectionCard>
+
+          {/* Section 9: Partenaires */}
           <CMSSectionCard
             id="partners"
-            title="6. Partenaires Institutionnels"
+            title="9. Partenaires Institutionnels"
             description="Liste des organisations partenaires du FAFE."
             icon={Building}
           >
@@ -559,10 +740,10 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
             </div>
           </CMSSectionCard>
 
-          {/* Section 7: SEO */}
+          {/* Section 10: SEO */}
           <CMSSectionCard
             id="seo"
-            title="7. SEO & Métadonnées"
+            title="10. SEO & Métadonnées"
             description="Balises pour Google, WhatsApp, Facebook et Twitter."
             icon={Globe}
           >

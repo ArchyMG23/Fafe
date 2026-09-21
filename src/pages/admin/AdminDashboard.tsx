@@ -23,7 +23,6 @@ import { AdminProjects } from './AdminProjects';
 
 import { AdminAdhesions } from './AdminAdhesions';
 import { AdminCMSMain } from './cms/AdminCMSMain';
-import { AdminVisualCMS } from './cms/AdminVisualCMS';
 import { AdminContentDashboard } from './cms/AdminContentDashboard';
 import { AdminArticles } from './cms/AdminArticles';
 import { AdminArticleEditor } from './cms/AdminArticleEditor';
@@ -245,7 +244,6 @@ export function AdminDashboard() {
             <Route path="/adhesions" element={<AdminAdhesions />} />
             <Route path="/cms" element={<AdminCMSMain />} />
             <Route path="/cms/*" element={<AdminCMSMain />} />
-            <Route path="/cms-visuel" element={<AdminCMSMain />} />
             
             {/* Events routes */}
             <Route path="/evenements" element={<AdminEvents />} />

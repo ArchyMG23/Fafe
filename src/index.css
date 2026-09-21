@@ -49,3 +49,97 @@
     color: inherit;
   }
 }
+
+/* FAFE Hero Floating Ambience */
+@keyframes hero-drift-green {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(6%, 8%) scale(1.08);
+  }
+}
+
+@keyframes hero-drift-gold {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-7%, -6%) scale(1.1);
+  }
+}
+
+@keyframes hero-drift-red {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(5%, -7%) scale(1.06);
+  }
+}
+
+.animate-hero-green {
+  animation: hero-drift-green 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-hero-gold {
+  animation: hero-drift-gold 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-hero-red {
+  animation: hero-drift-red 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-green,
+  .animate-hero-gold,
+  .animate-hero-red {
+    animation: none !important;
+  }
+}
+
+/* FAFE Global Backdrop Halos */
+@keyframes backdrop-drift-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(4%, 6%) scale(1.06);
+  }
+}
+
+@keyframes backdrop-drift-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-5%, -4%) scale(1.05);
+  }
+}
+
+.animate-backdrop-halo-1 {
+  animation: backdrop-drift-1 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-backdrop-halo-2 {
+  animation: backdrop-drift-2 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (max-width: 767px) {
+  .animate-backdrop-halo-1,
+  .animate-backdrop-halo-2 {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-backdrop-halo-1,
+  .animate-backdrop-halo-2 {
+    animation: none !important;
+  }
+}

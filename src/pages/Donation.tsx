@@ -180,7 +180,7 @@ export function Donation() {
     : activeProjects.find(p => p.id === projectId)?.title || 'Projet inconnu';
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] pt-32 pb-20">
+    <div className="min-h-screen bg-transparent pt-32 pb-20">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 bg-orange-100 rounded-full mb-6">

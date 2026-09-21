@@ -114,9 +114,9 @@ export function NewsAndEvents() {
   });
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen">
+    <div className="bg-transparent min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-16 pb-14 md:pt-24 md:pb-20 overflow-hidden bg-white border-b border-stone-100">
+      <section className="relative pt-16 pb-14 md:pt-24 md:pb-20 overflow-hidden bg-white/60 backdrop-blur-xs border-b border-stone-100">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[350px] h-[350px] bg-[#D4AF37] opacity-10 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[300px] h-[300px] bg-[#C8102E] opacity-10 rounded-full blur-[70px] pointer-events-none" />
         

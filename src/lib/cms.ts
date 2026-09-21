@@ -15,7 +15,7 @@ export const defaultAccueilCMS = {
     buttonLink: "/rejoindre",
     secondaryButtonText: { fr: "Découvrir le FAFE", en: "Discover FAFE" },
     secondaryButtonLink: "/nous",
-    heroImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80"
+    heroImage: ""
   },
   stats: [],
   missions: {
@@ -97,7 +97,7 @@ export const defaultNousCMS = {
     heroDescription: { fr: "Construire un avenir où chaque femme africaine peut entreprendre, grandir et contribuer à la prospérité du continent.", en: "Building a future where every African woman can undertake, thrive, and contribute to the continent's prosperity." },
     pcaName: "Présidence du Conseil d'Administration",
     pcaTitle: { fr: "Présidente du Conseil d'Administration", en: "President of the Board of Directors" },
-    pcaPhoto: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800"
+    pcaPhoto: ""
   },
   presentation: {
     title: { fr: "QUI SOMMES-NOUS ?", en: "WHO ARE WE?" },
@@ -370,11 +370,6 @@ export function cleanFirestoreData<T = any>(data: T): T {
   if (data === undefined) return '' as unknown as T;
   if (data === null) return null as unknown as T;
   if (typeof data !== 'object') return data;
-  
-  // STRIP DATA URLs FROM LOCALSTORAGE CACHE
-  if (typeof data === 'string' && (data as string).startsWith('data:image')) {
-    return '' as unknown as T;
-  }
 
   if (Array.isArray(data)) {
     return data.map(item => cleanFirestoreData(item)) as unknown as T;
@@ -505,42 +500,20 @@ export const getCMSGlobal = async () => {
       console.warn('[CMS] Global document offline or unreachable, using defaults:', docErr?.message || docErr);
     }
 
-    const [accueilRecord, nousRecord, donsRecord] = await Promise.all([
-      getCMSPageRecord('accueil'),
+    const [nousRecord, donsRecord] = await Promise.all([
       getCMSPageRecord('nous'),
       getCMSPageRecord('dons')
     ]);
 
-    let heroSlides = defaultHeroSlides;
-    if (accueilRecord.publishedContent?.hero) {
-      const hero = accueilRecord.publishedContent.hero;
-      heroSlides = [
-        {
-          id: 'slide-1',
-          image: hero.heroImage || defaultHeroSlides[0].image,
-          title: hero.title,
-          shortText: hero.shortText,
-          buttonText: hero.buttonText,
-          link: hero.buttonLink || '/rejoindre',
-          order: 1,
-          status: 'ACTIVE'
-        }
-      ];
-    } else if (globalData.heroSlides && globalData.heroSlides.length > 0) {
-      heroSlides = globalData.heroSlides;
-    }
-
     return {
       about: nousRecord.publishedContent,
-      bankDetails: globalData.bankDetails || donsRecord.publishedContent?.bankDetails || defaultDonsCMS.bankDetails,
-      heroSlides
+      bankDetails: globalData.bankDetails || donsRecord.publishedContent?.bankDetails || defaultDonsCMS.bankDetails
     };
   } catch (error: any) {
     console.warn("[CMS] Notice in getCMSGlobal, using fallback defaults:", error?.message || error);
     return {
       about: defaultNousCMS,
-      bankDetails: defaultDonsCMS.bankDetails,
-      heroSlides: defaultHeroSlides
+      bankDetails: defaultDonsCMS.bankDetails
     };
   }
 };
@@ -617,7 +590,9 @@ export async function saveCMSDraft(
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
-  const cleanDraft = cleanFirestoreData(draftContent);
+  const baseContent = currentRecord.draftContent || CMS_PAGE_DEFAULTS[pageId] || {};
+  const mergedDraft = mergeWithDefaults(baseContent, draftContent);
+  const cleanDraft = cleanFirestoreData(mergedDraft);
 
   const jsonSize = new Blob([JSON.stringify(cleanDraft)]).size;
   if (jsonSize > 900000) throw new Error('Page trop lourde pour Firestore (limite 1 Mo) : réduisez le nombre d\'images ou utilisez des liens directs');
@@ -682,7 +657,9 @@ export async function publishCMSPage(
   const nextVersion = (currentRecord.version || 0) + 1;
   const docRef = doc(db, 'cms_pages', pageId);
 
-  const cleanContent = cleanFirestoreData(contentToPublish);
+  const baseContent = currentRecord.publishedContent || CMS_PAGE_DEFAULTS[pageId] || {};
+  const mergedContent = mergeWithDefaults(baseContent, contentToPublish);
+  const cleanContent = cleanFirestoreData(mergedContent);
   const now = Date.now();
   const userName = user.name || user.email || 'SUPER_ADMIN';
 
@@ -726,18 +703,6 @@ export async function publishCMSPage(
       await setDoc(doc(db, 'cms', 'global'), { about: cleanContent }, { merge: true });
     } else if (pageId === 'dons' && cleanContent.bankDetails) {
       await setDoc(doc(db, 'cms', 'global'), { bankDetails: cleanContent.bankDetails }, { merge: true });
-    } else if (pageId === 'accueil' && cleanContent.hero) {
-      const slide = {
-        id: 'slide-1',
-        image: cleanContent.hero.heroImage || defaultHeroSlides[0].image,
-        title: cleanContent.hero.title,
-        shortText: cleanContent.hero.shortText,
-        buttonText: cleanContent.hero.buttonText,
-        link: cleanContent.hero.buttonLink || '/rejoindre',
-        order: 1,
-        status: 'ACTIVE'
-      };
-      await setDoc(doc(db, 'cms', 'global'), { heroSlides: [slide] }, { merge: true });
     } else if (pageId === 'global') {
       await setDoc(doc(db, 'cms', 'global'), cleanContent, { merge: true });
     }

@@ -7,11 +7,30 @@ import { FafeImage } from '../../components/ui/FafeImage';
 import { Button } from '../../components/ui/Button';
 import { Entrepreneur } from '../../types';
 import { fetchEntrepreneurs } from '../../lib/dataFetching';
+import { DEMO_ENTREPRENEURS } from '../../lib/mockData';
 
 // Quick mock data for public showcase
 export function PublicEntrepreneurs() {
   const { language } = useLanguageStore();
-  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
+  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>(() => DEMO_ENTREPRENEURS.slice(0, 6));
+
+  useEffect(() => {
+    let isMounted = true;
+    const load = async () => {
+      try {
+        const data = await fetchEntrepreneurs(12, true);
+        if (isMounted && data.length > 0) {
+          setEntrepreneurs(data);
+        }
+      } catch (e) {
+        console.warn('PublicEntrepreneurs fetch:', e);
+      }
+    };
+    load();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },

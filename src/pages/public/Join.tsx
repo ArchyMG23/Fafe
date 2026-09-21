@@ -30,9 +30,9 @@ export function Join() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] pb-24">
+    <div className="min-h-screen bg-transparent pb-24">
       {/* Hero Header */}
-      <section className="bg-[#FAF9F6] text-[#063F3A] pt-32 pb-20 relative overflow-hidden">
+      <section className="bg-transparent text-[#063F3A] pt-32 pb-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-[#D4AF37] opacity-10 rounded-full blur-[80px]"></div>
         <div className="w-full max-w-7xl mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold font-heading mb-6">{tl(content.title)}</h1>

@@ -72,15 +72,21 @@ export function About() {
   }, []);
 
   useEffect(() => {
-    if (hash) {
-      setTimeout(() => {
-        const element = document.querySelector(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
+    if (hash && hash.length > 1) {
+      const timeout = setTimeout(() => {
+        try {
+          const id = hash.replace(/^#/, '');
+          const element = document.getElementById(id) || (hash.match(/^[#a-zA-Z0-9_-]+$/) ? document.querySelector(hash) : null);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        } catch (e) {}
       }, 100);
+      return () => clearTimeout(timeout);
     } else {
-      window.scrollTo(0, 0);
+      try {
+        window.scrollTo(0, 0);
+      } catch (e) {}
     }
   }, [hash]);
 
@@ -95,9 +101,9 @@ export function About() {
   };
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen about-container">
+    <div className="bg-transparent min-h-screen about-container">
       {/* 1. HERO PCA */}
-      <section className="merged-section relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden bg-[#FAF9F6] merged-section" id="about-hero">
+      <section className="merged-section relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden bg-transparent merged-section" id="about-hero">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 -mt-32 -mr-32 w-[500px] h-[500px] bg-[#C8102E] opacity-5 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 w-[400px] h-[400px] bg-[#D4AF37] opacity-5 rounded-full blur-[80px]"></div>
@@ -161,7 +167,7 @@ export function About() {
       </section>
 
       {/* 2. PRÉSENTATION */}
-      <section className="merged-section py-24 bg-white" id="presentation">
+      <section className="merged-section py-24 bg-white/60 backdrop-blur-xs" id="presentation">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
             className="text-center mb-16 flex flex-col items-center"
@@ -192,7 +198,7 @@ export function About() {
       </section>
 
       {/* 3. NOTRE HISTOIRE */}
-      <section className="merged-section py-24 bg-[#FAF9F6]" id="historique">
+      <section className="merged-section py-24 bg-transparent" id="historique">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-20"
@@ -243,11 +249,11 @@ export function About() {
       </section>
 
       {/* 4. VISION ET MISSION */}
-      <section className="merged-section py-24 bg-white" id="vision">
+      <section className="merged-section py-24 bg-white/60 backdrop-blur-xs" id="vision">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <motion.div 
-              className="bg-[#FAF9F6] p-10 md:p-12 rounded-[2rem] border border-[#063F3A]/5 shadow-sm hover:shadow-lg transition-shadow"
+              className="bg-white p-10 md:p-12 rounded-[2rem] border border-[#063F3A]/5 shadow-sm hover:shadow-lg transition-shadow"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6 } }}
               viewport={{ once: true }}
@@ -285,7 +291,7 @@ export function About() {
       </section>
 
       {/* 5. NOS VALEURS */}
-      <section className="merged-section py-24 bg-[#FAF9F6]" id="valeurs">
+      <section className="merged-section py-24 bg-transparent" id="valeurs">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-16"
@@ -311,7 +317,7 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: idx * 0.1 } }}
                 viewport={{ once: true }}
               >
-                <div className="w-16 h-16 mx-auto bg-[#FAF9F6] rounded-xl flex items-center justify-center mb-6 text-[#00843D] group-hover:scale-110 group-hover:bg-[#C8102E] group-hover:text-white transition-all duration-300">
+                <div className="w-16 h-16 mx-auto bg-stone-50 rounded-xl flex items-center justify-center mb-6 text-[#00843D] group-hover:scale-110 group-hover:bg-[#C8102E] group-hover:text-white transition-all duration-300">
                   {getIcon(valeur.icon)}
                 </div>
                 <h4 className="text-lg font-bold text-[#063F3A] tracking-wide uppercase">
@@ -324,7 +330,7 @@ export function About() {
       </section>
 
       {/* 6. GOUVERNANCE */}
-      <section className="merged-section py-24 bg-white border-b border-[#063F3A]/5" id="gouvernance">
+      <section className="merged-section py-24 bg-white/60 backdrop-blur-xs border-b border-[#063F3A]/5" id="gouvernance">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-4xl text-center">
           <motion.div 
             initial="hidden"
@@ -347,7 +353,7 @@ export function About() {
       </section>
 
       {/* 7. BUREAU EXÉCUTIF */}
-      <section className="merged-section py-24 bg-[#FAF9F6]" id="bureau-executif">
+      <section className="merged-section py-24 bg-transparent" id="bureau-executif">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-6xl">
           <motion.div 
             className="text-center mb-16"
@@ -403,7 +409,7 @@ export function About() {
       </section>
 
       {/* 8. ÉQUIPE OPÉRATIONNELLE */}
-      <section className="merged-section py-24 bg-white" id="equipe">
+      <section className="merged-section py-24 bg-white/60 backdrop-blur-xs" id="equipe">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-6xl">
           <motion.div 
             className="text-center mb-16"
@@ -451,7 +457,7 @@ export function About() {
       </section>
 
       {/* 9. PARTENAIRES */}
-      <section className="merged-section py-24 bg-[#FAF9F6]" id="partenaires">
+      <section className="merged-section py-24 bg-transparent" id="partenaires">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-5xl">
           <motion.div 
             className="text-center mb-16"
@@ -495,7 +501,7 @@ export function About() {
       </section>
 
       {/* 10. RAPPORTS D'ACTIVITÉS */}
-      <section className="merged-section py-24 bg-white" id="rapports">
+      <section className="merged-section py-24 bg-white/60 backdrop-blur-xs" id="rapports">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 max-w-4xl">
           <motion.div 
             className="text-center mb-16"
