@@ -10,11 +10,20 @@
   --color-fafe-red: #C8102E;
   --color-fafe-yellow: #F4C430;
   
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-heading: 'Playfair Display', serif;
 }
 
 @layer base {
+  .fafe-container {
+    width: 100%;
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(1rem, 3vw, 4rem);
+    padding-right: clamp(1rem, 3vw, 4rem);
+  }
+  
   html {
     width: 100%;
     max-width: 100%;

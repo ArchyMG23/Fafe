@@ -15,7 +15,17 @@ export const defaultAccueilCMS = {
     buttonLink: "/rejoindre",
     secondaryButtonText: { fr: "Découvrir le FAFE", en: "Discover FAFE" },
     secondaryButtonLink: "/nous",
-    heroImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80"
+    heroImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80",
+    floatingImages: [],
+    emailPlaceholder: { fr: "exemple@domaine.com", en: "example@domain.com" },
+    showEmailForm: true
+  },
+  featuredEntrepreneurs: {
+    title: { fr: "Coups de cœur", en: "Staff Picks" },
+    subtitle: { fr: "Des projets inspirants, des femmes extraordinaires", en: "Inspiring projects, extraordinary women" }
+  },
+  featuredNews: {
+    title: { fr: "À la une", en: "Featured" }
   },
   stats: [],
   missions: {
