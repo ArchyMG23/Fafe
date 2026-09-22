@@ -1,31 +1,68 @@
 import React, { useState, useEffect } from 'react';
 
+const DEFAULT_PERSON_FALLBACK = 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800';
+
 interface FafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   fallbackType?: 'person' | 'project' | 'article' | 'logo' | 'general';
+  fallbackSrc?: string;
   aspectRatio?: string;
   priority?: boolean;
+  imageClassName?: string;
+  objectPosition?: string;
 }
 
 export function FafeImage({
   src,
   alt = 'Image FAFE',
   className = '',
+  imageClassName = '',
   fallbackType = 'general',
+  fallbackSrc,
   aspectRatio,
   priority = false,
+  objectPosition,
+  style,
   ...props
 }: FafeImageProps) {
+  const effectiveFallback = fallbackSrc || (fallbackType === 'person' ? DEFAULT_PERSON_FALLBACK : undefined);
+  const initialSrc = src?.trim() || effectiveFallback || '';
+
+  const [currentSrc, setCurrentSrc] = useState<string>(initialSrc);
+  const [triedFallback, setTriedFallback] = useState(false);
   const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = React.useRef<HTMLImageElement>(null);
 
-  // Reset states if src changes
+  // Check if image is already cached or loaded in DOM
   useEffect(() => {
-    setError(false);
-    setIsLoaded(false);
-  }, [src]);
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setIsLoaded(true);
+    }
+  }, [currentSrc]);
+
+  // Only reset states if the URL actually changes
+  useEffect(() => {
+    const newSrc = src?.trim() || effectiveFallback || '';
+    if (newSrc !== currentSrc) {
+      setCurrentSrc(newSrc);
+      setTriedFallback(false);
+      setError(false);
+      setIsLoaded(false);
+    }
+  }, [src, effectiveFallback, currentSrc]);
+
+  const handleImgError = () => {
+    if (effectiveFallback && currentSrc !== effectiveFallback && !triedFallback) {
+      setTriedFallback(true);
+      setCurrentSrc(effectiveFallback);
+      setIsLoaded(false);
+    } else {
+      setError(true);
+    }
+  };
 
   // If no source is provided at all, or failed to load
-  if (!src || error) {
+  if (!currentSrc || error) {
     const fallbackLabels: Record<string, string> = {
       person: 'Entrepreneure FAFE',
       article: 'Actualité FAFE',
@@ -64,16 +101,21 @@ export function FafeImage({
       )}
 
       <img
-        src={src}
+        ref={imgRef}
+        src={currentSrc}
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
-        referrerPolicy="strict-origin-when-cross-origin"
+        referrerPolicy="no-referrer"
         onLoad={() => setIsLoaded(true)}
-        onError={() => setError(true)}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
+        onError={handleImgError}
+        style={{
+          objectPosition: objectPosition || (fallbackType === 'person' ? '50% 10%' : undefined),
+          ...style,
+        }}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${imageClassName}`}
         {...props}
       />
     </div>

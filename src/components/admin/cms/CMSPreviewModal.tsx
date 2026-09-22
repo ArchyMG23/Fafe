@@ -152,7 +152,13 @@ export function CMSPreviewModal({
                 </div>
 
                 <div className="w-64 h-80 rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-stone-100 shrink-0">
-                  <FafeImage src={pcaHero.pcaPhoto} alt={pcaHero.pcaName} className="w-full h-full object-cover" />
+                  <FafeImage 
+                    src={pcaHero.pcaPhoto || "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800"} 
+                    fallbackSrc="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800"
+                    alt={pcaHero.pcaName || "Présidente du Conseil d'Administration"} 
+                    fallbackType="person"
+                    className="w-full h-full object-cover" 
+                  />
                 </div>
               </div>
             </div>

@@ -21,6 +21,7 @@ import {
 import { FafeImage } from "../components/ui/FafeImage";
 import { AnimatedCounter } from "../components/ui/AnimatedCounter";
 import { HeroSection } from "../components/home/HeroSection";
+import { EntrepreneurDirectoryCard } from "../components/directory/EntrepreneurDirectoryCard";
 import {
   DEMO_ENTREPRENEURS,
   DEMO_ARTICLES,
@@ -402,35 +403,12 @@ export function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {entrepreneurs.map((ent) => (
-              <Link key={ent.id} to={`/hub/annuaire/${ent.id}`} className="group">
-                <Card className="border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden bg-[#FAF9F6] h-full flex flex-col">
-                  <div className="relative h-48 overflow-hidden bg-stone-200">
-                    <FafeImage
-                      src={ent.professionalPhoto}
-                      alt={`${ent.firstName} ${ent.lastName}`}
-                      fallbackType="person"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-[#063F3A] uppercase tracking-wider">
-                        <MapPin className="w-3.5 h-3.5 text-[#00843D]" /> {ent.country}
-                      </span>
-                    </div>
-                  </div>
-                  <CardContent className="p-5 flex flex-col flex-grow">
-                    <h3 className="text-base font-bold font-heading text-[#063F3A] mb-1 group-hover:text-[#00843D] transition-colors truncate">
-                      {ent.firstName} {ent.lastName}
-                    </h3>
-                    <p className="text-xs font-bold text-[#D4AF37] mb-2 truncate">
-                      {ent.company}
-                    </p>
-                    <p className="text-xs text-stone-600 line-clamp-2 mt-auto leading-relaxed">
-                      {ent.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+            {entrepreneurs.map((ent, idx) => (
+              <EntrepreneurDirectoryCard
+                key={ent.id}
+                entrepreneur={ent}
+                priority={idx < 2}
+              />
             ))}
           </div>
         </div>

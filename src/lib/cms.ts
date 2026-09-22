@@ -90,6 +90,8 @@ export const defaultAccueilCMS = {
   }
 };
 
+export const OFFICIAL_PCA_PHOTO = "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800";
+
 export const defaultNousCMS = {
   pcaHero: {
     heroLabel: { fr: "À PROPOS DU FAFE", en: "ABOUT FAFE" },
@@ -97,7 +99,7 @@ export const defaultNousCMS = {
     heroDescription: { fr: "Construire un avenir où chaque femme africaine peut entreprendre, grandir et contribuer à la prospérité du continent.", en: "Building a future where every African woman can undertake, thrive, and contribute to the continent's prosperity." },
     pcaName: "Présidence du Conseil d'Administration",
     pcaTitle: { fr: "Présidente du Conseil d'Administration", en: "President of the Board of Directors" },
-    pcaPhoto: ""
+    pcaPhoto: OFFICIAL_PCA_PHOTO
   },
   presentation: {
     title: { fr: "QUI SOMMES-NOUS ?", en: "WHO ARE WE?" },
@@ -349,6 +351,9 @@ export function mergeWithDefaults<T>(defaults: T, current: any): T {
     const curVal = current[key];
     if (curVal === undefined || curVal === null) {
       result[key] = defVal;
+    } else if (key === 'pcaPhoto' && (typeof curVal !== 'string' || !curVal.trim())) {
+      // Never allow PCA photo to be erased by empty string or whitespace
+      result[key] = defVal || OFFICIAL_PCA_PHOTO;
     } else if (
       typeof defVal === 'object' && defVal !== null && !Array.isArray(defVal) &&
       typeof curVal === 'object' && curVal !== null && !Array.isArray(curVal)

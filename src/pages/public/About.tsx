@@ -92,8 +92,9 @@ export function About() {
 
   const { pcaHero, presentation, historique, vision, mission, valeurs, gouvernance, bureauExecutif, equipe, partenaires, rapports } = cmsData;
 
-  
-
+  const officialPcaPhoto = "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800";
+  const rawPcaPhoto = pcaHero?.pcaPhoto?.trim();
+  const resolvedPcaPhoto = rawPcaPhoto && rawPcaPhoto.length > 0 ? rawPcaPhoto : officialPcaPhoto;
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -148,14 +149,16 @@ export function About() {
               whileInView={{ opacity: 1, scale: 1, transition: { duration: 0.8 } }}
               viewport={{ once: true }}
             >
-              <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl">
+              <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl bg-stone-100">
                 <FafeImage 
-                  src={pcaHero?.pcaPhoto} 
-                  alt={pcaHero?.pcaName}
+                  src={resolvedPcaPhoto} 
+                  fallbackSrc={officialPcaPhoto}
+                  alt={pcaHero?.pcaName || "Présidente du Conseil d'Administration FAFE"}
                   className="w-full h-full object-cover"
                   fallbackType="person"
+                  priority={true}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none"></div>
               </div>
               
               {/* African motif decoration */}

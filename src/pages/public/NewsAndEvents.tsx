@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Article, FAFEEvent, EventStatus } from '../../types';
 import { fetchArticles } from '../../lib/dataFetching';
 import { getPublishedEvents } from '../../lib/events';
+import { getPublishedCMSContent, defaultActualitesCMS, getCMSLocalizedText } from '../../lib/cms';
+import { useLanguageStore } from '../../store/language';
 import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { FafeImage } from '../../components/ui/FafeImage';
 import { format } from 'date-fns';
@@ -70,6 +72,8 @@ const INITIAL_DEMO_EVENTS: FAFEEvent[] = [
 ];
 
 export function NewsAndEvents() {
+  const { language } = useLanguageStore();
+  const [cmsData, setCmsData] = useState(defaultActualitesCMS);
   const [filter, setFilter] = useState<FilterType>('ALL');
   // Initialize immediately with demo items for instant visual presentation
   const [items, setItems] = useState<MixedItem[]>(() => {
@@ -84,10 +88,14 @@ export function NewsAndEvents() {
     let isMounted = true;
     const fetchData = async () => {
       try {
-        const articles = await fetchArticles();
-        const eventsData = await getPublishedEvents(50);
+        const [articles, eventsData, cms] = await Promise.all([
+          fetchArticles(),
+          getPublishedEvents(50),
+          getPublishedCMSContent('actualites', defaultActualitesCMS)
+        ]);
         
         if (isMounted) {
+          if (cms) setCmsData(cms);
           const mixed: MixedItem[] = [
             ...(articles.length > 0 ? articles : DEMO_ARTICLES).map(a => ({ type: 'news' as const, data: a, date: a.publishedAt || a.createdAt })),
             ...(eventsData.events.length > 0 ? eventsData.events : INITIAL_DEMO_EVENTS).map(e => ({ type: 'event' as const, data: e, date: e.startDate }))
@@ -122,13 +130,13 @@ export function NewsAndEvents() {
         
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center max-w-3xl">
           <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-2 block">
-            Éditorial & Agenda
+            {getCMSLocalizedText(cmsData.header?.badge, language, "ÉDITORIAL & ÉVÉNEMENTS")}
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4 leading-tight">
-            Actualités & Événements
+            {getCMSLocalizedText(cmsData.header?.title, language, "Actualités & Événements")}
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-stone-600 max-w-xl mx-auto mb-8 leading-relaxed">
-            Suivez les initiatives du réseau FAFE et participez aux rencontres clés pour les entrepreneures panafricaines.
+            {getCMSLocalizedText(cmsData.header?.description, language, "Suivez les initiatives du réseau FAFE et participez aux rencontres clés pour les entrepreneures panafricaines.")}
           </p>
           
           {/* Internal Filter Tabs */}

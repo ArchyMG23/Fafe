@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Camera, Video, Mic, CalendarDays, MonitorPlay, Play, ExternalLink, Sparkles } from 'lucide-react';
 import { FafeImage } from '../../components/ui/FafeImage';
+import { getPublishedCMSContent, defaultGalerieCMS, getCMSLocalizedText } from '../../lib/cms';
+import { useLanguageStore } from '../../store/language';
 
 const galleryTabs = [
   { path: "/galerie/photos", label: "Photos", icon: <Camera className="w-4 h-4 mr-2" /> },
@@ -202,16 +204,37 @@ function PodcastGallery() {
 
 export function Gallery() {
   const location = useLocation();
+  const { language } = useLanguageStore();
+  const [cmsData, setCmsData] = useState(defaultGalerieCMS);
+
+  useEffect(() => {
+    let isMounted = true;
+    getPublishedCMSContent('galerie', defaultGalerieCMS).then(data => {
+      if (isMounted && data) {
+        setCmsData(data);
+      }
+    }).catch(err => {
+      console.warn("Gallery CMS load notice:", err);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="bg-transparent min-h-screen pt-24 pb-16">
       <div className="w-full max-w-7xl mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
+          {cmsData.header?.badge && (
+            <span className="text-xs font-bold tracking-widest text-[#D4AF37] uppercase mb-2 block">
+              {getCMSLocalizedText(cmsData.header.badge, language, "MÉDIATHÈQUE OFFICIELLE")}
+            </span>
+          )}
           <h1 className="text-4xl md:text-5xl font-bold font-heading text-[#063F3A] mb-4">
-            Médiathèque FAFE
+            {getCMSLocalizedText(cmsData.header?.title, language, "Médiathèque FAFE")}
           </h1>
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-            Revivez nos événements en images, vidéos et audios. Découvrez les moments forts de l'entrepreneuriat féminin en Afrique.
+            {getCMSLocalizedText(cmsData.header?.description, language, "Revivez nos événements en images, vidéos et audios. Découvrez les moments forts de l'entrepreneuriat féminin en Afrique.")}
           </p>
         </div>
 

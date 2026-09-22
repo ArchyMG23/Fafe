@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button';
 import { Entrepreneur } from '../../types';
 import { fetchEntrepreneurs } from '../../lib/dataFetching';
 import { DEMO_ENTREPRENEURS } from '../../lib/mockData';
+import { EntrepreneurDirectoryCard } from '../../components/directory/EntrepreneurDirectoryCard';
 
 // Quick mock data for public showcase
 export function PublicEntrepreneurs() {
@@ -76,7 +77,7 @@ export function PublicEntrepreneurs() {
             <div className="w-20 h-1 bg-[#D4AF37] mx-auto rounded-full"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {entrepreneurs.map((ent, idx) => (
               <motion.div 
                 key={ent.id}
@@ -84,42 +85,15 @@ export function PublicEntrepreneurs() {
                 whileInView="visible"
                 viewport={{ once: true, margin: '-50px' }}
                 variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: idx * 0.1 } }
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: idx * 0.08 } }
                 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-all duration-300 flex flex-col"
+                className="h-full"
               >
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <FafeImage 
-                    src={ent.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
-                    alt={`${ent.firstName} ${ent.lastName}`} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <div className="inline-block bg-[#D4AF37] text-white text-xs font-bold px-3 py-1 rounded-full mb-3">
-                      {ent.country}
-                    </div>
-                    <h3 className="text-2xl font-bold font-heading text-white mb-1">
-                      {ent.firstName} {ent.lastName}
-                    </h3>
-                    <p className="text-stone-600 font-medium">
-                      {ent.position || 'Entrepreneure'}, {ent.company}
-                    </p>
-                  </div>
-                </div>
-                <div className="p-6 flex-grow flex flex-col">
-                  <p className="text-stone-600 mb-6 italic line-clamp-3">
-                    {/* Simplified story/expertise */}
-                    {(ent.expertise || []).join(', ')}
-                  </p>
-                  <Link to={`/hub/annuaire/${ent.id}`} className="mt-auto">
-                    <Button variant="outline" className="w-full border-stone-200 text-[#063F3A] hover:border-[#00843D] hover:text-[#00843D] group-hover:bg-[#C8102E] group-hover:text-white transition-all">
-                      {language === 'fr' ? 'Découvrir son profil complet' : 'View full profile'}
-                    </Button>
-                  </Link>
-                </div>
+                <EntrepreneurDirectoryCard
+                  entrepreneur={ent}
+                  priority={idx < 2}
+                />
               </motion.div>
             ))}
           </div>

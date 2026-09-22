@@ -836,9 +836,10 @@ export function CMSPageEditor({ pageId, pageTitle, pageDescription }: CMSPageEdi
 
                 <CMSImageField
                   label="Photo officielle de la PCA"
-                  value={draftData.pcaHero?.pcaPhoto || ''}
+                  value={draftData.pcaHero?.pcaPhoto || 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800'}
                   onChange={(url) => handleFieldChange('pcaHero', 'pcaPhoto', url)}
                   aspectRatio="portrait"
+                  helperText="Photo officielle affichée dans la section Nous et sur le bandeau d'accueil"
                 />
               </div>
             </div>

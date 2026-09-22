@@ -5,15 +5,7 @@ import {
   X,
   User as UserIcon,
   Search,
-  Globe,
-  ChevronDown,
   ShoppingCart,
-  Heart,
-  Briefcase,
-  Users,
-  Compass,
-  ArrowRight,
-  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '../ui/Button';
@@ -25,12 +17,10 @@ import { useCartStore } from '../../store/cart';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const location = useLocation();
   const { currentUser: user } = useAuthStore();
   const { language, setLanguage } = useLanguageStore();
   const cartItemsCount = useCartStore(state => state.getTotalItems());
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +33,6 @@ export function Navbar() {
   // Close mobile drawer on route change
   useEffect(() => {
     setIsOpen(false);
-    setOpenSubmenu(null);
   }, [location.pathname, location.hash]);
 
   // Prevent background scroll when mobile drawer is open
@@ -63,10 +52,16 @@ export function Navbar() {
   };
 
   const isActive = (path: string) => {
-    const basePath = path.split('#')[0];
+    const [basePath, hash] = path.split('#');
+    if (hash) {
+      return location.pathname === basePath && location.hash === `#${hash}`;
+    }
     if (basePath === '/') return location.pathname === '/' && !location.hash;
     if (basePath === '/nous') {
-      return location.pathname === '/nous' || location.pathname === '/a-propos' || location.pathname === '/nos-actions';
+      return (
+        !location.hash &&
+        (location.pathname === '/nous' || location.pathname === '/a-propos' || location.pathname === '/nos-actions')
+      );
     }
     if (basePath === '/actualites') {
       return (
@@ -75,8 +70,26 @@ export function Navbar() {
         location.pathname === '/evenements'
       );
     }
+    if (basePath === '/hub') {
+      return location.pathname.startsWith('/hub');
+    }
     return location.pathname.startsWith(basePath);
   };
+
+  // Direct, single-level destinations for mobile Android
+  const mobileNavLinks = [
+    { label: 'ACCUEIL', path: '/' },
+    { label: 'NOUS', path: '/nous' },
+    { label: 'ACTUALITÉS', path: '/actualites' },
+    { label: 'PROJETS SOCIAUX', path: '/projets-sociaux' },
+    { label: 'ANNUAIRE PANAFRICAIN', path: '/entrepreneures' },
+    { label: 'GALERIE', path: '/galerie' },
+    { label: 'DONS', path: '/dons' },
+    { label: 'REJOINDRE', path: '/rejoindre' },
+    { label: 'FAFE HUB', path: user ? '/hub/dashboard' : '/hub' },
+    { label: 'MARKETPLACE', path: '/marketplace' },
+    { label: 'CONTACT', path: '/nous#contact' },
+  ];
 
   return (
     <>
@@ -324,167 +337,28 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Drawer Scrollable Content */}
+          {/* Drawer Scrollable Content: Liste claire, directe et tactile des destinations principales */}
           <div className="flex-1 overflow-y-auto w-full px-5 py-6 flex flex-col justify-between max-w-lg mx-auto">
-            <div className="space-y-6">
-              
-              {/* 1. ACCUEIL */}
-              <div>
-                <Link
-                  to="/"
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center justify-between p-3.5 rounded-xl font-bold text-base transition-colors ${
-                    isActive('/') ? 'bg-[#00843D]/10 text-[#00843D]' : 'text-[#063F3A] hover:bg-stone-50'
-                  }`}
-                >
-                  <span>ACCUEIL</span>
-                  <ArrowRight className="w-4 h-4 opacity-50" />
-                </Link>
-              </div>
-
-              {/* 2. NOUS */}
-              <div className="border-t border-stone-100 pt-3">
-                <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
-                  NOUS
-                </span>
-                <div className="space-y-1">
+            {/* Single clean list of primary destinations - no submenus, no chevrons */}
+            <nav className="flex flex-col space-y-1.5" aria-label="Navigation principale mobile">
+              {mobileNavLinks.map((item) => {
+                const active = isActive(item.path);
+                return (
                   <Link
-                    to="/nous"
+                    key={item.label}
+                    to={item.path}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
+                    className={`flex items-center px-4 py-3 rounded-xl font-bold text-sm tracking-wide transition-all ${
+                      active
+                        ? 'bg-[#00843D] text-white shadow-xs'
+                        : 'text-[#063F3A] hover:bg-stone-100/80 active:bg-stone-200/70'
+                    }`}
                   >
-                    <span>Présentation & Vision</span>
+                    <span>{item.label}</span>
                   </Link>
-                  <Link
-                    to="/nous#categories"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <span>Nos actions & programmes</span>
-                  </Link>
-                  <Link
-                    to="/nous#contact"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <span>Contact & Secrétariat</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* 3. ACTUALITÉS & ÉDITORIAL */}
-              <div className="border-t border-stone-100 pt-3">
-                <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
-                  ACTUALITÉS & ÉDITORIAL
-                </span>
-                <div className="space-y-1">
-                  <Link
-                    to="/actualites"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <span>Actualités & Articles</span>
-                  </Link>
-                  <Link
-                    to="/evenements"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <span>Événements & Conférences</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-                      Agenda
-                    </span>
-                  </Link>
-                  <Link
-                    to="/galerie"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <span>Médiathèque (Photos & Vidéos)</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* 4. ENTREPRENEURES */}
-              <div className="border-t border-stone-100 pt-3">
-                <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
-                  ENTREPRENEURES
-                </span>
-                <Link
-                  to="/entrepreneures"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                >
-                  <span>Annuaire Panafricain</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#063F3A]">
-                    Talents
-                  </span>
-                </Link>
-              </div>
-
-              {/* 5. SERVICES & HUB */}
-              <div className="border-t border-stone-100 pt-3">
-                <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-1 block">
-                  SERVICES & ENGAGEMENT
-                </span>
-                <div className="space-y-1">
-                  <Link
-                    to={user ? "/hub/dashboard" : "/hub"}
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
-                      <span>FAFE Hub</span>
-                    </div>
-                    <span className="text-xs text-stone-400">Espace membre</span>
-                  </Link>
-
-                  <Link
-                    to="/marketplace"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl text-stone-700 hover:text-[#063F3A] hover:bg-stone-50 text-sm font-semibold transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <ShoppingCart className="w-4 h-4 text-[#063F3A]" />
-                      <span className="font-semibold text-stone-900">Boutique & Marketplace</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-xs text-stone-400">Produits locaux</span>
-                      {cartItemsCount > 0 && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600 mt-1">
-                          {cartItemsCount} article{cartItemsCount > 1 ? 's' : ''}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-
-                  <Link
-                    to="/dons"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl bg-orange-50/80 text-[#00843D] text-sm font-bold transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-[#00843D]" />
-                      <span>Faire un don</span>
-                    </div>
-                    <span className="text-xs font-semibold uppercase tracking-wider">Soutenir</span>
-                  </Link>
-
-                  <Link
-                    to="/recherche"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl text-stone-600 hover:bg-stone-50 text-sm font-medium transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Search className="w-4 h-4 text-stone-400" />
-                      <span>Recherche globale</span>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-            </div>
+                );
+              })}
+            </nav>
 
             {/* Bottom Actions: Connexion / Inscription */}
             <div className="pt-6 mt-6 border-t border-stone-200/80 space-y-3 pb-4">

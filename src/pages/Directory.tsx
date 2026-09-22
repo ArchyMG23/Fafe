@@ -9,6 +9,7 @@ import { Button } from '../components/ui/Button';
 import { Entrepreneur } from '../types';
 import { AFRICAN_COUNTRIES, SECTORS } from '../lib/constants';
 import { fetchEntrepreneurs } from '../lib/dataFetching';
+import { EntrepreneurDirectoryCard } from '../components/directory/EntrepreneurDirectoryCard';
 
 export function Directory() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -193,53 +194,12 @@ export function Directory() {
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredEntrepreneurs.map(entrepreneure => (
-              <div key={entrepreneure.id} className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-[#063F3A]/5">
-                <div className="w-full aspect-[4/5] bg-stone-100 relative overflow-hidden">
-                  <FafeImage 
-                    src={entrepreneure.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
-                    alt={`${entrepreneure.firstName} ${entrepreneure.lastName}`} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  
-                  {/* Location badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-bold text-[#063F3A] uppercase tracking-widest shadow-sm flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-[#00843D]" />
-                      {getCountryName(entrepreneure.country)}
-                    </span>
-                  </div>
-                  
-                  {/* Verification badge */}
-                  {entrepreneure.verificationStatus === 'VERIFIED' && (
-                    <div className="absolute top-4 right-4">
-                      <div className="bg-[#D4AF37] text-white p-1.5 rounded-full shadow-sm" title="Profil vérifié FAFE">
-                        <ShieldCheck className="w-4 h-4" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-6 flex-grow flex flex-col">
-                  <h3 className="font-bold text-xl leading-tight text-[#063F3A] mb-2 group-hover:text-[#00843D] transition-colors">
-                    {entrepreneure.firstName} {entrepreneure.lastName}
-                  </h3>
-                  <p className="text-sm text-[#063F3A]/70 mb-4 font-medium flex items-center gap-2 line-clamp-2">
-                    <Briefcase className="w-4 h-4 text-[#D4AF37] shrink-0" />
-                    <span className="truncate">{entrepreneure.position || 'Fondatrice'}, {entrepreneure.company}</span>
-                  </p>
-                  
-                  <div className="mt-auto pt-4 border-t border-[#063F3A]/10 flex items-center justify-between">
-                    <span className="text-[10px] bg-[#FAF9F6] px-3 py-1.5 rounded-full font-bold text-[#063F3A] uppercase tracking-wider truncate max-w-[60%]">
-                      {getSectorName(entrepreneure.sector)}
-                    </span>
-                    <Link to={`/hub/annuaire/${entrepreneure.id}`} className="text-[#00843D] text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Profil <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+            {filteredEntrepreneurs.map((entrepreneure, idx) => (
+              <EntrepreneurDirectoryCard
+                key={entrepreneure.id}
+                entrepreneur={entrepreneure}
+                priority={idx < 4}
+              />
             ))}
           </div>
         )}

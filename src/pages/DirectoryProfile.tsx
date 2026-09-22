@@ -114,6 +114,8 @@ export function DirectoryProfile() {
                 <FafeImage 
                   src={profile.professionalPhoto || "https://images.unsplash.com/photo-1531123414708-5369786a5f54?q=80&w=600&auto=format&fit=crop"} 
                   alt={`${profile.firstName} ${profile.lastName}`} 
+                  fallbackType="person"
+                  objectPosition="50% 10%"
                   className="w-full h-full object-cover"
                 />
                 {profile.verificationStatus === 'VERIFIED' && (

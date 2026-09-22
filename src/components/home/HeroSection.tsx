@@ -14,12 +14,17 @@ interface HeroSectionProps {
   };
 }
 
+const OFFICIAL_PCA_PHOTO = "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800";
+
 export function HeroSection({ hero, pcaHero }: HeroSectionProps) {
   const [heroImageError, setHeroImageError] = useState(false);
   const { language } = useLanguageStore();
 
-  const pcaPhoto = pcaHero?.pcaPhoto?.trim() || "";
-  const pcaName = pcaHero?.pcaName?.trim() || "";
+  const rawPcaPhoto = pcaHero?.pcaPhoto?.trim() || "";
+  const initialPhoto = rawPcaPhoto || OFFICIAL_PCA_PHOTO;
+  const [activePhoto, setActivePhoto] = useState(initialPhoto);
+
+  const pcaName = pcaHero?.pcaName?.trim() || "Présidence du Conseil d'Administration";
   const pcaTitleText = getCMSLocalizedText(
     pcaHero?.pcaTitle,
     language,
@@ -29,8 +34,17 @@ export function HeroSection({ hero, pcaHero }: HeroSectionProps) {
   );
 
   useEffect(() => {
+    setActivePhoto(rawPcaPhoto || OFFICIAL_PCA_PHOTO);
     setHeroImageError(false);
-  }, [pcaPhoto]);
+  }, [rawPcaPhoto]);
+
+  const handleHeroImgError = () => {
+    if (activePhoto !== OFFICIAL_PCA_PHOTO) {
+      setActivePhoto(OFFICIAL_PCA_PHOTO);
+    } else {
+      setHeroImageError(true);
+    }
+  };
 
   // CMS Content
   const badgeText = getCMSLocalizedText(
@@ -69,7 +83,7 @@ export function HeroSection({ hero, pcaHero }: HeroSectionProps) {
 
   const pastilleText = button2Text || (language === "fr" ? "Découvrir le FAFE" : "Discover FAFE");
 
-  const hasPcaPhoto = Boolean(pcaPhoto && !heroImageError);
+  const hasPcaPhoto = Boolean(activePhoto && !heroImageError);
 
   return (
     <section
@@ -232,10 +246,10 @@ export function HeroSection({ hero, pcaHero }: HeroSectionProps) {
               >
                 {/* PCA Photo */}
                 <img
-                  src={pcaPhoto}
+                  src={activePhoto}
                   alt={pcaName || "Présidente du Conseil d'Administration FAFE"}
                   className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
-                  onError={() => setHeroImageError(true)}
+                  onError={handleHeroImgError}
                   loading="eager"
                   referrerPolicy="no-referrer"
                 />
